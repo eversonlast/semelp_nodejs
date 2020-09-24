@@ -1,0 +1,11 @@
+[
+    {
+        "value": "cel", "text":"Celular"
+    },
+    {
+        "value": "res", "text":"Residencial"
+    },
+    {
+        "value":"com", "text":"Comercial"
+    }
+]

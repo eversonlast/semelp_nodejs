@@ -1,0 +1,111 @@
+
+    return knex.schema.createTable('telephones', table=>{
+        table.increments('id').primary();
+        table.enum('tipo_telefone', ['cel', 'res', 'com']).notNull();
+        table.string('numero',9).notNull();
+        table.string('ddd', 2).notNull();
+        table.integer('id_user_telefone').references('id')
+            .inTable('users')
+            .notNull()
+            .onDelete('CASCADE');
+
+
+  return knex.schema.createTable('addresses', table =>{
+        table.increments('id').primary()
+        table.string('tipo_logradouro').notNull()
+        table.string('nome_logradouro').notNull()
+        table.string('numero').notNull()
+        table.string('bairro').notNull()
+        table.string('cidade').notNull()
+        table.string('estado', 2)
+        table.string('cep')
+        table.integer('id_user_address').references('id')
+            .inTable('users')
+            .onDelete('CASCADE')
+            .notNull() 
+  })
+
+    return knex.schema.createTable('users', table=>{
+        table.increments('id').primary()
+        table.string('nome').notNull()
+        table.string('mae').notNull()
+        table.string('pai')
+        table.enum('tipo_documento'['rg','cn'])
+        table.string('documento', 10).notNull()
+        table.string('cpf',11).notNull().unique()
+        table.string('email').notNull()
+        table.string('password').notNull()
+        table.string('naturalidade')
+        table.string('estado', 2)
+        table.string('escola_trabalho')
+        table.date('data_nasc').notNull()
+        table.timestamp('data_inscricao').defaultTo(knex.fn.now())
+        table.string('tipo_usuario').notNull()
+    })
+
+    if(req.params.id) user.id = req.params.id
+
+        try{
+            existsOrError(user.nome, 'Nome não informado')
+            existsOrError(user.mae, 'Nome da mãe não informado')
+            existsOrError(user.tipoDocumento, 'Tipo de documento não informado')
+            existsOrError(user.documento, 'Documento não informado')
+            existsOrError(user.cpf, 'CPF não informado')
+            existsOrError(user.email, 'Email não informado')
+            existsOrError(user.password, 'Senha não informado')
+            existsOrError(user.confirmPassword, ' Confirmação de Senha  inválida')
+            equalsOrError(user.password, confirmPassword, 'Senhas não conferem')
+
+            typeUser(user.tipoUsuario, 'Tipo de Usuário inválido')
+            // existsOrError(user.data_nasc, ' Data de Nascimento não informado')
+
+            const userFromDB = await app.db('users')
+                .where({cpf: user.cpf}).first()
+
+            if(!user.id){
+                notExistsOrError(userFromDB,'Usuário já cadastro')
+            }
+        }catch(msg){
+            return res.status(400).send(msg)
+        }
+
+        user.password = encryptPassword(user.password)
+        delete user.confirmPassword
+
+        if(user.id){
+            app.db('users')
+                .update(user)
+                .where({id: user.id})
+                // .orWhere({tipo_usuario: 'admin'})
+                .then(_=> res.status(204).send())
+                .catch(err=>res.status(500).send(err))
+        }else{
+            app.db('users')
+                .insert(user)
+                .then(_=>res.status(204).send())
+                .catch(err=>res.status(500).send(err))        }
+    }
+    // const get = (req , res)=>{
+    //     app.db({u: 'users', a:'addresses', t:'telephones'})
+    //         .select({
+    //             nomeUser: 'u.nome',
+    //             mae: 'u.mae',
+    //             cpf: 'u.cpf',
+    //             data_nasc: 'u.data_nasc',
+    //             email: 'u.email',
+    //             tipo_logradouro:'a.tipo_logradouro',
+    //             nome_rua: 'a.nome_rua',
+    //             numero_da_casa: 'a.numero',
+    //             cidade: 'a.ciadade',
+    //             bairro: 'a.bairro',
+    //             tipo_telefone: 't.tipo_telefone',
+    //             ddd: 't.ddd',
+    //             numero_telefone: 't.numero'
+    //         })
+    //         .where({tipo_usuario: 'admin'})
+    //         .orWhere({id: user.id})
+    //         .then(_=> res.status(204).send())
+    //         .catch(err=>es.status(500).send(err))
+    // }
+    return { save}
+}

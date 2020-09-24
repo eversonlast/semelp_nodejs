@@ -1,0 +1,19 @@
+[
+    {
+        "value": null, 
+        "text": "Escolha uma opção"    
+    },
+    {
+        "value": "RG",
+        "text": "RG"
+    },
+    {
+        "value": "CN",
+        "text": "Certidão de Nascimento"
+    },
+    {
+        "value": "Outro",
+        "text": "Outro"
+    }
+
+]
