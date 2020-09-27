@@ -35,6 +35,9 @@ module.exports = app =>{
                 existsOrError(user.password, 'A senha não informado')
                 existsOrError(user.confirmPassword, 'A confirmação não informado')
             }
+            if(!user.pai){
+                user.pai = 'Não consta'
+            }
             
             typeUser(user.tipoUsuario, 'Tipo de Usuário inválido!')
            

@@ -332,7 +332,7 @@ export default {
             typeTel: [],
             ddd:[],
             confirmPassword: false, 
-            cep: [],
+            cep: {},
             stateAddress: true
         }
     },
