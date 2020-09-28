@@ -1,20 +1,9 @@
 const nodemailer = require('nodemailer')
-const configMailer = require('../config/mailer/configMailer.json')
+const { mail } = require('../.env')
 
 module.exports = app=>{
     const sendEmail = (token, email)=>{
-        const transporter = nodemailer.createTransport({
-            host: configMailer.host,
-            port: configMailer.port,
-            secure: configMailer.secure,
-            auth:{
-                user: configMailer.auth.user,
-                pass: configMailer.auth.pass
-            },
-            tls:{
-                rejectUnauthorized: configMailer.tls.rejectUnauthorized
-            }
-        })
+        const transporter = nodemailer.createTransport(mail)
 
         async function run(){
             const sentMailer = await transporter.sendMail({
