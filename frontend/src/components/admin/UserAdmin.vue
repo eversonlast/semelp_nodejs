@@ -1,6 +1,7 @@
 <template>
     <div class="admin-user">
-          <b-table hover striped :items="users" :fields="fields">
+        <b-form-input id="type-text" type="text" v-model="search" placeholder="Buscar o nome ou CPF" class="my-2"></b-form-input>
+          <b-table hover striped :items="resutaldoBusca" :fields="fields">
             <template slot="cell(actions)" slot-scope="data" class="acoes"> 
                 <a href @click.prevent="update(data.item)">
                     <b-button variant="warning" class="mr-2">
@@ -42,6 +43,7 @@ export default {
     data: function(){
         return{
             mode: 'save',
+            search:'', 
             user:{},
             users: [],
             typeUser: {},
@@ -130,6 +132,15 @@ export default {
     mounted(){
         this.loadUsers()
         this.userType()
+    }, 
+    computed:{
+        resutaldoBusca: function(){
+           if(this.search== '' || this.search == ' '){
+               return this.users
+           }else{
+               return this.users.filter(user=> user.cpf.match(this.search) || user.nome.match(this.search))
+           }
+        }
     }
 }
 </script>
@@ -138,5 +149,8 @@ export default {
     .acoes a{
         text-decoration: none;
         color: #000;
+    }
+    .admin-user{
+        font-size:1rem;
     }
 </style>

@@ -111,11 +111,10 @@
                                 <b-form-select v-model="user.estado" :options="estados"></b-form-select>
                             </div>
                          <div class="form-group col-md-4">
-                                <label for="data_nasc">Data de Nascimento</label>                               
-                                <b-form-datepicker id="dataNasc" locale="pt-BR" startDate='01/01/1990'
-                                v-model="user.dataNasc" class="mb-2"
-                                placeholder="Informe a data de Nascimento"
-                                :date-format-options="{year: 'numeric', day:'numeric',month:'numeric' }"></b-form-datepicker>                        
+                                <label for="data_nasc">Data de Nascimento</label>    
+                                <!-- <b-form-input v-model="user.dataNasc" type="date" id="text-date" placeholder="Enter your name"></b-form-input> -->
+                                <DatePicker :language="ptBR" v-model="user.dataNasc" format="dd/MM/yyyy" :bootstrap-styling="true"/>
+                                
                         </div>
                         </div> 
                         <div class="form-group">
@@ -149,14 +148,14 @@
                                     class="form-control "
                                     placeholder="Por favor Digite o nome da Rua."
                                     v-model="cep.logradouro"
-                                    :readonly="stateAddress">
+                                    :readonly="stateAddress" @blur="buscarCep(user.cep)">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="numeroCasa">Numero da Casa</label>
                                 <input type="text" id="numeroCasa" name="numeroCasa"
                                     class="form-control"
                                     placeholder="Digite o número da casa"
-                                    v-model="user.numeroCasa">
+                                    v-model="user.numeroCasa" @blur="buscarCep(user.cep)">
                             </div>
                         </div>
                         <div class="form-row">
@@ -166,6 +165,7 @@
                                     class="form-control "
                                     placeholder="Por favor Digite o nome do Bairro."
                                     v-model="cep.bairro" :readonly="stateAddress"
+                                    @blur="buscarCep(user.cep)"
                                     >
                             </div>
                             <div class="form-group col-md-4">
@@ -173,12 +173,12 @@
                                 <input type="text" id="cidade" name="cidade"
                                     class="form-control"
                                     placeholder="Digite a Cidade."
-                                    v-model="cep.localidade" :readonly="stateAddress">
+                                    v-model="cep.localidade" :readonly="stateAddress" @blur="buscarCep(user.cep)">
                             </div>
                             <div class="form-group col-md-4">                                
                                 <label for="senha">Estado(endereço)</label>
                                 <b-form-select v-model="cep.uf" :options="estados" 
-                                readonly></b-form-select>                        
+                                readonly @change="buscarCep(user.cep)" ></b-form-select>                        
                             </div>
                         </div>
                     </div>
@@ -280,7 +280,7 @@
                             </p>
                             <p class="my-0">
                                 Bairro: {{user.bairro}} - 
-                                Cidade: {{user.cidade}}
+                                Cidade: {{user.cidade}} -
                                 Estado: {{user.estadoEndereco}}
                             </p>
                             <p class="my-0">
@@ -318,9 +318,13 @@ import ddd from './json/ddd.json'
 import typeTelephone from './json/typeTelephone.json'
 import typeDocument from './json/typeDocument.json'
 
+import DatePicker from 'vuejs-datepicker'
+// eslint-disable-next-line no-unused-vars
+import { ptBR} from 'vuejs-datepicker/dist/locale'
 
 export default {
     name: 'Signup',
+    components: { DatePicker},
     data: function(){
         return {
             user: {},
@@ -333,7 +337,9 @@ export default {
             ddd:[],
             confirmPassword: false, 
             cep: {},
-            stateAddress: true
+            stateAddress: true,
+            // eslint-disable-next-line no-undef
+            ptBR: ptBR
         }
     },
     methods:{
@@ -471,6 +477,8 @@ export default {
         buscarCep(cep){
             axios.get(`https://viacep.com.br/ws/${cep}/json/`)
                 .then(res => this.cep = res.data)
+
+            
             if(this.cep.bairro){
                 this.user.bairro = this.cep.bairro
             }else{
@@ -478,10 +486,10 @@ export default {
                 this.user.bairro = this.cep.bairro
             }
 
-            if(this.cep.logradouro){
+            if(this.cep.logradouro == ' '){
+                this.stateAddress = false
                 this.user.nomeLogradouro = this.cep.logradouro
             }else{
-                this.stateAddress = false
                 this.user.nomeLogradouro = this.cep.logradouro
             }
             this.user.cidade = this.cep.localidade

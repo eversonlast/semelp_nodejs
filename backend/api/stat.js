@@ -1,6 +1,7 @@
 module.exports = app =>{
     const Stat = app.mongoose.model('Stat', {
         users: Number,
+        modalities: Number,
         createdAt: Date
     })
 
@@ -8,7 +9,8 @@ module.exports = app =>{
         Stat.findOne({}, {}, {sort: {'createdAt': -1} })
             .then(stat => {
                 const defaultStat = {
-                    users: 0
+                    users: 0,
+                    modalities: 0,
                 }
                 res.json(stat|| defaultStat)
             })

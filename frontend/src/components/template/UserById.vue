@@ -82,11 +82,12 @@
                                 <b-form-select v-model="user.estado" :options="estados"></b-form-select>
                             </div>
                          <div class="form-group col-md-4">
-                                <label for="data_nasc">Data de Nascimento</label>                               
-                                <b-form-datepicker id="dataNasc" locale="pt-BR" startDate='01/01/1990'
+                                <label for="data_nasc">Data de Nascimento</label>                                                               
+                                <DatePicker :language="ptBR" v-model="user.dataNasc" :value="user.dataNasc" format="dd/MM/yyyy" :bootstrap-styling="true"/>
+                                <!-- <b-form-datepicker id="dataNasc" locale="pt-BR" startDate='01/01/1990'
                                 v-model="user.dataNasc" class="mb-2"
                                 placeholder="Informe a data de Nascimento"
-                                :date-format-options="{year: 'numeric', day:'numeric',month:'numeric' }"></b-form-datepicker>                        
+                                :date-format-options="{year: 'numeric', day:'numeric',month:'numeric' }"></b-form-datepicker>                         -->
                         </div>
                         </div> 
                         <div class="form-group">
@@ -293,10 +294,13 @@ import typeDocument from '../auth/component/json/typeDocument.json'
 import typeTelephone from '../auth/component/json/typeTelephone.json'
 import ddd from '../auth/component/json/ddd.json'
 import selectEstado from '../auth/component/json/selectEstados.json'
+import DatePicker from 'vuejs-datepicker'
+// eslint-disable-next-line no-unused-vars
+import { ptBR} from 'vuejs-datepicker/dist/locale'
 
 export default {
     name: 'UserById',
-    components: { PageTitle },
+    components: { PageTitle, DatePicker },
     data: function(){
         return {
             user: {},
@@ -307,7 +311,9 @@ export default {
             typeTel: [], 
             ddd:[], 
             estados: [],
-            verification: true
+            verification: true,
+            // eslint-disable-next-line no-undef
+            ptBR: ptBR
         }
     },
     methods:{

@@ -2,6 +2,7 @@ const admin = require('./accessControl/admin')
 const secreAdmin = require('./accessControl/secreAdmin')
 const userSecreAdmin = require('./accessControl/userSecreAdmin')
 const profAdmin = require('./accessControl/profAdmin')
+const secreProfAdmin = require('./accessControl/secreProfAdmin')
 
 module.exports = app =>{
 
@@ -11,7 +12,9 @@ module.exports = app =>{
     app.post('/validateUser', app.api.auth.validateUser)
     app.post('/forgotPassword', app.api.forgotPassword.passwordForgotten)
     app.put('/resetPassword', app.api.forgotPassword.resetPasswordToken)
-    
+   
+    app.get('/modality', app.api.modality.get)
+
     app.route('/users')
         .all(app.config.passport.authenticate())
         .post(secreAdmin(app.api.users.save))
@@ -53,4 +56,27 @@ module.exports = app =>{
         .put(admin(app.api.sportCenter.save))
         .get(app.api.sportCenter.getById)
         .delete(admin(app.api.sportCenter.remove))
+
+    app.route('/modality')
+        .all(app.config.passport.authenticate())
+        .post(admin(app.api.modality.save))
+        .get(secreAdmin(app.api.modality.get))
+        
+    app.route('/modality/:id')
+        .all(app.config.passport.authenticate())
+        .get(secreAdmin(app.api.modality.getById))    
+        .post(admin(app.api.modality.save))
+        .delete(admin(app.api.modality.remove))
+
+    app.route('/modalitySportCenter')
+        .all(app.config.passport.authenticate())
+        .post(secreAdmin(app.api.modalitySportCenter.save))
+
+    app.route('/sportCenterModality/:id')
+        .all(app.config.passport.authenticate())
+        .get(app.api.modalitySportCenter.getSportCenter)
+    
+    app.route('/modalitySportCenter/:id')
+        .all(app.config.passport.authenticate())
+        .get(app.api.modalitySportCenter.getModality)
 }

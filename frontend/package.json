@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve --host 127.0.0.1 --port 8080",
+    "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
@@ -12,17 +12,21 @@
     "axios": "0.18.0",
     "bootstrap": "^4.5.2",
     "bootstrap-vue": "2.16.0",
+    "cors": "^2.8.5",
     "font-awesome": "4.7.0",
     "highlightjs": "9.10.0",
     "iconfont": "0.3.1",
     "liquor-tree": "0.2.32",
     "moment": "^2.27.0",
     "vue": "^2.5.17",
+    "vue-axios-cors": "^1.0.1",
+    "vue-bootstrap-datetimepicker": "^5.0.1",
     "vue-gravatar": "1.2.1",
     "vue-mq": "0.2.1",
     "vue-router": "3.0.1",
     "vue-toasted": "1.1.24",
     "vue2-editor": "2.6.6",
+    "vuejs-datepicker": "^1.6.2",
     "vuex": "3.0.1"
   },
   "devDependencies": {
