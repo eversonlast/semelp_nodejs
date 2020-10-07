@@ -27,9 +27,9 @@ module.exports = app =>{
         .get(userSecreAdmin(app.api.users.getById))
         .delete(userSecreAdmin(app.api.users.remove))
     
-    app.route('/resertPassword/:id')
+    app.route('/resetPassword/:id')
         .all(app.config.passport.authenticate())   
-        .put(userSecreAdmin(app.api.forgotPassword.resetPasswordAuth))
+        .put(app.api.forgotPassword.resetPasswordAuth)
     
     app.route('/changeTypeUser')
         .all(app.config.passport.authenticate())

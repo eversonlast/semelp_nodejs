@@ -24,6 +24,9 @@
                 
             </div>
             <hr>
+            <div class="div-spinner" v-show="showLoad">
+                <b-spinner variant="primary" label="Text Centered" class="spinner"></b-spinner>
+            </div>
             
             <input v-model="user.cpf" type="text" name="cpf" placeholder="Por favor, digite o CPF.">
             <input v-model="user.password" type="password" name="password" placeholder="Senha" v-on:keyup.enter="signin">
@@ -50,18 +53,26 @@ export default {
     name: 'Login',
     data: function(){
         return{
-            user:{}
+            user:{},
+            showLoad: false
         }
     },
     methods:{
-        signin(){
-            axios.post(`${baseApiUrl}/signin`, this.user)
-                .then(res=>{
-                    this.$store.commit('setUser', res.data)
-                    localStorage.setItem(userKey, JSON.stringify(res.data))
-                    this.$router.push({name: 'home'})
-                })
-                .catch(showError)
+        async signin(){
+            try{
+                this.showLoad=true
+                await axios.post(`${baseApiUrl}/signin`, this.user)
+                    .then(res=>{
+                        this.$store.commit('setUser', res.data)
+                        localStorage.setItem(userKey, JSON.stringify(res.data))
+                        this.$router.push({name: 'home'})
+                    })
+                    .catch(showError)
+            }catch(msg){
+                this.$toasted.erro('Erro ao fazer Login')
+            }finally{
+                this.showLoad = false
+            }
         },
         changeView(){
             this.$parent.state = 'S'
@@ -127,5 +138,19 @@ export default {
 
     .div-botao{
         display: flex;
+    }
+    .div-spinner{
+        background-color:rgb(120, 120, 120, 0.3);
+        width: 350px;
+        height: 337px;        
+        position:absolute;
+        margin-top: -35px;
+
+    }
+    .spinner{
+        text-align: center;
+        justify-items: center;
+        margin-top:45%;
+        margin-left: 45%;
     }
 </style>

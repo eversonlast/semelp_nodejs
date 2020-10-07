@@ -33,7 +33,7 @@ export default {
 
             if(node.text == 'Trocar Senha'){                
                 this.$router.push({
-                    path:'/signup'                           
+                    path:`/forgotPasswordAuth/${this.user}`                           
                 })
             } 
         },

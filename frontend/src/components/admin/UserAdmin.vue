@@ -92,7 +92,6 @@ export default {
             axios.delete(`${baseApiUrl}/users/${id}`)
                 .then(() => {
                     this.$toasted.global.defaultSuccess()
-                    this.reset()
                 })
                 .catch(showError)
             document.location.reload(true)

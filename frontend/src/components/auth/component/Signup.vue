@@ -14,15 +14,12 @@
                                 placeholder="Digite somente número, Ex.:999999999"
                                 v-model="user.cpf"
                                 maxlength="12" >
-                                   
                         </div>   
                                                  
                         <div class="form-group col-md-2">
                             <label for="senha">Tipo de Documento</label>
                             <b-form-select v-model="user.tipoDocumento" :options="options"></b-form-select>
-                        </div>
-                      
-        
+                        </div>      
                             
                         <div class="form-group col-md-4">
                             <label for="senha">RG</label>
@@ -113,8 +110,11 @@
                          <div class="form-group col-md-4">
                                 <label for="data_nasc">Data de Nascimento</label>    
                                 <!-- <b-form-input v-model="user.dataNasc" type="date" id="text-date" placeholder="Enter your name"></b-form-input> -->
-                                <DatePicker :language="ptBR" v-model="user.dataNasc" format="dd/MM/yyyy" :bootstrap-styling="true"/>
-                                
+                                <!-- <DatePicker :language="ptBR" v-model="user.dataNasc" format="dd/MM/yyyy" :bootstrap-styling="true"/> -->
+                                <b-form-datepicker id="dataNasc" locale="pt-BR" startDate='01/01/1990'
+                                v-model="user.dataNasc" class="mb-2"
+                                placeholder="Informe a data de Nascimento"
+                                :date-format-options="{year: 'numeric', day:'numeric',month:'numeric' }" show-decade-nav></b-form-datepicker>
                         </div>
                         </div> 
                         <div class="form-group">

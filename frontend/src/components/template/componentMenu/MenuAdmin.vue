@@ -17,8 +17,16 @@ export default {
                 {text: 'Usuários', children:[
                     {text: 'Lista de Usuários'},
                     {text: 'Cadastro de Usuários'}
+                ]},
+                {text: 'Modalidades', children:[
+                    {text: 'Por Centro Esportivo'},
+                    {text: 'Por Modalidade'}
+                ]},
+                {text: 'Centro Esportivo', children:[
+                    {text: 'Cadatrar Centro Esportivo'},
+                    {text: 'Gerenciar Centros Esportivos'}
                 ]}
-            ]           
+            ]
         }
     },
     methods:{
@@ -31,8 +39,13 @@ export default {
                 this.$router.push({
                     path:'/signup'                           
                 })
-            } 
-            
+            }
+
+            if(node.text=='Modalidades'){
+                this.$router.push({
+                    name: 'modality'
+                })
+            }
         }
     },
     mounted(){

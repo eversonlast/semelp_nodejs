@@ -6,6 +6,9 @@ import AdminPages from '@/components/admin/AdminPages'
 import Auth from '../components/auth/Auth'
 import UserById from '@/components/template/UserById'
 import Signup from '../components/auth/component/Signup'
+import ForgotPasswordAuth from '../components/auth/component/ForgotPasswordAuth'
+import Modality from '../components/modalities/Modality'
+import ModalityById from '../components/modalities/ModalityById'
 
 import { userKey, baseApiUrl } from './global'
 import axios from 'axios'
@@ -30,9 +33,21 @@ const routes = [{
     path: '/user/:id',
     component: UserById
 },{
-    nome: 'signup',
+    name: 'signup',
     path: '/signup',
     component: Signup
+},{
+    name:'forgotPasswordAuth',
+    path:'/forgotPasswordAuth/:id',
+    component: ForgotPasswordAuth
+},{
+    name:'modality',
+    path: '/modality',
+    component: Modality
+},{
+    name: 'modalityById',
+    path:'/modality/:id',
+    component: ModalityById
 }]
 
 const router = new VueRouter({

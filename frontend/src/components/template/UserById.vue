@@ -83,11 +83,11 @@
                             </div>
                          <div class="form-group col-md-4">
                                 <label for="data_nasc">Data de Nascimento</label>                                                               
-                                <DatePicker :language="ptBR" v-model="user.dataNasc" :value="user.dataNasc" format="dd/MM/yyyy" :bootstrap-styling="true"/>
-                                <!-- <b-form-datepicker id="dataNasc" locale="pt-BR" startDate='01/01/1990'
+                                <!-- <DatePicker :language="ptBR" v-model="user.dataNasc" :value="user.dataNasc" format="dd/MM/yyyy" :bootstrap-styling="true"/> -->
+                                <b-form-datepicker id="dataNasc" locale="pt-BR" startDate='01/01/1990'
                                 v-model="user.dataNasc" class="mb-2"
                                 placeholder="Informe a data de Nascimento"
-                                :date-format-options="{year: 'numeric', day:'numeric',month:'numeric' }"></b-form-datepicker>                         -->
+                                :date-format-options="{year: 'numeric', day:'numeric',month:'numeric' }" show-decade-nav></b-form-datepicker>                        
                         </div>
                         </div> 
                         <div class="form-group">
