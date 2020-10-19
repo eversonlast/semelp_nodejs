@@ -5,6 +5,7 @@ import Vue from 'vue'
 import './config/bootstrap'
 import './config/axios'
 import './config/msgs'
+import './config/mq'
 
 import store from './config/store'
 import App from './App'

@@ -26,12 +26,19 @@ export default {
     methods:{
        onNodeSelected(node){
             if(node.text=='Atualizar Cadastro'){
+                if(this.$mq ==='xs' || this.$mq === 'sm'){
+                    this.$store.commit('toggleMenu', false)
+                }      
                 this.$router.push({
                     path: `/user/${this.user}`
                 })
             }
 
-            if(node.text == 'Trocar Senha'){                
+            if(node.text == 'Trocar Senha'){ 
+                  
+                if(this.$mq ==='xs' || this.$mq === 'sm'){
+                    this.$store.commit('toggleMenu', false)
+            }             
                 this.$router.push({
                     path:`/forgotPasswordAuth/${this.user}`                           
                 })
@@ -42,7 +49,8 @@ export default {
             const userData = JSON.parse(json)
             await this.$store.commit('setUser', userData)
             this.user = userData.id
-        }
+        },
+        
     },
     mounted(){
         this.getUser()

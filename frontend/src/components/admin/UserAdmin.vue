@@ -1,7 +1,7 @@
 <template>
     <div class="admin-user">
         <b-form-input id="type-text" type="text" v-model="search" placeholder="Buscar o nome ou CPF" class="my-2"></b-form-input>
-          <b-table hover striped :items="resutaldoBusca" :fields="fields">
+          <b-table hover striped :items="resutaldoBusca" :fields="fields" class="table-responsive-md">
             <template slot="cell(actions)" slot-scope="data" class="acoes"> 
                 <a href @click.prevent="update(data.item)">
                     <b-button variant="warning" class="mr-2">

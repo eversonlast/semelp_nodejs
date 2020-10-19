@@ -433,6 +433,11 @@ export default {
         this.$router.push({
             name: 'home'
         })
+    },
+    menuVisible(){
+        if(this.$mq ==='xs' || this.$mq === 'sm'){
+            this.$store.commit('toggleMenu', false)
+        }      
     }     
     
     },
@@ -444,6 +449,7 @@ export default {
         this.loadEstados()
         this.getUser()
         this.checkPhone()
+        this.menuVisible()
     }
     
 }

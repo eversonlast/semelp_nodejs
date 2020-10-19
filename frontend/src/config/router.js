@@ -9,6 +9,9 @@ import Signup from '../components/auth/component/Signup'
 import ForgotPasswordAuth from '../components/auth/component/ForgotPasswordAuth'
 import Modality from '../components/modalities/Modality'
 import ModalityById from '../components/modalities/ModalityById'
+import SportCenterById from '../components/modalities/SportCenterById'
+import SportCenter from '../components/modalities/SportCenter'
+import RegisterSportCenter from '../components/modalities/RegisterSportCenter'
 
 import { userKey, baseApiUrl } from './global'
 import axios from 'axios'
@@ -48,6 +51,18 @@ const routes = [{
     name: 'modalityById',
     path:'/modality/:id',
     component: ModalityById
+},{
+    name: 'sportCenterById',
+    path:'/sportCenter/:id',
+    component: SportCenterById
+},{
+    name:'sportCenter',
+    path: '/sportCenter',
+    component: SportCenter
+},{
+    name: 'registerSportCenter',
+    path: '/registerSportCenter',
+    component: RegisterSportCenter
 }]
 
 const router = new VueRouter({

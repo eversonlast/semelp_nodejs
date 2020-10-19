@@ -5,7 +5,7 @@
             {{ main }}
         </h1>
         <h2>
-            {{ sub }}
+            {{ sub }} {{ divisor }}  {{ responsability }}
         </h2>
         <hr>
     </div>
@@ -14,7 +14,7 @@
 <script>
 export default {
     name: 'PageTitle',
-    props: ['icon', 'main', 'sub']
+    props: ['icon', 'main', 'sub', 'responsability', 'divisor']
 }
 </script>
 

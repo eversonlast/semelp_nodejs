@@ -1,6 +1,6 @@
 <template>
     <div class= "all-modalities">
-        <PageTitle main="Configuração de Modalidade" sub="Modalidade" icon="icofont-runner-alt-2"/>
+        <PageTitle main="Por Modalidade" sub=" Configuração de Modalidade" icon="icofont-runner-alt-2"/>
         <ul>
             <li v-for="modality in modalities" :key="modality.id">
                 <ModalityItem :modality="modality"/>

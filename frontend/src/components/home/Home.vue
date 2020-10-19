@@ -40,10 +40,16 @@ export default {
             axios.get(`${baseApiUrl}/stats`)
                 .then(res => this.stat = res.data)
             this.user = userData
+        },
+        menuVisible(){
+               if(this.$mq ==='xs' || this.$mq === 'sm'){
+                this.$store.commit('toggleMenu', false)
+            }      
         }
     },
     mounted(){
         this.getStats()
+        this.menuVisible()
     }
 }
 </script>

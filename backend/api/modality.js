@@ -39,7 +39,7 @@ module.exports = app =>{
             .catch(err=>res.status(500).send(err))
     }
 
-    const getIdBy = async(req, res)=>{
+    const getById = async(req, res)=>{
         app.db('modalities')
             .where({id: req.params.id})
             .first()
@@ -62,5 +62,5 @@ module.exports = app =>{
         }
     }
 
-    return { save, get, getIdBy, remove }
+    return { save, get, getById, remove }
 }

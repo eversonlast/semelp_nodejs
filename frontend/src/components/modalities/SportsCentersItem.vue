@@ -1,24 +1,26 @@
 <template>
-    <div class="modality-item">
-        <router-link :to="{ name: 'modalityById', params: {id: modality.id}}">
-            <div class="modality-item-info">
-                <h2>{{modality.nomeModalidade}}</h2>
-                <p>Departamento: {{modality.departamento}}</p>
+    <div class="sport-center-item">
+        <router-link :to="{name: 'sportCenterById', params: {id: sportCenter.id}}">
+            <div class="sport-center-item-info">
+                <h2>{{sportCenter.nome}}</h2>
+                <p>{{sportCenter.telefone}}</p>
             </div>
         </router-link>
 
     </div>
+  
 </template>
 
 <script>
 export default {
-    name: 'ModalityItem',
-    props: ['modality']
+    name: 'SportCentersItem',
+    props: ['sportCenter']
 }
 </script>
 
 <style>
-    .modality-item{
+
+    .sport-center-item{
         border-radius: 8px;
         margin-bottom: 20px;
         background-color: #fff;
@@ -27,7 +29,7 @@ export default {
         box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
     }
 
-    .modality-item a{
+    .sport-center-item a{
         display: flex;
         align-items: center;
         text-decoration: none;
@@ -35,15 +37,14 @@ export default {
         padding:10px;
     }
 
-    .modality-item-info h2{
-        font-size: 1.7rem;
-    }
-
-    .modality-item-info{
+    .sport-center-item-info{
         display: flex;
         align-items: stretch;
         flex-direction: column;
     }
 
+    .sport-center-item-info h2{
+        font-size: 1.7rem;
+    }
 
 </style>

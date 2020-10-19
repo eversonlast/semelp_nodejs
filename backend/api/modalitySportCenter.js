@@ -43,8 +43,8 @@ module.exports = app =>{
         const result = await app.db.raw(`select count("idSportCenter") from "modalitiesSportsCenters" where "idSportCenter" = ${req.params.id}`)
         const count = parseInt(result.rows[0].count)
 
-        app.db.raw(`select nome, "nomeModalidade" 
-                    from "sportsCenters"
+        app.db.raw(`select nome as "Local", "nomeModalidade", m.id as "idModalidade", departamento, "idResponsabilityModality"
+                    from "sportsCenters" 
                     right join "modalitiesSportsCenters" as mdc on mdc."idSportCenter" = "sportsCenters".id
                     right join modalities as m on mdc."idModality" = m.id
                     where "idSportCenter" = ${req.params.id}        
@@ -58,8 +58,8 @@ module.exports = app =>{
         const result = await app.db.raw(`select count("idModality") from "modalitiesSportsCenters" where "idModality" = ${req.params.id}`)
         const count = parseInt(result)
 
-        app.db.raw(`select nome, "nomeModalidade" 
-                    from "sportsCenters"
+        app.db.raw(`select nome, "nomeModalidade", "sportsCenters".id
+                    from "sportsCenters" 
                     right join "modalitiesSportsCenters" as mdc on mdc."idSportCenter" = "sportsCenters".id
                     right join modalities as m on mdc."idModality" = m.id
                     where "idModality" = ${req.params.id}
