@@ -8,7 +8,6 @@ module.exports = app =>{
 
         try{
             existsOrError(modality.nomeModalidade, "Por favor, informe qual é a modalidade.")
-            existsOrError(modality.setor, "Por favor, informe qual setor que pertence a modalidade.")
             existsOrError(modality.departamento, "Por favor, informe qual é o departamento.")
             existsOrError(modality.idResponsabilityModality, "Por favor, informe qual é o responsável pela modalidade.")
         }catch(msg){
@@ -62,5 +61,19 @@ module.exports = app =>{
         }
     }
 
-    return { save, get, getById, remove }
+    const getResponsability = async(req, res)=>{
+        try{
+            app.db('users')
+                .select('nome', 'id')
+                .where('tipoUsuario', 'admin')
+                .orWhere('tipoUsuario', 'prof')
+                .first()
+                .then(users=>res.json([users]))
+                .catch(err=>res.status(500).send(err))
+        }catch(msg){
+            res.status(500).send(msg)
+        }
+    }
+
+    return { save, get, getById, remove, getResponsability }
 }

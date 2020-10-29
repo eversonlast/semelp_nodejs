@@ -31,7 +31,7 @@ export default {
         loadSportsCenters(){
             this.loadKey()
             const url = `${baseApiUrl}/sportCenter`
-            axios.get(url).then(res=> this.sportsCenters = res.data)
+            axios.get(url).then(res=> this.sportsCenters = res.data.data)
         }
     },
     mounted(){

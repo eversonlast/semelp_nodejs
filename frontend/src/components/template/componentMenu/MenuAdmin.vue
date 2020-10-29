@@ -20,7 +20,9 @@ export default {
                 ]},
                 {text: 'Modalidades', children:[
                     {text: 'Por Centro Esportivo'},
-                    {text: 'Por Modalidade'}
+                    {text: 'Por Modalidade'},
+                    {text: 'Cadastrar Modalidade'},
+                    {text: 'Gerenciar Modalidade'}
                 ]},
                 {text: 'Centro Esportivo', children:[
                     {text: 'Cadastrar Centro Esportivo'},
@@ -56,6 +58,24 @@ export default {
             if(node.text == 'Cadastrar Centro Esportivo'){
                 this.$router.push({
                     name: 'registerSportCenter'
+                })
+            }
+
+            if(node.text == 'Gerenciar Centros Esportivos'){
+                this.$router.push({
+                    name: 'sportCenterList'
+                })
+            }
+
+            if(node.text == 'Cadastrar Modalidade'){
+                this.$router.push({
+                    name: 'modalityRegister'
+                })
+            }
+
+            if(node.text == 'Gerenciar Modalidade'){
+                this.$router.push({
+                    name: 'modalityList'
                 })
             }
         }

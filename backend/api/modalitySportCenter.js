@@ -23,11 +23,14 @@ module.exports = app =>{
         }
     }
     const remove = async (req, res)=>{
+        const modalitySportCenter = {...req.body}
         try{
-            existsOrError(req.params.id, "Por favor, informe o id.")
-
+            existsOrError(modalitySportCenter.idModality,'Por favor, informe o Id da Modalidade')
+            existsOrError(modalitySportCenter.idSportCenter, 'Por favor, informe o Id do Centro Esportivo')
+            
             const rowsDeleted = await app.db('modalitiesSportsCenters')
-                                        .where({id: req.params.id})
+                                        .where({idModality: modalitySportCenter.idModality,
+                                                idSportCenter: modalitySportCenter.idSportCenter})
                                         .del()
             existsOrError(rowsDeleted, "A modalidade ou Centro esportivo não existe")
 
@@ -66,6 +69,17 @@ module.exports = app =>{
                     limit ${limit} offset ${page*limit-limit}`)
                 .then(sportCenter=> res.json({data: sportCenter.rows, count, limit}))
                 .catch(err=>res.status(500).send(err))
+    }
+
+    const getID = async(req, res)=>{
+        const modalitySportCenter = {...req.body}
+
+        try{
+            existsOrError(modalitySportCenter.idModality,'Por favor, informe o Id da Modalidade')
+            existsOrError(modalitySportCenter.idSportCenter, 'Por favor, informe o Id do Centro Esportivo')
+        }catch(e){
+
+        }
     }
 
     return { save, remove, getSportCenter, getModality }

@@ -71,12 +71,18 @@ module.exports = app =>{
     app.route('/modalitySportCenter')
         .all(app.config.passport.authenticate())
         .post(secreAdmin(app.api.modalitySportCenter.save))
+        .delete(admin(app.api.modalitySportCenter.remove))
 
     app.route('/sportCenterModality/:id')
         .all(app.config.passport.authenticate())
         .get(app.api.modalitySportCenter.getSportCenter)
-    
+        
     app.route('/modalitySportCenter/:id')
         .all(app.config.passport.authenticate())
         .get(app.api.modalitySportCenter.getModality)
-}
+    
+    app.route('/responsabilityModality')
+        .all(app.config.passport.authenticate())
+        .get(app.api.modality.getResponsability)
+    
+    }

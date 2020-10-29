@@ -181,7 +181,7 @@ module.exports = app =>{
     }
 
     const getById = async(req, res)=>{
-        const ResultgetById = await app.db.raw(`select  u.id, nome, cpf, mae, pai, TO_CHAR("dataNasc",'DD/MM/YYYY') as "dataNasc", "tipoDocumento", documento, 
+        const ResultgetById = await app.db.raw(`select  u.id, nome, cpf, mae, pai, TO_CHAR("dataNasc",'DD/MM/YYYY') as "dataNasc", "tipoDocumento", documento,  
                             "nomeLogradouro", "numeroCasa", bairro, "escolaTrabalho", naturalidade, estado, email,
                             ddd, "numeroTelefone", "typePhone", "estadoEndereco", cep, cidade, t.id as idtel
                     from addresses a, telephones t, users u 

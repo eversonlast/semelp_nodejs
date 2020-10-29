@@ -9,9 +9,13 @@ import Signup from '../components/auth/component/Signup'
 import ForgotPasswordAuth from '../components/auth/component/ForgotPasswordAuth'
 import Modality from '../components/modalities/Modality'
 import ModalityById from '../components/modalities/ModalityById'
-import SportCenterById from '../components/modalities/SportCenterById'
-import SportCenter from '../components/modalities/SportCenter'
-import RegisterSportCenter from '../components/modalities/RegisterSportCenter'
+import SportCenterById from '../components/sportCenter/SportCenterById'
+import SportCenter from '../components/sportCenter/SportCenter'
+import RegisterSportCenter from '../components/sportCenter/RegisterSportCenter'
+import SportCenterList from '../components/sportCenter/SportCenterList'
+import ManagerSportCenter from '../components/sportCenter/ManagerSportCenter'
+import RegisterModalities from '../components/modalities/RegisterModalities'
+import ModalityList from '../components/modalities/ModalityList'
 
 import { userKey, baseApiUrl } from './global'
 import axios from 'axios'
@@ -63,6 +67,22 @@ const routes = [{
     name: 'registerSportCenter',
     path: '/registerSportCenter',
     component: RegisterSportCenter
+},{
+    name:'sportCenterList',
+    path:'/sportCenterList',
+    component: SportCenterList
+},{
+    name:'managerSportCenter',
+    path: '/managerSportCenter/:id',
+    component: ManagerSportCenter
+},{
+    name:'modalityRegister',
+    path: '/modalityRegister',
+    component: RegisterModalities
+},{
+    name: 'modalityList',
+    path: '/modalityList',
+    component: ModalityList
 }]
 
 const router = new VueRouter({

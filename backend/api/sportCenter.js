@@ -33,7 +33,7 @@ module.exports = app =>{
         }
         
     }
-    
+   
     const getById = (req, res)=>{
 
         app.db('sportsCenters')
@@ -42,10 +42,15 @@ module.exports = app =>{
             .then(sportCenter=>{ res.json(sportCenter)})
             .catch(err=> res.status(500).send(err))
     }
+    const limit = 10  
+    const get = async (req, res)=>{
+        const page = req.query.page || 1
+        const result = await app.db('sportsCenters').count('id').first()
+        const count = parseInt(result.count)
 
-    const get = (req, res)=>{
         app.db('sportsCenters')
-            .then(sportsCenters=>res.json(sportsCenters))
+            .limit(limit).offset(page*limit-limit)
+            .then(sportsCenters=>res.json({data: sportsCenters, count, limit}))
             .catch(err=>res.status(500).send(err))
     }
     const remove = async (req, res)=>{
