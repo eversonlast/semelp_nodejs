@@ -65,7 +65,7 @@ module.exports = app =>{
     app.route('/modality/:id')
         .all(app.config.passport.authenticate())
         .get(secreAdmin(app.api.modality.getById))    
-        .post(admin(app.api.modality.save))
+        .put(admin(app.api.modality.save))
         .delete(admin(app.api.modality.remove))
 
     app.route('/modalitySportCenter')
