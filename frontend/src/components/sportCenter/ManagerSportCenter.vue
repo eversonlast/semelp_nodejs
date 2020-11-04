@@ -12,7 +12,6 @@
               {{sportCenter.nome}}
           </b-modal>
       </div>
-
   </div>
 </template>
 

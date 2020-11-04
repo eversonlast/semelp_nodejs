@@ -4,7 +4,7 @@ exports.up = function(knex, Promise) {
         table.increments('id').primary()
         table.string('dias').notNull()
         table.string('horarios').notNull()
-        table.integer('idProfessorRespnsadbilty').references('id').inTable('users')
+        table.integer('idProfessorResponsability').references('id').inTable('users')
         table.integer('idSportCenter').references('id').inTable('sportsCenters').onDelete('cascade')
         table.integer('idModality').references('id').inTable('modalities').onDelete('cascade')
     })

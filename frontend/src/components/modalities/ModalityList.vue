@@ -6,21 +6,21 @@
         </div>
         <ul>
             <li v-for="modality in modalities" :key="modality.id">
-                <ModalityItem :modality="modality"/>
+                <ModalityItemList :modality="modality"/>
             </li>
         </ul>
     </div>
 </template>
 
 <script>
-import ModalityItem from './ModalityItem'
+import ModalityItemList from './ModalityItemList'
 import PageTitle from '../template/PageTitle'
 
 import axios from 'axios'
 import {baseApiUrl, userKey, showError } from '@/config/global'
 export default {
     name: 'ModalityList',
-    components: {PageTitle, ModalityItem},
+    components: {PageTitle, ModalityItemList},
     data: function(){
         return {
             modalities: {},
@@ -50,8 +50,8 @@ export default {
                 .catch(showError)
         },
         registerModality(){
-            this.$route.push({
-                name: 'registerModality'
+            this.$router.push({
+                name: 'modalityRegister'
             })
         }
     },

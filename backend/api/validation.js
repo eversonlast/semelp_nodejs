@@ -65,5 +65,10 @@ module.exports = app =>{
             return true;
     }
 
-    return { existsOrError, notExistsOrError, equalsOrError, typeUser, typeAddress, TestaCPF}
+    function daysOfClass(dia, msg){                
+        if(!(dia == "3° e 5°")|| !(dia == "2°, 4° e 6°") || !(dia == "2° e 4°") || !(dia == "2° e 6°") || !(dia == "4° e 6°") || !(dia=="3°, 5° e 6°")) {
+            throw msg
+        }
+    }
+    return { existsOrError, notExistsOrError, equalsOrError, typeUser, typeAddress, TestaCPF, daysOfClass}
 }

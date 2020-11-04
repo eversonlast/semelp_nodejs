@@ -90,7 +90,13 @@ export default {
             await axios[method](url, this.modality)
                 .then(()=>{
                     this.$toasted.success('Salvo com sucesso!')
-                    this.modality = {}
+                    if(method == 'put'){
+                        this.$router.push({
+                            name: 'modalityList'
+                        })
+                    }else{
+                        this.modality = {}
+                    }
                 })
                 .catch(showError)
         },
@@ -99,11 +105,23 @@ export default {
             this.$router.push({
                 name: 'home'
             })
+        },
+        async loadModality(){
+            if(this.$route.params.id){
+                this.loadUser()
+                this.stateButton = 'f'
+                const url = `${baseApiUrl}/modality/${this.$route.params.id}`
+                await axios.get(url)
+                    .then(res=>{
+                        this.modality = res.data
+                    })
+            }
         }
 
     },
     mounted(){
         this.getResponsabilitiesModality()
+        this.loadModality()
     }
 }
 </script>

@@ -85,4 +85,13 @@ module.exports = app =>{
         .all(app.config.passport.authenticate())
         .get(app.api.modality.getResponsability)
     
-    }
+    app.route('/class')
+        .all(app.config.passport.authenticate())
+        .post(admin(app.api.class.save))
+        .get(app.api.class.getAll)
+
+    app.route('/class/:id')
+        .all(app.config.passport.authenticate())
+        .put(admin(app.api.class.save))
+        .delete(admin(app.api.class.remove))
+}

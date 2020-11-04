@@ -16,6 +16,7 @@ import SportCenterList from '../components/sportCenter/SportCenterList'
 import ManagerSportCenter from '../components/sportCenter/ManagerSportCenter'
 import RegisterModalities from '../components/modalities/RegisterModalities'
 import ModalityList from '../components/modalities/ModalityList'
+import ManagerModality from '../components/modalities/ManagerModality'
 
 import { userKey, baseApiUrl } from './global'
 import axios from 'axios'
@@ -83,6 +84,10 @@ const routes = [{
     name: 'modalityList',
     path: '/modalityList',
     component: ModalityList
+},{
+    name: 'managerModality',
+    path: '/managerModality/:id',
+    component: ManagerModality
 }]
 
 const router = new VueRouter({
