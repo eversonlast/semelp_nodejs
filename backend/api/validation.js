@@ -65,8 +65,10 @@ module.exports = app =>{
             return true;
     }
 
-    function daysOfClass(dia, msg){                
-        if(!(dia == "3° e 5°")|| !(dia == "2°, 4° e 6°") || !(dia == "2° e 4°") || !(dia == "2° e 6°") || !(dia == "4° e 6°") || !(dia=="3°, 5° e 6°")) {
+    function daysOfClass(dia, msg){      
+        
+        valueA = dia == "3° e 5°"  ||  dia == "2°, 4° e 6°" || dia == "2° e 6°" || (dia == "4° e 6°") || dia=="3°, 5° e 6°" || dia == "2° e 4°"        
+        if(!valueA) {
             throw msg
         }
     }

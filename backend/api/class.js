@@ -14,6 +14,10 @@ module.exports = app =>{
             existsOrError(classes.idModality, 'Por favor, informe o ID da Modality da Turma.')
 
             daysOfClass(classes.dias, 'Por favor, digite dias válidos de turma.')
+            
+            
+            // const verification = await app.db('modalities')
+            //                             .right
 
             const sportCenterInModality = await app.db('classes')
                     .where({idSportCenter: classes.idSportCenter})
