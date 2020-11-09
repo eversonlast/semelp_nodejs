@@ -12,20 +12,26 @@ module.exports = app =>{
             existsOrError(classes.idProfessorResponsability, 'Por favor, informe o ID do Professor da turma.')
             existsOrError(classes.idSportCenter, 'Por favor, informe o ID do Centro Esportivo.')
             existsOrError(classes.idModality, 'Por favor, informe o ID da Modality da Turma.')
+            existsOrError(classes.faixaEtaria, 'Por favor, informe a faixa etária da turma.')
 
             daysOfClass(classes.dias, 'Por favor, digite dias válidos de turma.')
             
             
-            // const verification = await app.db('modalities')
-            //                             .right
+            const verification = await app.db('modalities')
+                                        .select('departamento')
+                                        .where({id: classes.idModality})           
 
             const sportCenterInModality = await app.db('classes')
                     .where({idSportCenter: classes.idSportCenter})
                     .where({idModality: classes.idModality})
+                    .where({faixaEtaria: classes.faixaEtaria})
                     .first()
 
-            if(sportCenterInModality){
-                notExistsOrError(sportCenterInModality, 'A modalidade já está cadastrada no Centro Esportivo')
+
+            if(verification[0].departamento == 'esporte'){
+                if(sportCenterInModality){
+                    notExistsOrError(sportCenterInModality, 'A modalidade já está cadastrada no Centro Esportivo')
+                }
             }
         }catch(msg){
             return res.status(400).send(msg)

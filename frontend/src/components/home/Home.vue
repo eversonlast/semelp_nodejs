@@ -7,10 +7,13 @@
         <div class="stats">
             <Stat title="Usuários" :value="stat.users" icon="fa fa-user" color="#3282cd" v-if="user.tipoUsuario == 'admin'" />
             <Stat title="Modalidades" :value="stat.modalities" icon="icofont-volleyball-alt" color="#3bc480" v-if="user.tipoUsuario == 'admin'" />
+            <Stat title="Turmas" :value="stat.classes" icon="icofont-group-students" color="#52057B" v-if="user.tipoUsuario == 'admin'" />
             <Stat title="Usuários" :value="stat.users" icon="fa fa-user" color="#3282cd" v-if="user.tipoUsuario == 'secre'" />
             <Stat title="Modalidades" :value="stat.modalities" icon="icofont-volleyball-alt" color="#3bc480" v-if="user.tipoUsuario == 'secre'" />
+            <Stat title="Turmas" :value="stat.classes" icon="icofont-group-students" color="#52057B" v-if="user.tipoUsuario == 'secre'" />
             <Stat title="Usuários" :value="stat.users" icon="fa fa-user" color="#3282cd" v-if="user.tipoUsuario == 'prof'" />
             <Stat title="Modalidades" :value="stat.modalities" icon="icofont-volleyball-alt" color="#3bc480" v-if="user.tipoUsuario == 'prof'" />
+            <Stat title="Turmas" :value="stat.classes" icon="icofont-group-students" color="#52057B" v-if="user.tipoUsuario == 'prof'" />
             <HomeUser v-if="user.tipoUsuario==='user'"/>
         </div>
     </div>
