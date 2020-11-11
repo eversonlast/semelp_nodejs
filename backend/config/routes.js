@@ -94,4 +94,9 @@ module.exports = app =>{
         .all(app.config.passport.authenticate())
         .put(admin(app.api.class.save))
         .delete(admin(app.api.class.remove))
+
+    app.route('/classUser')
+        .all(app.config.passport.authenticate())
+        .post(app.api.classUser.save)
+        .get(app.api.class.getAll)
 }

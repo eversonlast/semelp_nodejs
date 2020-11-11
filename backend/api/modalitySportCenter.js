@@ -82,5 +82,5 @@ module.exports = app =>{
         }
     }
 
-    return { save, remove, getSportCenter, getModality }
+    return { save, remove, getSportCenter, getModality, getID }
 }
