@@ -61,7 +61,7 @@ module.exports = app =>{
                     .where({id: req.params.id}).del()
             existsOrError(rowsDeleted, "Centro Esportivo não cadastrado.")
             
-            res.status(200).send({success: "Deletado com sucesso"})
+            res.status(200).send("Deletado com sucesso")
         }catch(e){
             res.status(500).send(e)
         }

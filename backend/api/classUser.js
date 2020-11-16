@@ -57,12 +57,35 @@ module.exports = app=>{
    }
 
    const getByIDClass = async(req, res)=>{
-       const idClass = {... req.params.id}
-        await app.db.raw(`select "nomeModalidade", dias, horarios, nome, classes.id from classes
-                        inner join "sportsCenters" as spt on spt.id = (select "idSportCenter" from classes where classes.id = ${idClass})
-                        inner join modalities as m on m.id = (select "idModality" from classes where classes.id = ${idClass})
-                        where classes.id = ${idClass}`)
+        const idClass = req.params.id
+        const id = parseInt(idClass)
+        await app.db.raw(`select nome, "idUser" from "classesUsers" as turma
+                        inner join users as u on u.id = turma."idUser"  
+                        where "idClass"= ${id}`)
+                    .then(classUser=>res.json(classUser.rows))
+                    .catch(err=>res.status(500).send(err))
    }
 
-    return { save, remove, getAll, getByIDClass }
+   const getByIdUser = async(req, res)=>{
+       const idUser = req.params.id
+       await app.db.raw(`select u.nome, "nomeModalidade" as "Nome da Modalidade", spt.nome as local, dias, horarios as "horários" from "classesUsers" as turma                                            
+                        inner join users as u on u.id = turma."idUser"  
+                        inner join classes as c on c.id = turma."idClass"
+                        inner join modalities as m on m.id = c."idModality"
+                        inner join                                          
+                        "sportsCenters" as spt on spt.id = c."idSportCenter"
+                        where "idUser" = ${idUser}`)
+                    .then(userClass=>res.json(userClass.rows))
+                    .catch(err=>res.status(500).send(err))
+   }
+
+    return { save, remove, getAll, getByIDClass, getByIdUser }
 }
+
+
+
+// select u.nome as "Aluno(a)","nomeModalidade", dias, horarios, spt.nome as local from classes
+//                         inner join "sportsCenters" as spt on spt.id = (select "idSportCenter" from classes where classes.id = (select "idClass" from "classesUsers" where id=${req.params.id}))                                                                                
+//                         inner join modalities as m on m.id = (select "idModality" from classes where classes.id = (select "idClass" from "classesUsers" where id=${req.params.id}))
+//                         inner join users as u on u.id = (select "idUser" from "classesUsers" where id = ${id})
+//                         where classes.id = (select "idClass" from "classesUsers" where id = ${id})

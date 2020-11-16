@@ -48,14 +48,14 @@ module.exports = app =>{
 
     const remove = async(req, res)=>{
         try{
-            existsOrError(req.params.id, "Por favor, informe o id")
-
-            const rowsDeleted = app.db('modalities')
-                .where({id: req.params.id})
-                .del()
-            existsOrError(rowsDeleted, "A modalidade não Cadastrada")
-
-            res.status(200).send({success: "Deletado com sucesso"})
+            const rowsDeleted = await app.db('modalities')
+                .where({id: req.params.id}).del()
+            try{
+                existsOrError(rowsDeleted, "A modalidade não Cadastrada")
+            }catch(e){
+                return res.status(400).send(e)
+            }
+            return res.status(200).send("Deletado com sucesso")
         }catch(msg){
             res.status(500).send(msg)
         }
