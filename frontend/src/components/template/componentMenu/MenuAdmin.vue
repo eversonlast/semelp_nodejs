@@ -27,6 +27,9 @@ export default {
                 {text: 'Centro Esportivo', children:[
                     {text: 'Cadastrar Centro Esportivo'},
                     {text: 'Gerenciar Centros Esportivos'}
+                ]},
+                {text: 'Turma', children:[
+                    {text: 'Cadastrar Turma'}
                 ]}
             ]
         }
@@ -76,6 +79,12 @@ export default {
             if(node.text == 'Gerenciar Modalidade'){
                 this.$router.push({
                     name: 'modalityList'
+                })
+            }
+
+            if(node.text == 'Cadastrar Turma'){
+                this.$router.push({
+                    name: 'registerClass'
                 })
             }
         }

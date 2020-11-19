@@ -1,0 +1,20 @@
+[
+  
+    {
+        "value": "manha",
+        "text": "Manhã"
+    },
+    {
+        "value": "tarde",
+        "text": "Tarde"        
+    },
+    {
+        "value": "noite",
+        "text": "Noite"
+    },
+    {
+        "value": "digite",
+        "text": "Digitar um horário"
+    }
+
+]
