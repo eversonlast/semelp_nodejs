@@ -49,21 +49,22 @@
                         <label for="faixaEtaria">Faixa Etária</label>
                         <div>
                             <input type="text" id="faixaEtaria" name="faixaEtaria" 
-                            class="form-control col-md-12" v-model="turma.faixaEtaria">
+                            class="form-control col-md-12" v-model="turma.faixaEtaria" >
                         </div>
                     </div>
                 </div>
             </div>
             <div class="card-body button">
-                <b-button variant="primary" class="mr-2" @click="loadControle" v-b-modal.modalRegisterClass>Salvar</b-button>
+                <b-button variant="primary" class="mr-2" v-on:click="loadControle" v-b-modal.modalRegisterClass>Salvar</b-button>
                 <b-button variant="outline-danger" class="mr-2">Cancelar</b-button>
             </div>
             <div>
-                <b-modal id="modalRegisterClass" title="Confirmação de Dados">
+                <b-modal id="modalRegisterClass" title="Confirmação de Dados" @ok="saveClasses">
                     Dias da Turma: {{turma.dias}} <br>
                     Horário: {{turma.horarios}}<br>
-                    Professor Responsável:  {{teste.nameResponsable}}
-                    
+                    Professor Responsável:  {{turma.idProfessorResponsability}} - {{nomeProfessor}} <br>
+                    Centro Esportivo: {{turma.idSportCenter}} - {{nomeCentroEsportivo}} <br>
+                    Modalidade: {{turma.idModalidade }} - {{nomeModalidade}}        
                 </b-modal>
             </div>
         </div>
@@ -93,7 +94,9 @@ export default {
             teacherResponsable: [],
             sportCenter: [],
             modalities: [],
-            teste: {}
+            nomeProfessor: '',
+            nomeCentroEsportivo: '',
+            nomeModalidade: ''
         }
     },
     methods: {
@@ -167,8 +170,22 @@ export default {
         },
         loadControle(){
            var selectNomeResponsavel = document.getElementById('idProfessorResponsability')
-           this.teste.nameResponsable = selectNomeResponsavel.options[selectNomeResponsavel.selectedIndex].text
-            
+           this.nomeProfessor = selectNomeResponsavel.options[selectNomeResponsavel.selectedIndex].text
+           var selectCentroEsportivo = document.getElementById('idSportCenter')
+           this.nomeCentroEsportivo = selectCentroEsportivo.options[selectCentroEsportivo.selectedIndex].text
+           var selectModalidade = document.getElementById('idModalidade')
+           this.nomeModalidade = selectModalidade.options[selectModalidade.selectedIndex].text
+        },
+        async saveClasses(){
+            const id = this.$route.params.id ? `/${this.$route.params.id}` : ''
+            const url = `${baseApiUrl}/class${id}`
+            const method = this.$route.params.id ? 'put' : 'post'
+            await axios[method](url, this.turma)
+                        .then(()=>{
+                            this.$toasted.success('Cadastrado com sucesso')
+                            this.turma = {}
+                        })
+                        .catch(showError)
         }
     },
     mounted(){
