@@ -92,6 +92,7 @@ module.exports = app =>{
 
     app.route('/class/:id')
         .all(app.config.passport.authenticate())
+        .get(app.api.class.getById)
         .put(admin(app.api.class.save))
         .delete(admin(app.api.class.remove))
 

@@ -29,7 +29,8 @@ export default {
                     {text: 'Gerenciar Centros Esportivos'}
                 ]},
                 {text: 'Turma', children:[
-                    {text: 'Cadastrar Turma'}
+                    {text: 'Cadastrar Turma'},
+                    {text: 'Lista de Turma'}
                 ]}
             ]
         }
@@ -87,6 +88,13 @@ export default {
                     name: 'registerClass'
                 })
             }
+
+            if(node.text == 'Lista de Turma'){
+                this.$router.push({
+                    name: 'managerClass'
+                })
+            }
+            
         }
     },
     mounted(){

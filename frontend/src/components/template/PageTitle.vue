@@ -2,7 +2,7 @@
     <div class="page-title">
         <h1>
             <i v-if="icon" :class="icon"></i>
-            {{ main }}
+            {{ main }} {{idade}} {{divisorMain}} {{dias}} {{divisorTurma}} {{horarios}}
         </h1>
         <h2>
             {{ sub }} {{ divisor }}  {{ responsability }}
@@ -14,7 +14,7 @@
 <script>
 export default {
     name: 'PageTitle',
-    props: ['icon', 'main', 'sub', 'responsability', 'divisor']
+    props: ['icon', 'main', 'sub', 'responsability', 'divisor', 'dias', 'horarios', 'divisorMain', 'divisorTurma', 'idade']
 }
 </script>
 

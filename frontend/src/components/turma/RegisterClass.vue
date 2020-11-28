@@ -55,8 +55,9 @@
                 </div>
             </div>
             <div class="card-body button">
-                <b-button variant="primary" class="mr-2" v-on:click="loadControle" v-b-modal.modalRegisterClass>Salvar</b-button>
-                <b-button variant="outline-danger" class="mr-2">Cancelar</b-button>
+                <b-button variant="primary" class="mr-2" v-on:click="loadControle" v-b-modal.modalRegisterClass v-if="controleButton">Salvar</b-button>
+                 <b-button variant="primary" class="mr-2" v-on:click="loadControle" v-b-modal.modalRegisterClass v-else>Atualizar</b-button>
+                <b-button variant="outline-danger" class="mr-2" @click="buttonReset">Cancelar</b-button>
             </div>
             <div>
                 <b-modal id="modalRegisterClass" title="Confirmação de Dados" @ok="saveClasses">
@@ -96,7 +97,8 @@ export default {
             modalities: [],
             nomeProfessor: '',
             nomeCentroEsportivo: '',
-            nomeModalidade: ''
+            nomeModalidade: '',
+            controleButton: true
         }
     },
     methods: {
@@ -186,6 +188,29 @@ export default {
                             this.turma = {}
                         })
                         .catch(showError)
+        },
+        buttonReset(){
+            this.turma = {}
+            this.loadDaysClass()
+            this.loadPeriodo()
+            this.loadResponsability()
+            this.loadSportCenter()
+            this.modalities = []
+            this.$router.push({
+                name: 'home'
+            })
+        },
+        async loadClass(){
+            if(this.$route.params.id){
+                this.loadUser()
+                this.controleButton = false
+                const url = `${baseApiUrl}/class/${this.$route.params.id}`
+                await axios.get(url)
+                        .then(res=> this.turma = res.data)
+                        .catch(showError)
+            }else{
+                return
+            }
         }
     },
     mounted(){
@@ -193,6 +218,7 @@ export default {
         this.loadPeriodo()
         this.loadResponsability()
         this.loadSportCenter()
+        this.loadClass()
     }
 }
 </script>

@@ -7,7 +7,7 @@ module.exports = app=>{
 
         async function run(){
             const sentMailer = await transporter.sendMail({
-                from: "noreply@gmail.com",
+                from: "apinodesemelp@gmail.com",
                 to:[email],
                 subject: "Nova Senha",
                 text: "Utilize este códgio de verificação: " + token

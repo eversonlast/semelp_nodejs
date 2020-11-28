@@ -1,17 +1,17 @@
 <template>
     <div class="admin-user">
         <b-form-input id="type-text" type="text" v-model="search" placeholder="Buscar o nome ou CPF" class="my-2"></b-form-input>
-          <b-table hover striped :items="resutaldoBusca" :fields="fields" class="table-responsive-md">
+          <b-table hover striped stacked="md" :items="resutaldoBusca" :fields="fields" class="table-responsive-md">
             <template slot="cell(actions)" slot-scope="data" class="acoes"> 
                 <a href @click.prevent="update(data.item)">
-                    <b-button variant="warning" class="mr-2">
+                    <b-button variant="warning" class="mr-1">
                         <i class="fa fa-pencil" ></i>
                     </b-button>                      
                 </a>                
-                <b-button variant="danger" class="mr-2" @click="loadUser(data.item)" v-b-modal.modal-3>
+                <b-button variant="danger" class="mr-1 mt-1" @click="loadUser(data.item)" v-b-modal.modal-3>
                     <i class="fa fa-trash"></i>
                 </b-button>
-                <b-button variant="danger"  @click="loadUser(data.item)" v-b-modal.modal-changeUser v-if="getTypeUser.tipoUsuario == 'admin'" >
+                <b-button variant="outline-danger"  class="my-1" @click="loadUser(data.item)" v-b-modal.modal-changeUser v-if="getTypeUser.tipoUsuario == 'admin'" >
                     <i class="fa fa-id-badge"></i>
                 </b-button>
             </template>

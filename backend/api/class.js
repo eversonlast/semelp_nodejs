@@ -55,16 +55,24 @@ module.exports = app =>{
     const getAll = async(req, res)=>{
         const page = req.query.page || 1
         const result = await app.db('classes').count('id').first()
-    const count = parseInt(result.count)
-        await app.db('classes')
+        const count = parseInt(result.count)
+        await app.db('classes as c')
+                .join('users as u', 'u.id', 'c.idProfessorResponsability')
+                .join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')
+                .join('modalities as m', 'm.id', 'c.idModality')
+                .select('c.id', 'dias', 'horarios', 'faixaEtaria', 'u.nome as nomeProfessor', 'spt.nome as centroEsportivo', 'm.nomeModalidade')
                 .limit(limit).offset(page*limit-limit)
                 .then(classes=>res.json({data: classes, count, limit}))
                 .catch(err=>res.status(500).send(err))
     }
 
     const getById = async(req, res)=>{
-        await app.db('classes')
-                .where({id: req.params.id})
+        await app.db('classes as c')
+                .join('users as u', 'u.id', 'c.idProfessorResponsability')
+                .join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')
+                .join('modalities as m', 'm.id', 'c.idModality')
+                .select('c.id', 'dias', 'horarios', 'faixaEtaria', 'u.nome as nomeProfessor', 'spt.nome as centroEsportivo', 'm.nomeModalidade')
+                .where({'c.id': req.params.id})
                 .first()
                 .then(classes=>res.json(classes))
                 .catch(err=>res.status(500).send(err))
