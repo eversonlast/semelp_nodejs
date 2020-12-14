@@ -7,7 +7,7 @@ module.exports = app=>{
         try{
             existsOrError(classUser.idUser, 'Por favor, informe o ID do Usuário.')
             existsOrError(classUser.idClass, 'Por favor, informe o ID da Turma.')
-        }catch(ms){
+        }catch(msg){
             return res.status(500).send(msg)
         }
 

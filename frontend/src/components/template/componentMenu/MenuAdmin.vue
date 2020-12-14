@@ -31,7 +31,8 @@ export default {
                 {text: 'Turma', children:[
                     {text: 'Cadastrar Turma'},
                     {text: 'Lista de Turma'}
-                ]}
+                ]},
+                {text: 'Fazer Matrícula'}
             ]
         }
     },
@@ -92,6 +93,12 @@ export default {
             if(node.text == 'Lista de Turma'){
                 this.$router.push({
                     name: 'managerClass'
+                })
+            }
+
+            if(node.text == 'Fazer Matrícula'){
+                this.$router.push({
+                    name: 'registerUserClass'
                 })
             }
             

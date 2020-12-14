@@ -1,0 +1,198 @@
+<template>
+    <div>
+        <PageTitle main="Matrícula de Alunos" sub="Por favor, escolha um aluno e uma turma." icon="icofont-win-trophy"/>
+        <b-form>
+            <div class="login-card card">
+                <input type="hidden" class="userClassID" v-model="userClass.id">
+                <div class="card-header">
+                    Dados para Matrícula
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-12 mt-1">
+                            <label for="turma">Escolha a turma</label>
+                            <input type="text" v-model="search" class="form-control mb-1 maiscula" 
+                            id="turma" placeholder="Digite uma turma" v-b-popover.hover.top="'Digite uma turma'"/>
+                            <b-form-select v-model="userClass.idClass" 
+                            :options="resultClass" :select-size="4" id="teste"
+                            v-on:change="clicar" v-b-popover.hover.top="'Escolha uma opçãode turma'">></b-form-select>
+                        </div>
+                        <div class="form-group col-md-12 mt-1">
+                            <label for="user">Escolha um Usuário</label>
+                            <input type="text" class="form-control mb-1 maiscula" v-model="searchUser"
+                            v-b-popover.hover.top="'Digite o nome do usuário'" placeholder="Digite o nome de uma usuário"/>
+                            <b-form-select v-model="userClass.idUser"
+                            :options="resultUser" :select-size="4"
+                            v-b-popover.hover.top="'Escolha uma opção de usuário'" id='userInput'></b-form-select>
+                            <b-form-checkbox class="mt-2" id="checkbox-1"
+                            v-model="userClass.activeClass" value="Ativo" unchecked-value="Desativado">Ativar o aluno</b-form-checkbox>
+                            <div>Estado da matrícula do Aluno: <span :class="corDaLetra">{{userClass.activeClass}}</span></div>
+                        </div>
+                        <div class="form-group col-md-12 mt-1 divButton" >
+                            <b-button variant="primary" class="buttonSalvar mx-1"
+                            v-b-popover.hover.top="'Clique para matricular o usuário na turma'"
+                            v-if="controleButtonSaveUpdate" @click="loadControle" 
+                            v-b-modal.modalRegisterClassUser>Matricular</b-button>
+                            <b-button variant="success" class="buttonSalvar mx-1"
+                            v-b-popover.hover.top="'Clique para modificar ou atualizar o aluno'"
+                            v-else @click="loadControle" 
+                            v-b-modal.modalRegisterClassUser>Atualizar a Matrícula</b-button>
+                            <b-button variant="outline-danger" class="buttonCancelar"
+                            v-b-popover.hover.top="'Clique para Cancelar a Matrícula'" @click='cancelButton'>Cancelar</b-button>
+                        </div>
+                        <div>
+                            <b-modal id="modalRegisterClassUser" title="Confirmação de Matrícula" @ok="registerClassUser">
+                                Turma: {{userClass.idClass}} - {{selectTurma}}<br>
+                                Aluno: {{userClass.idUser}} - {{selectUser}} 
+                            </b-modal>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </b-form>
+    </div>
+</template>
+
+<script>
+import PageTitle from '../template/PageTitle'
+import axios from 'axios' 
+import { userKey, baseApiUrl, showError} from '@/config/global'
+export default {
+    name: 'RegisterUserClasses',
+    components: {PageTitle},
+    data: function(){
+        return {
+            userClass: {},
+            turmas: [],
+            users: [],
+            searchUser: '',
+            search: '',
+            anoMinino: 0,
+            anoMaximo: 0,
+            selectTurma: '',
+            selectUser: '',
+            controleButtonSaveUpdate: this.$route.params.id ? false : true,
+        }
+    },
+    methods: {
+        async loadUserSelect(){
+            this.loadUser()
+            const url = `${baseApiUrl}/users`
+            await axios.get(url)
+                .then(res=>{
+                    this.users = res.data.data.filter(user=>{                        
+                            return user.dataNasc.substring(6) > this.anoMinino && user.dataNasc.substring(6) < this.anoMaximo                        
+                    })
+                    .map(option=>{
+                        return {value: option.id, text: (option.nome).toUpperCase()}
+                    })
+                })
+                .catch(showError)
+        },
+        async loadUser(){
+            const json = localStorage.getItem(userKey)
+            const userData = JSON.parse(json)
+            await this.$store.commit('setUser', userData)
+        },
+        async loadClass(){
+            this.loadUser()
+            const url = `${baseApiUrl}/class`
+            await axios.get(url)
+                .then(res=>{
+                    this.turmas = res.data.data.map(option=>{
+                        return {value: option.id, text: (`${option.nomeModalidade} - ${option.dias} - ${option.horarios} -  ${option.centroEsportivo} | ${option.faixaEtaria}`).toUpperCase()}
+                    })
+                })
+        },
+        clicar(){
+            var select = document.getElementById('teste')
+            var option = select.children[select.selectedIndex]
+            var texto = option.textContent
+            var valor = ''
+            var valorMaximo = 0
+            var data = new Date()
+
+            if(texto.toLowerCase() == 'acima de 60 anos' || texto.toLowerCase() == 'idoso'){
+                valorMaximo = 60
+                this.anoMinimo = data.getFullYear() - valorMaximo
+                this.anoMaximo = 1900
+            }else{
+                valor = texto.substring(texto.indexOf("|") + 1)
+                var valorMinino = valor.substring(0, valor.indexOf("À"))
+                valorMaximo = valor.substring(valor.indexOf("À") + 1, valor.indexOf("A"))
+                this.anoMinino = data.getFullYear() - valorMaximo
+                this.anoMaximo = data.getFullYear() - valorMinino
+            }
+            this.loadUserSelect()
+        },
+        async registerClassUser(){
+            const url = `${baseApiUrl}/classUser`
+            this.loadUser()
+            const methods = this.$route.params.id ? 'put' : 'post'
+            await axios[methods](url, this.userClass)
+                    .then(()=>{
+                        this.$toasted.success('O usuário matriculado com sucesso')
+                        this.userClass = {}
+                    })
+                    .catch(showError)
+        }, 
+        loadControle(){
+            var select = document.getElementById('teste')
+            this.selectTurma = select.options[select.selectedIndex].text
+            select = document.getElementById('userInput')
+            this.selectUser = select.options[select.selectedIndex].text
+        },
+        cancelButton(){
+            this.userClass = {}
+            this.selectUser = ''
+            this.selectTurma = ''
+        }
+    },
+    mounted(){
+        this.loadClass()
+    },
+    computed: {
+        resultClass(){
+            if(this.searchClass == '' || this.searchClass == ' '){
+                return this.turmas
+            }else{
+               return this.turmas.filter(turma=>{
+                   return   turma.text.match(this.search.toUpperCase())
+                        
+                })
+               
+            }
+        },
+        resultUser(){
+            if(this.searchUser == '' || this.searchUser == ' '){
+                return this.users
+            }else{
+                return this.users.filter(user=>{
+                    return user.text.match(this.searchUser.toUpperCase())
+                })
+            }
+        },
+        corDaLetra(){
+            return this.userClass.activeClass == "Ativo" ? 'verde' : 'vermelho'
+        }
+    }
+
+}
+</script>
+
+<style>
+
+.divButton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.verde{
+    color: green;
+}
+
+.vermelho{
+    color: red;
+}
+</style>

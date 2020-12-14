@@ -17,7 +17,7 @@
             <router-link to="/admin" v-if="user.tipoUsuario == 'prof'">
                 <i class="fa fa-cogs" ></i>Administrador
             </router-link>
-            <a href @click.prevent="logout"><i class="fa fa-sign-out"></i>Sair</a>
+            <a href @click="logout"><i class="fa fa-sign-out"></i>Sair</a>
         </div>
     </div>
 </template>

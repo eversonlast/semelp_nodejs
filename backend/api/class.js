@@ -60,7 +60,7 @@ module.exports = app =>{
                 .join('users as u', 'u.id', 'c.idProfessorResponsability')
                 .join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')
                 .join('modalities as m', 'm.id', 'c.idModality')
-                .select('c.id', 'dias', 'horarios', 'faixaEtaria', 'u.nome as nomeProfessor', 'spt.nome as centroEsportivo', 'm.nomeModalidade')
+                .select('c.id', 'dias', 'horarios', 'faixaEtaria', 'u.nome as nomeProfessor', 'spt.nome as centroEsportivo', 'm.nomeModalidade', 'maxLackMounth as maximoFaltasMes')
                 .limit(limit).offset(page*limit-limit)
                 .then(classes=>res.json({data: classes, count, limit}))
                 .catch(err=>res.status(500).send(err))

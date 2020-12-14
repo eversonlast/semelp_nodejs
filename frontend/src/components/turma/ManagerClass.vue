@@ -33,6 +33,7 @@ import axios from 'axios'
 import { userKey, baseApiUrl } from '@/config/global'
 import PageTitle from '../template/PageTitle'
 
+
 export default {
     name: 'ManagerClass',
     components: {PageTitle},
@@ -51,6 +52,7 @@ export default {
                 {key: 'nomeProfessor', label: 'Nome do Professor'},
                 {key: 'centroEsportivo', label: 'Centro Esportivo'},
                 {key: 'nomeModalidade', label: 'Modalidade'},
+                {key: 'maximoFaltasMes', label: 'Máximo de Faltas por Mês'},
                 {key: 'actions', label: 'Ações'}
             ],
             search: ''
@@ -87,6 +89,7 @@ export default {
                             this.$toasted.success('Deletado com sucesso')
                         })
             this.loadClasses()
+            
         }
     },
     mounted(){

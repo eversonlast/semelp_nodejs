@@ -10,25 +10,28 @@
                 <div class="form-row">
                     <div class="form-group col-md-12 mt-1">
                         <label for="diasTurma">Dias da Turma</label>
-                        <b-form-select v-model="turma.dias" :options="diasDaTurma"></b-form-select>
+                        <b-form-select v-model="turma.dias" :options="diasDaTurma"
+                        v-b-popover.hover.top="'Escolha uma opção.'"></b-form-select>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-12 mt-1">
                         <label for="horarios">Horário da Turma</label>
                         <div>
-                            <b-form-select  class="form-group col-md-4" id="periodo" v-on:change="escolherHorario" v-model="controle.value" :options="optionHorarios" ></b-form-select>
-                            <b-form-select v-model="turma.horarios" :options="horarios" id="horarios" name="horarios" class="form-group col-md-7 mx-md-1" v-if="statusDigite==false"></b-form-select>
+                            <b-form-select  class="form-group col-md-4" id="periodo" v-on:change="escolherHorario" v-model="controle.value" :options="optionHorarios" 
+                            v-b-popover.hover.top="'Escolha uma opção.'"></b-form-select>
+                            <b-form-select v-model="turma.horarios" :options="horarios" id="horarios" name="horarios" class="form-group col-md-7 mx-md-1" v-if="statusDigite==false"
+                            v-b-popover.hover.top="'Escolha uma opção.'"></b-form-select>
                             <input type="text" id="horarios" name="horarios" 
-                            class="form-control col-md-12" v-model="turma.horarios" v-else>
+                            class="form-control col-md-12" v-model="turma.horarios" v-else
+                            v-b-popover.hover.top="'Digite uma opção, com formato 00hs00min'">
                         </div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <label for="teacherResponsability">Professor Responsável pela Turma</label>
-                        <b-form-select id="idProfessorResponsability"
-                        
+                        <b-form-select id="idProfessorResponsability"                        
                          :options="teacherResponsable"  v-model="turma.idProfessorResponsability"></b-form-select>
                     </div>
                 </div>
@@ -45,11 +48,18 @@
                     </div>
                 </div>
                  <div class="form-row">
-                    <div class="form-group col-md-12 mt-1">
+                    <div class="form-group col-md-6 mt-1">
                         <label for="faixaEtaria">Faixa Etária</label>
                         <div>
                             <input type="text" id="faixaEtaria" name="faixaEtaria" 
-                            class="form-control col-md-12" v-model="turma.faixaEtaria" >
+                            class="form-control" v-model="turma.faixaEtaria" >
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6 mt-1">
+                        <label for="faixaEtaria">Máximo de Faltas por Mês que a Turma permite</label>
+                        <div>
+                            <input type="text" id="faixaEtaria" name="faixaEtaria" 
+                            class="form-control " v-model="turma.maximoFaltasMes" >
                         </div>
                     </div>
                 </div>
