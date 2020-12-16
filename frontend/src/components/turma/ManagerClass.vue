@@ -5,7 +5,7 @@
     <b-form-input type="text" id="turma" class="my-2" v-model="search" placeholder="Por favor, digite a turma que queira digitar..."></b-form-input>
     <b-table striped hover :fields="fields"  :items="resultadoPesquisa" class="my-2">
         <template slot="cell(actions)" slot-scope="data" >
-            <b-button variant="warning" @click="updateButton(data.item)" class="update-button my-1"
+            <b-button variant="warning" @click="updateButton(data.item)" class="update-button my-1 ml-1"
             v-b-popover.hover.top="'Update'">
                 <i class="fa fa-pencil"></i>
             </b-button>
@@ -13,6 +13,11 @@
             v-b-popover.hover.top="'Delete'"
             v-b-modal.remove>
                 <i class="fa fa-trash "></i>
+            </b-button>
+            <b-button variant="success" @click="loadTurma(data.item)" class="ml-1"
+            v-b-popover.hover.top="'Ver Turma'"
+            >
+                <i class="icofont-eye"></i>                
             </b-button>
         </template>
     </b-table>
@@ -32,7 +37,6 @@
 import axios from 'axios'
 import { userKey, baseApiUrl } from '@/config/global'
 import PageTitle from '../template/PageTitle'
-
 
 export default {
     name: 'ManagerClass',
@@ -90,6 +94,15 @@ export default {
                         })
             this.loadClasses()
             
+        },
+        loadTurma(turma){
+            const nome = turma.nomeModalidade
+            const local = turma.centroEsportivo
+            const dias = turma.dias
+            const horarios = turma.horarios
+            this.$router.push({
+                path: `/classByUsers/${turma.id}?nomeModalidade=${nome}&local=${local}&dias=${dias}&horarios=${horarios}`
+            })
         }
     },
     mounted(){

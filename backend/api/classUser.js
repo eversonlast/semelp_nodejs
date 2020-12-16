@@ -57,12 +57,18 @@ module.exports = app=>{
    }
 
    const getByIDClass = async(req, res)=>{
+        const page = req.query.page || 1
         const idClass = req.params.id
+        const result = await app.db('classesUsers').count('id').first().where({idClass: idClass})
         const id = parseInt(idClass)
-        await app.db.raw(`select nome, "idUser" from "classesUsers" as turma
-                        inner join users as u on u.id = turma."idUser"  
-                        where "idClass"= ${id}`)
-                    .then(classUser=>res.json(classUser.rows))
+        const count = parseInt(result.count)
+        await app.db('classesUsers as turma')
+                    .join('users as u', 'u.id', 'turma.idUser')
+                    .select('u.nome', 'idUser', 'quantidadesDeFalta')
+                    .where({idClass: id})
+                    .andWhere({activeClass: true})
+                    .limit(limit).offset(page*limit-limit)
+                    .then(classUser=>res.json({data: classUser, count, limit}))
                     .catch(err=>res.status(500).send(err))
    }
 
@@ -72,14 +78,33 @@ module.exports = app=>{
                         inner join users as u on u.id = turma."idUser"  
                         inner join classes as c on c.id = turma."idClass"
                         inner join modalities as m on m.id = c."idModality"
-                        inner join                                          
+                        inner join                                 
                         "sportsCenters" as spt on spt.id = c."idSportCenter"
                         where "idUser" = ${idUser}`)
                     .then(userClass=>res.json(userClass.rows))
                     .catch(err=>res.status(500).send(err))
    }
 
-    return { save, remove, getAll, getByIDClass, getByIdUser }
+   const lackByMounth =  app.mongoose.model('lackByMounth',{
+       idUser: Number,
+       ano: Number,
+       mes: String,
+       dias: Array
+   })
+
+   const saveLack = async (req, res)=>{
+       var lack = new lackByMounth({... req.body})
+       await lack.save()
+            .then(lack=>res.json(lack))
+   }
+
+   const getByIdUserLack = async(req, res)=>{
+        var idUser = req.params.id
+        await lackByMounth.find({idUser: idUser})
+            .then(userLacks=>res.json(userLacks))
+   }
+
+    return { save, remove, getAll, getByIDClass, getByIdUser, saveLack, getByIdUserLack}
 }
 
 

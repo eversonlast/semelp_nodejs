@@ -25,8 +25,8 @@
                             :options="resultUser" :select-size="4"
                             v-b-popover.hover.top="'Escolha uma opção de usuário'" id='userInput'></b-form-select>
                             <b-form-checkbox class="mt-2" id="checkbox-1"
-                            v-model="userClass.activeClass" value="Ativo" unchecked-value="Desativado">Ativar o aluno</b-form-checkbox>
-                            <div>Estado da matrícula do Aluno: <span :class="corDaLetra">{{userClass.activeClass}}</span></div>
+                            v-model="userClass.activeClass">Ativar o aluno</b-form-checkbox>
+                            <div>Estado da matrícula do Aluno: <span :class="corDaLetra">{{userClass.activeClass == true ? "Ativo" : "Desativo"}}</span></div>
                         </div>
                         <div class="form-group col-md-12 mt-1 divButton" >
                             <b-button variant="primary" class="buttonSalvar mx-1"
@@ -173,7 +173,7 @@ export default {
             }
         },
         corDaLetra(){
-            return this.userClass.activeClass == "Ativo" ? 'verde' : 'vermelho'
+            return this.userClass.activeClass == true ? 'verde' : 'vermelho'
         }
     }
 

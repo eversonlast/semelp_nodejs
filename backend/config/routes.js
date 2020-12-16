@@ -110,4 +110,12 @@ module.exports = app =>{
     app.route('/userClass/:id')
         .all(app.config.passport.authenticate())
         .get(userSecreAdmin(app.api.classUser.getByIdUser))
+    
+    app.route('/lackByMounth')
+        .all(app.config.passport.authenticate())
+        .post(app.api.classUser.saveLack)
+
+    app.route('/lackByMounthUser/:id')
+        .all(app.config.passport.authenticate())
+        .get(app.api.classUser.getByIdUserLack)
 }
