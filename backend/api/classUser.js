@@ -94,8 +94,16 @@ module.exports = app=>{
 
    const saveLack = async (req, res)=>{
        var lack = new lackByMounth({... req.body})
-       await lack.save()
-            .then(lack=>res.json(lack))
+       const verifyStudent = await lackByMounth.findOne({$and:[{idUser: req.params.id}, {ano: req.query.ano}, {mes: req.query.mes}]})
+       
+       if(req.params.id){
+            await lackByMounth.findOneAndUpdate({_id:verifyStudent._id}, 
+                                            {$set:{mes: req.body.mes, ano:req.body.ano, dias:req.body.dias}})
+                .then(lack=>res.json(lack))
+       }else{
+           await lack.save()
+           .then(lack=>res.json(lack))
+       }
    }
 
    const getByIdUserLack = async(req, res)=>{

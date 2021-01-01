@@ -118,4 +118,5 @@ module.exports = app =>{
     app.route('/lackByMounthUser/:id')
         .all(app.config.passport.authenticate())
         .get(app.api.classUser.getByIdUserLack)
+        .put(app.api.classUser.saveLack)
 }
