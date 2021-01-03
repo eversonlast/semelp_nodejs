@@ -97,6 +97,11 @@ module.exports = app=>{
        const verifyStudent = await lackByMounth.findOne({$and:[{idUser: req.params.id}, {ano: req.query.ano}, {mes: req.query.mes}]})
        
        if(req.params.id){
+           try{
+            existsOrError(verifyStudent, "Este Aluno não está matrículado nesta turma")
+           }catch (msg){
+            return res.status(400).send(msg)
+           }
             await lackByMounth.findOneAndUpdate({_id:verifyStudent._id}, 
                                             {$set:{mes: req.body.mes, ano:req.body.ano, dias:req.body.dias}})
                 .then(lack=>res.json(lack))
