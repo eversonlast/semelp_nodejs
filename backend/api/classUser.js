@@ -74,19 +74,20 @@ module.exports = app=>{
 
    const getByIdUser = async(req, res)=>{
        const idUser = req.params.id
-       await app.db.raw(`select u.nome, "nomeModalidade" as "Nome da Modalidade", spt.nome as local, dias, horarios as "horários" from "classesUsers" as turma                                            
-                        inner join users as u on u.id = turma."idUser"  
-                        inner join classes as c on c.id = turma."idClass"
-                        inner join modalities as m on m.id = c."idModality"
-                        inner join                                 
-                        "sportsCenters" as spt on spt.id = c."idSportCenter"
-                        where "idUser" = ${idUser}`)
+       await app.db('classesUsers as turma')        
+                    .join('users as u', 'u.id', 'turma.idUser')
+                    .join('classes as c', 'c.id', 'turma.idClass')
+                    .join('modalities as m', 'm.id', 'c.idModallity')
+                    .join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')
+                    .select('u.nome', 'nomeModalidade as Nome da Modalidade', 'spt.nome as local',
+                    'dias', 'horarios')
+                    .where({idUser: idUser})
                     .then(userClass=>res.json(userClass.rows))
                     .catch(err=>res.status(500).send(err))
    }
 
    const lackByMounth =  app.mongoose.model('lackByMounth',{
-       idUser: Number,
+       idUserClass: Number,
        ano: Number,
        mes: String,
        dias: Array
@@ -95,10 +96,19 @@ module.exports = app=>{
    const saveLack = async (req, res)=>{
        var lack = new lackByMounth({... req.body})
        const verifyStudent = await lackByMounth.findOne({$and:[{idUser: req.params.id}, {ano: req.query.ano}, {mes: req.query.mes}]})
+       const rowsRegisterClassUser = await app.db('classesUsers').count('id').first().where({id:req.body.idUserClass})
+       const countRegister = parseInt(rowsRegisterClassUser.count)
+       try{
+            existsOrError(req.body.mes, "Por favor, informe o mês.")
+            existsOrError(req.body.ano, "Pot favor, informe o ano.")
+            existsOrError(req.body.idUserClass, "Por favor, informe a matrícula do aluno.")
+       }catch(msg){
+            return res.status(400).send(msg)
+       }
        
        if(req.params.id){
            try{
-            existsOrError(verifyStudent, "Este Aluno não está matrículado nesta turma")
+            existsOrError(verifyStudent, "Ainda não existe registro destes dados.")
            }catch (msg){
             return res.status(400).send(msg)
            }
@@ -106,6 +116,7 @@ module.exports = app=>{
                                             {$set:{mes: req.body.mes, ano:req.body.ano, dias:req.body.dias}})
                 .then(lack=>res.json(lack))
        }else{
+           if(countRegister == 0) return res.status(400).send("A matrícula não existe")
            await lack.save()
            .then(lack=>res.json(lack))
        }
@@ -127,3 +138,11 @@ module.exports = app=>{
 //                         inner join modalities as m on m.id = (select "idModality" from classes where classes.id = (select "idClass" from "classesUsers" where id=${req.params.id}))
 //                         inner join users as u on u.id = (select "idUser" from "classesUsers" where id = ${id})
 //                         where classes.id = (select "idClass" from "classesUsers" where id = ${id})
+
+// `select u.nome, "nomeModalidade" as "Nome da Modalidade", spt.nome as local, dias, horarios as "horários" from "classesUsers" as turma                                            
+//                         inner join users as u on u.id = turma."idUser"  
+//                         inner join classes as c on c.id = turma."idClass"
+//                         inner join modalities as m on m.id = c."idModality"
+//                         inner join                                 
+//                         "sportsCenters" as spt on spt.id = c."idSportCenter"
+//                         where "idUser" = ${idUser}`
