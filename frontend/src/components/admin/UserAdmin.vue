@@ -4,15 +4,20 @@
           <b-table hover striped stacked="md" :items="resutaldoBusca" :fields="fields" class="table-responsive-md">
             <template slot="cell(actions)" slot-scope="data" class="acoes"> 
                 <a href @click.prevent="update(data.item)">
-                    <b-button variant="warning" class="mr-1">
+                    <b-button variant="warning" class="mr-1" v-b-popover.hover.top="'Editar Usuário'">
                         <i class="fa fa-pencil" ></i>
                     </b-button>                      
                 </a>                
-                <b-button variant="danger" class="mr-1 mt-1" @click="loadUser(data.item)" v-b-modal.modal-3>
+                <b-button variant="danger" class="mr-1 mt-1" @click="loadUser(data.item)" v-b-modal.modal-3
+                v-b-popover.hover.top="'Deletar Usuário'">
                     <i class="fa fa-trash"></i>
                 </b-button>
-                <b-button variant="outline-danger"  class="my-1" @click="loadUser(data.item)" v-b-modal.modal-changeUser v-if="getTypeUser.tipoUsuario == 'admin'" >
+                <b-button variant="outline-danger"  class="my-1" @click="loadUser(data.item)" v-b-modal.modal-changeUser v-if="getTypeUser.tipoUsuario == 'admin'" 
+                v-b-popover.hover.top="'Mudar Permissão'">
                     <i class="fa fa-id-badge"></i>
+                </b-button>
+                <b-button variant="outline-success"  class="my-1" @click="goToMoladitiesByUser(data.item)" v-b-popover.hover.top="'Ver Modalidades Matrículadas'">
+                    <i class="fa fa-eye"></i>
                 </b-button>
             </template>
         </b-table>
@@ -121,6 +126,12 @@ export default {
             const userData = JSON.parse(json)
             await this.$store.commit('setUser', userData)
             this.getTypeUser = userData
+        },
+        goToMoladitiesByUser(user){
+            this.user = {...user}
+            this.$router.push({
+                path: `/modalitiesByUser/${this.user.id}`
+            })
         }
     },
     watch:{

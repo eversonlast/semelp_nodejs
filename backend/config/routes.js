@@ -119,4 +119,8 @@ module.exports = app =>{
         .all(app.config.passport.authenticate())
         .get(app.api.classUser.getByIdUserLack)
         .put(app.api.classUser.saveLack)
+
+    app.route('/waitingList')
+        .all(app.config.passport.authenticate())
+        .post(app.api.waitingList.saveWaitingList)
 }

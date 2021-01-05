@@ -74,15 +74,17 @@ module.exports = app=>{
 
    const getByIdUser = async(req, res)=>{
        const idUser = req.params.id
+       const id = parseInt(idUser)
        await app.db('classesUsers as turma')        
-                    .join('users as u', 'u.id', 'turma.idUser')
-                    .join('classes as c', 'c.id', 'turma.idClass')
-                    .join('modalities as m', 'm.id', 'c.idModallity')
-                    .join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')
-                    .select('u.nome', 'nomeModalidade as Nome da Modalidade', 'spt.nome as local',
-                    'dias', 'horarios')
-                    .where({idUser: idUser})
-                    .then(userClass=>res.json(userClass.rows))
+                    .join('users as u', 'u.id','=', 'turma.idUser')
+                    .join('classes as c', 'c.id','=', 'turma.idClass')
+                    .join('modalities as m', 'm.id','=', 'c.idModality')
+                    .join('sportsCenters as spt', 'spt.id','=', 'c.idSportCenter')
+                    .select('u.nome as nome', 'nomeModalidade as NomeDaModalidade', 'spt.nome as local',
+                    'dias', 'horarios', 'turma.id')
+                    .where({idUser: id})
+                    .andWhere({activeClass: true})
+                    .then(userClass=>res.json(userClass))
                     .catch(err=>res.status(500).send(err))
    }
 
@@ -123,10 +125,12 @@ module.exports = app=>{
    }
 
    const getByIdUserLack = async(req, res)=>{
-        var idUser = req.params.id
-        await lackByMounth.find({idUser: idUser})
+        var idUserClass = req.params.id
+        await lackByMounth.find({idUserClass: idUserClass})
             .then(userLacks=>res.json(userLacks))
    }
+
+   
 
     return { save, remove, getAll, getByIDClass, getByIdUser, saveLack, getByIdUserLack}
 }

@@ -22,6 +22,7 @@ import ManagerClass from '../components/turma/ManagerClass'
 import ClassById from '../components/turma/ClassById'
 import RegisterUserClasses from '../components/turma/RegisterUserClasses'
 import ClassUsersById from '../components/turma/ClassUsersById'
+import ModalitiesByUser from '../components/users/ModalitiesByUser'
 
 import { userKey, baseApiUrl } from './global'
 import axios from 'axios'
@@ -113,6 +114,10 @@ const routes = [{
     name: 'classUsersById',
     path: '/classByUsers/:id',
     component: ClassUsersById
+},{
+    name:'modalitiesByUser',
+    path: '/modalitiesByUser/:id',
+    component: ModalitiesByUser
 }]
 
 const router = new VueRouter({
