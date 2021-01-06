@@ -123,4 +123,8 @@ module.exports = app =>{
     app.route('/waitingList')
         .all(app.config.passport.authenticate())
         .post(app.api.waitingList.saveWaitingList)
+
+    app.route('/waitingList/:idClass')
+        .all(app.config.passport.authenticate())
+        .get(app.api.waitingList.getWaitByClass)
 }
