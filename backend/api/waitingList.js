@@ -3,14 +3,14 @@ module.exports = app=>{
     const {existsOrError} = app.api.validation
 
     const waitingList = app.mongoose.model('waitingLists',{
-        dataInscricao: {type: Date, default: Date.now()},
+        dataInscricao: {type:Date},
         idUser: Number,
         idClass: Number
     })
 
     const saveWaitingList = async(req, res)=>{
         
-        const saveWait = new waitingList({...req.body})
+        const saveWait = new waitingList({idUser: req.body.User, idClass: req.body.idClass, dataInscricao: Date.now()})
         const rowsVerifyUser = await waitingList.findOne({$and:[{idUser:req.params.id}, {idClass: req.query.class}]})
         const existsUser = await app.db('users').count('id').first().where({id: req.body.idUser})
         const existsClass = await app.db('classes').count('id').first().where({id: req.body.idClass})
@@ -51,6 +51,17 @@ module.exports = app=>{
                     .then(waitByClass=>res.json(waitByClass))
     }
 
+    const countUserWaitingList = async(req, res)=>{
+        const dataInscricaoUser = await waitingList.findOne({idUser: req.body.idUser}, {_id: 0, dataInscricao: 1})
+        await waitingList.aggregate([ {$match:{dataInscricao:{$gte:new Date(dataInscricaoUser)}}},
+                    {$group:{_id:null, count:{$sum: 1}}},
+                    {$project:{_id:0}}])
+                    .then(countWait=>res.json(countWait))
+    }
 
-    return {saveWaitingList, getWaitByClass}
+    const getWaitingListByUser = async(req, res)=>{
+
+    }
+
+    return {saveWaitingList, getWaitByClass, countUserWaitingList, getWaitingListByUser}
 }
