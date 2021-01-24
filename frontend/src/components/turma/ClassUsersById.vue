@@ -36,6 +36,7 @@ export default {
                 {key:"idUser", label: "Código do Aluno", sortable: true},
                 {key: 'nome', label: 'Nome do Aluno', sortable: true},
                 {key: 'quantidadesDeFalta', label: 'Quantidades de Falta'},
+                {key: 'activeClass', label: 'Situação do Aluno'},
                 {key: 'actions', label: 'Ações'}
             ]
         }
@@ -47,6 +48,13 @@ export default {
             const url = `${baseApiUrl}/classUser/${id}` 
             await axios.get(url)
                     .then(res=> {
+                        for(var ativoOrDesativo in res.data.data){
+                            if(res.data.data[ativoOrDesativo].activeClass){
+                                res.data.data[ativoOrDesativo].activeClass = 'Ativo'
+                            }else{
+                                res.data.data[ativoOrDesativo].activeClass = 'Desativo'
+                            }
+                        }
                         this.classByUsers = res.data.data
                         this.limit = res.data.limit
                         this.count = res.data.count

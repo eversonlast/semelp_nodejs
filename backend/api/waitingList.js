@@ -60,8 +60,17 @@ module.exports = app=>{
     }
 
     const getWaitingListByUser = async(req, res)=>{
+        await waitingList.find({idUser: req.params.idUser}, 
+                    {_id:0, dataInscricao: 1, idUser: 1, idClass: 1})
+                    .then(listUser=>res.json(listUser))
+    }
+
+    const removeWaitList = async(req, res)=>{
+        await waitingList.remove({idUser: req.params.idUser, 
+                    idClass: req.query.idClass})
+                    .then(removeWaitUser=>res.json(removeWaitUser))
 
     }
 
-    return {saveWaitingList, getWaitByClass, countUserWaitingList, getWaitingListByUser}
+    return {saveWaitingList, getWaitByClass, countUserWaitingList, getWaitingListByUser, removeWaitList}
 }

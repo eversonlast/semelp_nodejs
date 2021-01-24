@@ -56,20 +56,36 @@ module.exports = app=>{
             .catch(err=>res.status(500).send(err))
    }
 
-   const getByIDClass = async(req, res)=>{
+   const getByIDClassActive = async(req, res)=>{
         const page = req.query.page || 1
         const idClass = req.params.id
-        const result = await app.db('classesUsers').count('id').first().where({idClass: idClass})
+        const result = await app.db('classesUsers').count('id').first().where({idClass: idClass}).andWhere({activeClass: true})
         const id = parseInt(idClass)
         const count = parseInt(result.count)
         await app.db('classesUsers as turma')
                     .join('users as u', 'u.id', 'turma.idUser')
-                    .select('u.nome', 'idUser', 'quantidadesDeFalta')
+                    .select('u.nome', 'idUser', 'quantidadesDeFalta', 'activeClass')
                     .where({idClass: id})
                     .andWhere({activeClass: true})
                     .limit(limit).offset(page*limit-limit)
                     .then(classUser=>res.json({data: classUser, count, limit}))
                     .catch(err=>res.status(500).send(err))
+   }
+
+   const getByIdClassDesactive = async(req, res)=>{
+        const page = req.query.page || 1
+        const idClass = req.params.id
+        const result = await app.db('classesUsers').count('id').first().where({idClass: idClass}).andWhere({activeClass: false, activeClass: null})
+        const count = parseInt(result.count)
+        await app.db('classesUsers as turma')
+                .join('users as u', 'u.id', 'turma.idUser')
+                .select('u.nome', 'idUser', 'activeClass')
+                .where({idClass: idClass})
+                .andWhere({activeClass: false, activeClass: null})
+                .limit(limit).offset(page*limit-limit)
+                .then(classUserDesactive=>res.json({data:classUserDesactive, count, limit}))
+                .catch(err=>res.status(500).send(err))
+
    }
 
    const getByIdUser = async(req, res)=>{
@@ -132,7 +148,7 @@ module.exports = app=>{
 
    
 
-    return { save, remove, getAll, getByIDClass, getByIdUser, saveLack, getByIdUserLack}
+    return { save, remove, getAll, getByIDClassActive, getByIdUser, saveLack, getByIdUserLack, getByIdClassDesactive}
 }
 
 

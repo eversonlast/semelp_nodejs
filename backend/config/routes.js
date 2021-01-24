@@ -105,7 +105,11 @@ module.exports = app =>{
         .all(app.config.passport.authenticate())
         .delete(admin(app.api.classUser.remove))
         .put(app.api.classUser.save)
-        .get(app.api.classUser.getByIDClass)
+        .get(app.api.classUser.getByIDClassActive)
+
+    app.route('/classUserDesactive/:id')
+        .all(app.config.passport.authenticate())
+        .get(app.api.classUser.getByIdClassDesactive)
 
     app.route('/userClass/:id')
         .all(app.config.passport.authenticate())
@@ -135,4 +139,5 @@ module.exports = app =>{
     app.route('/waitingListUser/:idUser')
         .all(app.config.passport.authenticate())
         .get(app.api.waitingList.getWaitingListByUser)
+        .delete(app.api.waitingList.removeWaitList)
 }
