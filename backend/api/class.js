@@ -66,13 +66,15 @@ module.exports = app =>{
                 .catch(err=>res.status(500).send(err))
     }
 
-    const getById = async(req, res)=>{
+    async function getById ( req, res, a){
+        const idClass = req.params.id ? req.params.id : a
+        console.log(idClass)
         await app.db('classes as c')
                 .join('users as u', 'u.id', 'c.idProfessorResponsability')
                 .join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')
                 .join('modalities as m', 'm.id', 'c.idModality')
                 .select('c.id', 'dias', 'horarios', 'faixaEtaria', 'u.nome as nomeProfessor', 'spt.nome as centroEsportivo', 'm.nomeModalidade')
-                .where({'c.id': req.params.id})
+                .where({'c.id': idClass})
                 .first()
                 .then(classes=>res.json(classes))
                 .catch(err=>res.status(500).send(err))

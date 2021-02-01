@@ -5,28 +5,33 @@ module.exports = app=>{
     const waitingList = app.mongoose.model('waitingLists',{
         dataInscricao: {type:Date},
         idUser: Number,
-        idClass: Number
+        nome: String,
+        idClass: Number,
+        nomeModalidade: String
+
     })
 
     const saveWaitingList = async(req, res)=>{
         
-        const saveWait = new waitingList({idUser: req.body.User, idClass: req.body.idClass, dataInscricao: Date.now()})
         const rowsVerifyUser = await waitingList.findOne({$and:[{idUser:req.params.id}, {idClass: req.query.class}]})
-        const existsUser = await app.db('users').count('id').first().where({id: req.body.idUser})
-        const existsClass = await app.db('classes').count('id').first().where({id: req.body.idClass})
-        const amountUser = parseInt(existsUser.count)
-        const amountClass = parseInt(existsClass.count)
+        const existsUser = await app.db('users').select('id', 'nome').first().where({id: req.body.idUser})
+        const existsClass = await app.db('classes as c').join('modalities as m', 'm.id', 'c.idModality')
+                                .select('c.id', 'm.nomeModalidade').first().where({'c.id': req.body.idClass})
+        try{
+            if(existsUser == undefined|| existsClass == undefined){
+                throw 'Não existe o id do usuário ou da turma.'
+            }
+        }catch(msg){
+            return res.status(400).send(msg)
+        }
+        const saveWait = new waitingList({idUser: req.body.User, nome: existsUser.nome, 
+            idClass: req.body.idClass, nomeModalidade: existsClass.nomeModalidade,
+            dataInscricao: Date.now()})
+        
 
         try{
             existsOrError(req.body.idUser, 'Por favor, informe o código do usuário.')
             existsOrError(req.body.idClass, 'Por favor, informe o código da turma.')
-            try{
-                if(amountUser == 0 || amountClass == 0){
-                    throw 'Não existe o id do usuário ou da turma.'
-                }
-            }catch(msg){
-                return res.status(400).send(msg)
-            }
         }catch (msg){
             return res.status(400).send(msg)
         }
