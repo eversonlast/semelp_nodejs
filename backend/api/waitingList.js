@@ -6,6 +6,7 @@ module.exports = app=>{
         dataInscricao: {type:Date},
         idUser: Number,
         nome: String,
+        dataNasc: Date,
         idClass: Number,
         nomeModalidade: String
 
@@ -14,27 +15,44 @@ module.exports = app=>{
     const saveWaitingList = async(req, res)=>{
         
         const rowsVerifyUser = await waitingList.findOne({$and:[{idUser:req.params.id}, {idClass: req.query.class}]})
-        const existsUser = await app.db('users').select('id', 'nome').first().where({id: req.body.idUser})
+        const rowsVerifyUserClassBody = await waitingList.findOne({$and:[{idUser: req.body.idUser}, {idClass: req.body.idClass}]})
+        const existsUser = await app.db('users').select('id', 'nome', 'dataNasc').first().where({id: req.body.idUser})
         const existsClass = await app.db('classes as c').join('modalities as m', 'm.id', 'c.idModality')
-                                .select('c.id', 'm.nomeModalidade').first().where({'c.id': req.body.idClass})
+                                .select('c.id', 'm.nomeModalidade', 'c.faixaEtaria').first().where({'c.id': req.body.idClass})
+        const ano = 1000*60*60*24*365;
+        const idade = parseInt((Date.now() - existsUser.dataNasc)/ano)
+
+        
         try{
             if(existsUser == undefined|| existsClass == undefined){
                 throw 'Não existe o id do usuário ou da turma.'
             }
         }catch(msg){
             return res.status(400).send(msg)
-        }
-        const saveWait = new waitingList({idUser: req.body.User, nome: existsUser.nome, 
-            idClass: req.body.idClass, nomeModalidade: existsClass.nomeModalidade,
-            dataInscricao: Date.now()})
-        
+        }       
+            const idadeMinima = parseInt(existsClass.faixaEtaria.substring(0 , existsClass.faixaEtaria.toUpperCase().indexOf("À")))
+            const idadeMaxima = parseInt(existsClass.faixaEtaria.substring(existsClass.faixaEtaria.toUpperCase().indexOf("À")+2, existsClass.faixaEtaria.toUpperCase().indexOf("A")))
 
         try{
-            existsOrError(req.body.idUser, 'Por favor, informe o código do usuário.')
-            existsOrError(req.body.idClass, 'Por favor, informe o código da turma.')
-        }catch (msg){
+            if(existsClass.faixaEtaria == "Acima de 60 anos" && idade < 60){
+                throw 'A idade está fora da faixa etária! Por favor verifique a Modalidade Escolhida!'
+            }
+            if(!(idade > idadeMinima && idade < idadeMaxima)){
+                throw 'A idade está fora da faixa etária! Por favor verifique a Modalidade Escolhida'
+            }
+        }catch(msg){
             return res.status(400).send(msg)
         }
+        const saveWait = new waitingList({idUser: req.body.idUser, nome: existsUser.nome, 
+            idClass: req.body.idClass, nomeModalidade: existsClass.nomeModalidade, dataNasc: existsUser.dataNasc,
+            dataInscricao: Date.now()})           
+            
+            try{
+                existsOrError(req.body.idUser, 'Por favor, informe o código do usuário.')
+                existsOrError(req.body.idClass, 'Por favor, informe o código da turma.')
+            }catch (msg){
+                return res.status(400).send(msg)
+            }
         
         if(req.params.id){
             try{
