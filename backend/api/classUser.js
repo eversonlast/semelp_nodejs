@@ -71,6 +71,18 @@ module.exports = app=>{
                     .then(classUser=>res.json({data: classUser, count, limit}))
                     .catch(err=>res.status(500).send(err))
    }
+   
+   const numberOfStudentsPerClass = async(req, res)=>{
+        await app.db('classesUsers as uc')
+                .count('c.id')
+                .join('classes as c', 'c.idSportCenter', parseInt(req.params.idSportCenter))
+                .first()
+                .where({'uc.idClass': parseInt(req.params.idClass)})
+                .andWhere({activeClass: true})
+                .andWhere({'c.id': parseInt(req.params.idClass)})
+                .then(resultStudent=>res.json(parseInt(resultStudent.count)))
+                .catch(err=>res.status(500).send(err))
+   }
 
    const getByIdClassDesactive = async(req, res)=>{
         const page = req.query.page || 1
@@ -148,7 +160,7 @@ module.exports = app=>{
 
    
 
-    return { save, remove, getAll, getByIDClassActive, getByIdUser, saveLack, getByIdUserLack, getByIdClassDesactive}
+    return { save, remove, getAll, getByIDClassActive, getByIdUser, saveLack, getByIdUserLack, getByIdClassDesactive, numberOfStudentsPerClass}
 }
 
 
@@ -166,3 +178,8 @@ module.exports = app=>{
 //                         inner join                                 
 //                         "sportsCenters" as spt on spt.id = c."idSportCenter"
 //                         where "idUser" = ${idUser}`
+
+// select count(*) from "classesUsers" 
+// as uc
+// inner join classes as c on c."idSportCenter" = 9
+// where uc."idClass" =23 and "activeClass" = true and c.id= 23;

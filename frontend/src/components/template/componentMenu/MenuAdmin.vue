@@ -32,7 +32,8 @@ export default {
                     {text: 'Cadastrar Turma'},
                     {text: 'Lista de Turma'}
                 ]},
-                {text: 'Fazer Matrícula'}
+                {text: 'Fazer Matrícula'},
+                {text: 'Lista de Espera'}
             ]
         }
     },
@@ -99,6 +100,11 @@ export default {
             if(node.text == 'Fazer Matrícula'){
                 this.$router.push({
                     name: 'registerUserClass'
+                })
+            }
+            if(node.text == 'Lista de Espera'){
+                this.$router.push({
+                    name: 'waitingLists'
                 })
             }
             

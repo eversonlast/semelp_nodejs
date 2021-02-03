@@ -114,6 +114,10 @@ module.exports = app =>{
     app.route('/userClass/:id')
         .all(app.config.passport.authenticate())
         .get(userSecreAdmin(app.api.classUser.getByIdUser))
+
+    app.route('/numberStudentPerClass/:idClass/:idSportCenter')
+        .all(app.config.passport.authenticate())
+        .get(app.api.classUser.numberOfStudentsPerClass)
     
     app.route('/lackByMounth')
         .all(app.config.passport.authenticate())

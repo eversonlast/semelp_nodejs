@@ -9,7 +9,6 @@ module.exports = app=>{
         dataNasc: Date,
         idClass: Number,
         nomeModalidade: String
-
     })
 
     const saveWaitingList = async(req, res)=>{
@@ -56,7 +55,7 @@ module.exports = app=>{
         
         if(req.params.id){
             try{
-                existsOrError(rowsVerifyUser, 'Verifique o id do Usuário e da Turma.')
+                existsOrError(rowsVerifyUser, 'Verifique o id do Usuário ou de Turma.')
             }catch(msg){
                 return res.status(400).send(msg)
             }
@@ -64,6 +63,11 @@ module.exports = app=>{
                                 {$set:{idUser: req.body.idUser, idClass: req.body.idClass}})
                             .then(waitList=> res.json(waitList))
         }else{
+            try{
+                existsOrError(rowsVerifyUserClassBody, 'Esse id já está cadastrado nesta modalidade!')
+            }catch(msg){
+                return res.status(400).send(msg)
+            }
             await saveWait.save()
                     .then(waitList=> res.json(waitList))
         }
