@@ -99,5 +99,5 @@ module.exports = app=>{
 
     }
 
-    return {saveWaitingList, getWaitByClass, countUserWaitingList, getWaitingListByUser, removeWaitList}
+    return {saveWaitingList, getWaitByClass, countUserWaitingList, getWaitingListByUser, removeWaitList, waitingList}
 }

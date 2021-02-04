@@ -3,6 +3,8 @@ module.exports = app =>{
         users: Number,
         modalities: Number,
         classes: Number,
+        classesUsers: Number,
+        waitingList: Number,
         createdAt: Date
     })
 
@@ -12,7 +14,10 @@ module.exports = app =>{
                 const defaultStat = {
                     users: 0,
                     modalities: 0,
-                    classes: 0
+                    classes: 0,
+                    classesUsers: 0,
+                    waitingList: 0
+
                 }
                 res.json(stat|| defaultStat)
             })

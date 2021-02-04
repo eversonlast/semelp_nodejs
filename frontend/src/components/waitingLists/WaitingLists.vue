@@ -33,7 +33,7 @@ export default {
         },
         async loadClassUers(){
             this.loadUser()
-            const url = `${baseApiUrl}/classUser`
+            const url = `${baseApiUrl}/class`
             await axios.get(url)
                     .then(res=> this.classesUsers = res.data.data)
         }

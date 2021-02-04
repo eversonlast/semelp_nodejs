@@ -99,7 +99,7 @@ module.exports = app =>{
     app.route('/classUser')
         .all(app.config.passport.authenticate())
         .post(app.api.classUser.save)
-        .get(app.api.class.getAll)
+        .get(app.api.classUser.getAll)
     
     app.route('/classUser/:id')
         .all(app.config.passport.authenticate())

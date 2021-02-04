@@ -50,8 +50,15 @@ module.exports = app=>{
        const result = await app.db('classesUsers').count('id').first()
        const count = parseInt(result.count)
 
-       await app.db('classesUsers')
+       await app.db('classesUsers as clu')
             .limit(limit).offset(page*limit-limit)
+            .join('users as u', 'u.id', 'clu.idUser')
+            .join('classes as c', 'c.id', 'clu.idClass')
+            .join('modalities as m', 'm.id', 'c.idModality')
+            .join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')
+            .select('clu.id', 'clu.idUser', 'clu.idClass', 'clu.quantidadesDeFalta', 'clu.activeClass',
+            'm.nomeModalidade', 'dias', 'horarios', 'faixaEtaria', 'u.nome as nomeAluno', 'spt.nome as centroEsportivo', 
+            'm.departamento', 'maxLackMounth as maximoFaltasMes')
             .then(classUser=>res.json({data: classUser, count, limit}))
             .catch(err=>res.status(500).send(err))
    }
