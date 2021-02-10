@@ -176,7 +176,7 @@ module.exports = app =>{
                     from addresses a, users u 
                     where u.id =  "idUserAddress"
                     limit ${limit} offset ${page*limit-limit}`)
-            .then(users=>res.json({data: users.rows, count, limit}))
+            .then(users=>res.json({data: users.rows , count, limit}))
             .catch(err=>res.status(500).send(err))
     }
 

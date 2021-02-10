@@ -119,9 +119,9 @@ export default {
                 return this.turmas
             }else{
                 return this.turmas.filter(turma=>{
-                   return   turma.nomeModalidade.match(this.search) ||
-                            turma.nomeProfessor.match(this.search)  ||
-                            turma.centroEsportivo.match(this.search) ||
+                   return   turma.nomeModalidade.toUpperCase().match(this.search.toUpperCase()) ||
+                            turma.nomeProfessor.toUpperCase().match(this.search.toUpperCase())  ||
+                            turma.centroEsportivo.toUpperCase().match(this.search.toUpperCase()) ||
                             turma.dias.match(this.search) ||
                             turma.horarios.match(this.search) ||
                             turma.faixaEtaria.match(this.search)
