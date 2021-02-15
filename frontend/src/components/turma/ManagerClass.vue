@@ -2,7 +2,9 @@
 <div>
     <PageTitle main="Lista de Turma" sub="Gerenciar Turmas" icon="icofont-users"/>
     <div class='base'>
-    <b-form-input type="text" id="turma" class="my-2" v-model="search" placeholder="Por favor, digite a turma que queira digitar..."></b-form-input>
+    <b-form-input type="text" id="turma" class="my-2" v-model="search" 
+    placeholder="Por favor, digite a turma..."
+    v-b-popover.hover.top="'Por favor, digite a turma.'"></b-form-input>
     <b-table striped hover :fields="fields"  :items="resultadoPesquisa" class="my-2">
         <template slot="cell(actions)" slot-scope="data" >
             <b-button variant="warning" @click="updateButton(data.item)" class="update-button my-1 ml-1"

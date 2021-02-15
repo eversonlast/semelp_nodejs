@@ -55,7 +55,7 @@ module.exports = app=>{
         
         if(req.params.id){
             try{
-                existsOrError(rowsVerifyUser, 'Verifique o id do Usuário ou de Turma.')
+                existsOrError(rowsVerifyUserClassBody, 'Verifique o id do Usuário ou de Turma.')
             }catch(msg){
                 return res.status(400).send(msg)
             }
@@ -64,7 +64,7 @@ module.exports = app=>{
                             .then(waitList=> res.json(waitList))
         }else{
             try{
-                existsOrError(rowsVerifyUserClassBody, 'Esse id já está cadastrado nesta modalidade!')
+                if(rowsVerifyUserClassBody) throw 'Este usuário já está na lista de espera desta modalidade, por favor verifique no Sistema'
             }catch(msg){
                 return res.status(400).send(msg)
             }

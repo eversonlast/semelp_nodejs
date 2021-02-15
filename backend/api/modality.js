@@ -5,11 +5,14 @@ module.exports = app =>{
         const modality = { ...req.body}
 
         if(req.params.id) modality.id = req.params.id
+        if(modality.departamento == "lazer") modality.needAttestation = true
 
         try{
             existsOrError(modality.nomeModalidade, "Por favor, informe qual é a modalidade.")
             existsOrError(modality.departamento, "Por favor, informe qual é o departamento.")
             existsOrError(modality.idResponsabilityModality, "Por favor, informe qual é o responsável pela modalidade.")
+            existsOrError(modality.needAttestation, "Por favor, informe se modalidade precisa de atestado.")
+            
         }catch(msg){
             return res.status(400).send(msg)
         }

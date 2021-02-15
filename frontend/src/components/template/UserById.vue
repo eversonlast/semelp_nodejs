@@ -322,7 +322,7 @@ export default {
         const userData = JSON.parse(json)
         await this.$store.commit('setUser', userData)
         const url = `${baseApiUrl}/users/${this.user.id}`
-        axios(url).then(res=> this.user = res.data)
+        await axios(url).then(res=> this.user = res.data)
     },
     async updateUser(){
         const urlPhone = `${baseApiUrl}/telephone`

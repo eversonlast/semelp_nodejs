@@ -18,7 +18,8 @@
                     <div class="form-group col-md-12 mt-1">
                         <label for="horarios">Horário da Turma</label>
                         <div>
-                            <b-form-select  class="form-group col-md-4" id="periodo" v-on:change="escolherHorario" v-model="controle.value" :options="optionHorarios" 
+                            <b-form-select  class="form-group col-md-4" id="periodo" 
+                            v-on:change="escolherHorario" v-model="controle.value" :options="optionHorarios" 
                             v-b-popover.hover.top="'Escolha uma opção.'"></b-form-select>
                             <b-form-select v-model="turma.horarios" :options="horarios" id="horarios" name="horarios" class="form-group col-md-7 mx-md-1" v-if="statusDigite==false"
                             v-b-popover.hover.top="'Escolha uma opção.'"></b-form-select>
@@ -32,19 +33,23 @@
                     <div class="form-group col-md-12">
                         <label for="teacherResponsability">Professor Responsável pela Turma</label>
                         <b-form-select id="idProfessorResponsability"                        
-                         :options="teacherResponsable"  v-model="turma.idProfessorResponsability"></b-form-select>
+                         :options="teacherResponsable"  v-model="turma.idProfessorResponsability"
+                         v-b-popover.hover.top="'Escolha uma opção.'"></b-form-select>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <label for="idSportCenter">Centro Esportivo da Turma</label>
-                        <b-form-select id="idSportCenter" v-model="turma.idSportCenter" :options="sportCenter" v-on:change="loadModalitiesBySportCenter"></b-form-select>
+                        <b-form-select id="idSportCenter" v-model="turma.idSportCenter" 
+                        :options="sportCenter" v-on:change="loadModalitiesBySportCenter"
+                        v-b-popover.hover.top="'Escolha uma opção'"></b-form-select>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <label for="Modality">Modalidade</label>
-                        <b-form-select id="idModalidade" v-model="turma.idModality" :options="modalities"></b-form-select>
+                        <b-form-select id="idModalidade" v-model="turma.idModality" 
+                        :options="modalities" v-b-popover.hover.top="'Escolha uma opção.'"></b-form-select>
                     </div>
                 </div>
                  <div class="form-row">
@@ -52,22 +57,28 @@
                         <label for="faixaEtaria">Faixa Etária</label>
                         <div>
                             <input type="text" id="faixaEtaria" name="faixaEtaria" 
-                            class="form-control" v-model="turma.faixaEtaria" >
+                            class="form-control" v-model="turma.faixaEtaria" 
+                            v-b-popover.hover.top="'Por favor, digite a faixa etária no formato 7 À 8 anos ou acima de 65 anos'">
                         </div>
                     </div>
                     <div class="form-group col-md-6 mt-1">
                         <label for="faixaEtaria">Máximo de Faltas por Mês que a Turma permite</label>
                         <div>
                             <input type="text" id="faixaEtaria" name="faixaEtaria" 
-                            class="form-control " v-model="turma.maximoFaltasMes" >
+                            class="form-control " v-model="turma.maximoFaltasMes" 
+                            v-b-popover.hover.top="'Por favor, digite somente número'">
                         </div>
                     </div>
                 </div>
             </div>
             <div class="card-body button">
-                <b-button variant="primary" class="mr-2" v-on:click="loadControle" v-b-modal.modalRegisterClass v-if="controleButton">Salvar</b-button>
-                 <b-button variant="primary" class="mr-2" v-on:click="loadControle" v-b-modal.modalRegisterClass v-else>Atualizar</b-button>
-                <b-button variant="outline-danger" class="mr-2" @click="buttonReset">Cancelar</b-button>
+                <b-button variant="primary" class="mr-2" v-on:click="loadControle"
+                v-b-modal.modalRegisterClass v-if="controleButton"
+                v-b-popover.hover.top="'Clique para salvar.'">Salvar</b-button>
+                 <b-button variant="primary" class="mr-2" v-on:click="loadControle" 
+                 v-b-modal.modalRegisterClass v-else>Atualizar</b-button>
+                <b-button variant="outline-danger" class="mr-2" @click="buttonReset"
+                v-b-popover.hover.top="'Clique para limpar todos os dados.'">Cancelar</b-button>
             </div>
             <div>
                 <b-modal id="modalRegisterClass" title="Confirmação de Dados" @ok="saveClasses">

@@ -25,18 +25,26 @@
                           <input type="text" class="form-control mb-1" id="turma" v-model="searchClass"
                           placeholder="Por favor, Digite a modalidade"
                           v-b-popover.hover.top="'Digite a modalidade'"/>
-                          <b-form-select :select-size="4" class="mb-1" 
+                          <b-form-select :select-size="4" class="mb-1" id="turmaUsuario"
                           :options="resultClass" v-model="waitingLists.idClass"
                           v-b-popover.hover.top="'Escolha uma Modalidade'"></b-form-select>
                       </div>
                       <div class="form-group col-md-12 mt-1 divButton">
-                          <b-button variant="primary" v-if="true"
+                          <b-button variant="primary" v-if="true" @click="selectedTurma" v-b-modal.ModalRegisterWaitList
                           v-b-popover.hover.top="'Clique para salvar os Dados'">Salvar</b-button>
                           <b-button variant="success" v-else
                           v-b-popover.hover.top="'Clique para Atualizar os Dados'">Atualizar</b-button>
-                          <b-button variant="outline-danger" class='ml-1'
+                          <b-button variant="outline-danger" class='ml-1' @click="btnCancel"
                           v-b-popover.hover.top="'Clique para limpar os Dados'">Cancelar</b-button>
-
+                      </div>
+                      <div>
+                          <b-modal id="ModalRegisterWaitList" title="Confirmação de Dados da Lista de Espera" 
+                          @ok="saveWaitingLists">
+                          Id do Usuário: {{waitingLists.idUser}} <br>
+                          Dados do Usuário: {{nomeUsuario}} <br>
+                          Id da Turma: {{waitingLists.idClass}}<br>
+                          Dados da Modalidade: {{nomeModalidade}}  
+                          </b-modal>
                       </div>
                   </div>
               </div>
@@ -59,7 +67,9 @@ export default {
             classes: [],
             searchUser: '',
             searchClass: '',
-            idadeDoUsuario: 0
+            idadeDoUsuario: 0,
+            nomeUsuario: '',
+            nomeModalidade: ''
 
         }
     },
@@ -84,9 +94,6 @@ export default {
             const url = `${baseApiUrl}/class`
             await axios.get(url)
                     .then(res=> this.classes = res.data.data.filter(turma=>{
-                        console.log(turma.faixaEtaria.substring(0, turma.faixaEtaria.toUpperCase().indexOf('À')))
-                        console.log(turma.faixaEtaria.substring(turma.faixaEtaria.toUpperCase().indexOf("À")+2, turma.faixaEtaria.toUpperCase().indexOf('A')-1))
-                        console.log(this.idadeDoUsuario)
                         return turma.faixaEtaria.substring(0, turma.faixaEtaria.toUpperCase().indexOf('À')) < this.idadeDoUsuario && 
                         turma.faixaEtaria.toUpperCase().substring(turma.faixaEtaria.toUpperCase().indexOf("À")+2, turma.faixaEtaria.toUpperCase().indexOf('A')-1) > this.idadeDoUsuario 
                     })
@@ -94,8 +101,6 @@ export default {
                         return {value: option.id, text:(`${option.nomeModalidade} - ${option.dias} - ${option.horarios} 
                         | ${option.faixaEtaria} - ${option.centroEsportivo}`).toUpperCase()}
                     }))
-
-                    console.log(this.classes)
         },
         buttonEditar(){
             if(this.waitingLists.idUser == undefined){
@@ -110,6 +115,7 @@ export default {
             var select = document.getElementById('usuario')
             var option = select.children[select.selectedIndex]
             var textoUsuario = option.textContent
+            this.nomeUsuario = textoUsuario
             var dataNasc = textoUsuario.substring(textoUsuario.indexOf("|")+1, textoUsuario.indexOf('-')-1)
             var arr = dataNasc.split('/')
             var dataFormatada = new Date(arr[2], arr[1] - 1, arr[0])
@@ -117,6 +123,30 @@ export default {
             this.idadeDoUsuario = Math.floor(Math.ceil(Math.abs(dataFormatada.getTime() - data.getTime()) / (1000 * 3600 * 24)) / 365.25)
             await this.loadClassUsers()
         },
+        async saveWaitingLists(){
+            this.loadUser()
+            const id = this.$route.params.id ? `/${this.$route.params.id}` : ''
+            const url = `${baseApiUrl}/waitingList${id}`
+            const method = this.$route.params.id ? 'put' : 'post'
+            await axios[method](url, this.waitingLists)
+                .then(()=>{
+                    this.$toasted.success('Cadastrado com sucesso')
+                    this.waitingLists = {}
+                })
+                .catch(showError)
+        },
+        selectedTurma(){
+            var selectClass = document.getElementById('turmaUsuario')
+            this.nomeModalidade = selectClass.options[selectClass.selectedIndex].text
+        },
+        btnCancel(){
+            this.waitingLists = {}
+            this.classes = []
+            this.searchUser =''
+            this.idadeDoUsuario = 0
+            this.nomeUsuario = ''
+            this.nomeModalidade = ''
+        }
     },
     mounted(){
         this.loadUserPerClass()

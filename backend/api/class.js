@@ -66,9 +66,8 @@ module.exports = app =>{
                 .catch(err=>res.status(500).send(err))
     }
 
-    async function getById ( req, res, a){
+    async function getById (req, res, a){
         const idClass = req.params.id ? req.params.id : a
-        console.log(idClass)
         await app.db('classes as c')
                 .join('users as u', 'u.id', 'c.idProfessorResponsability')
                 .join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')

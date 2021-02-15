@@ -27,6 +27,13 @@
                             <b-form-select id="responsavelModalidade" :options="responsabilityModality" v-model="modality.idResponsabilityModality"></b-form-select>
                         </div> 
                     </div>
+                    <div class="form-row" v-if="!(modality.departamento== 'lazer')">
+                        <div class="form-group col-md-12">
+                            <label for="precisaAtestado">Necessita de Atestado</label>
+                            <b-form-select id="responsavelModalidade" :options="needAttestation" v-model="modality.needAttestation"
+                            ></b-form-select>
+                        </div> 
+                    </div>
                 </div> 
             <div class="card-body button">
                 <b-button variant="primary" class="mr-2" v-b-modal.modalRegisterModality v-if="stateButton == 't'">Salvar</b-button> 
@@ -39,7 +46,8 @@
                         Vocẽ tem certeza que quer salvar a Modalidade?<br>
                         Nome da Modalidade: {{modality.nomeModalidade}}<br>
                         Departamento: {{modality.departamento}}<br>
-                        Id do Responsável: {{modality.idResponsabilityModality}}
+                        Id do Responsável: {{modality.idResponsabilityModality}}<br>
+                        Precisa de Atestado: {{modality.needAttestation}}
                     </p>
                 </b-modal>
             </div>
@@ -59,10 +67,15 @@ export default {
             modality: {},
             departamento:[
                 {text: "Lazer", value: "lazer"},
+                {text: "Lazer - Jogos de Mesa", value:"lazerJogosMesa"},
                 {text: "Esporte", value: "esporte"}
             ],
             stateButton: 't',
-            responsabilityModality: []
+            responsabilityModality: [],
+            needAttestation:[
+                {text: "Sim", value: true},
+                {text: "Não", value: false}
+            ]
         }
     },
     methods:{
