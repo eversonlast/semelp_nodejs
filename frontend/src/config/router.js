@@ -128,25 +128,26 @@ const routes = [{
 const router = new VueRouter({
     mode:'history',
     routes
-}) 
+})
 
 router.beforeEach(async(to, from, next)=>{
     const json = localStorage.getItem(userKey)
+    const userData = JSON.parse(json)
 
-    if(userKey && to.path ==='/auth'){
+    if(userData && to.path ==='/auth'){
         next({ path:'/'})
     }
-
-    if(!userKey && to.path !== '/auth'){
+    if(!userKey && to.path != '/auth'){
         next({path:'/auth'})
     }
-
+    
     if(to.matched.some(record=> record.meta.requiresAdmin)){
         const user = JSON.parse(json)
         const tipoUser = await axios.post(`${baseApiUrl}/validateUser`, user)
-
+        
+        
         const tipoUsuario = tipoUser.data === 'admin' | tipoUser.data ==='secre' | tipoUser.data === 'prof'
-
+        
         user && tipoUsuario ? next() : next({ path: '/ '})
     }else{
         next()

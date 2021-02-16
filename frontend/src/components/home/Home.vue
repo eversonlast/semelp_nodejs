@@ -46,9 +46,11 @@ export default {
             const json = localStorage.getItem(userKey)
 			const userData = JSON.parse(json)
             await this.$store.commit('setUser', userData)
-            axios.get(`${baseApiUrl}/stats`)
-                .then(res => this.stat = res.data)
-            this.user = userData
+            if(userData){
+                await axios.get(`${baseApiUrl}/stats`)
+                    .then(res => this.stat = res.data)
+                this.user = userData                
+            }
         },
         menuVisible(){
                if(this.$mq ==='xs' || this.$mq === 'sm'){
