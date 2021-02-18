@@ -27,6 +27,40 @@ module.exports = app =>{
                     .catch(err=>res.status(500).send(err))
         }
     }
-    return{save}
+
+    const limit = 10
+    const get = async(req, res)=>{
+        const page = req.query.page || 1
+        const result = await app.db('medicalExams').count('id').first()
+        const count = parseInt(result.count)
+        await app.db('medicalExams')
+                .limit(limit).offset(page*limit-limit)
+                .then(medicalExam=>res.json({data: medicalExama.rows, count, limit}))
+                .catch(err=>res.status(500).send(err))
+    }
+
+    const getById = async(req, res)=>{
+        await app.db('medicalExams')
+                .where({id: req.params.id})
+                .then(medicalExam=>res.json(medicalExam))
+                .catch(err=>res.status(500).send(err))
+    }
+
+    const remove = async(req, res)=>{
+        try{
+            const rowsDeleted = await app.db('medicalExams')
+                            .where({id: req.params.id}).del()
+            try{
+                existsError(rowsDeleted, "O Exame Médico não Cadastra")
+            }catch(msg){
+                return res.status(400).send(msg)
+            }
+            res.status(200).send("Deletado com sucesso.")
+        }catch(msg){
+            res.status(500).send(msg)
+        }   
+
+    }
+    return{save, get, getById, remove}
 
 }

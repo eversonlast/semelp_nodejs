@@ -35,14 +35,14 @@ module.exports = app =>{
         const page = req.query.page || 1
         const result = await app.db('modalities').count('id').first()
         const count = parseInt(result.count)
-        app.db.raw(`select * from modalities
+        await app.db.raw(`select * from modalities
                     limit ${limit} offset ${page*limit-limit}`)
             .then(modalities=>res.json({data: modalities.rows, count, limit}))
             .catch(err=>res.status(500).send(err))
     }
 
     const getById = async(req, res)=>{
-        app.db('modalities')
+        await app.db('modalities')
             .where({id: req.params.id})
             .first()
             .then(modality=>res.json(modality))
