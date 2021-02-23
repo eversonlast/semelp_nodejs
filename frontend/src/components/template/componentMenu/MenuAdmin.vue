@@ -33,7 +33,8 @@ export default {
                     {text: 'Lista de Turma'}
                 ]},
                 {text: 'Fazer Matrícula'},
-                {text: 'Lista de Espera'}
+                {text: 'Lista de Espera'},
+                {text: 'Exame Médico'}
             ]
         }
     },
@@ -107,7 +108,11 @@ export default {
                     name: 'waitingLists'
                 })
             }
-            
+            if(node.text == 'Exame Médico'){
+                this.$router.push({
+                    name: 'medicalExam'
+                })
+            }
         }
     },
     mounted(){
