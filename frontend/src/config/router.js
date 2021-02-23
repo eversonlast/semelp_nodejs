@@ -24,6 +24,7 @@ import RegisterUserClasses from '../components/turma/RegisterUserClasses'
 import ClassUsersById from '../components/turma/ClassUsersById'
 import ModalitiesByUser from '../components/users/ModalitiesByUser'
 import WaitingList from '../components/waitingLists/WaitingLists'
+import MedicalExam from '../components/medicalExam/MedicalExam'
 
 import { userKey, baseApiUrl } from './global'
 import axios from 'axios'
@@ -123,6 +124,10 @@ const routes = [{
     name: 'waitingLists',
     path:'/waitingLists',
     component: WaitingList
+},{
+    name: 'medicalExam',
+    path: '/medicalExam',
+    component: MedicalExam
 }]
 
 const router = new VueRouter({

@@ -144,4 +144,16 @@ module.exports = app =>{
         .all(app.config.passport.authenticate())
         .get(app.api.waitingList.getWaitingListByUser)
         .delete(app.api.waitingList.removeWaitList)
+
+    app.route('/medicalExam')
+        .all(app.config.passport.authenticate())
+        .post(app.api.medicalExam.save)
+        .get(app.api.medicalExam.get)
+
+    app.route('/medicalExam/:id')
+        .all(app.config.passport.authenticate())
+        .get(app.api.medicalExam.getById)
+        .delete(app.api.medicalExam.remove)
+
+    
 }

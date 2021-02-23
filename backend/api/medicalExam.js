@@ -1,15 +1,19 @@
 module.exports = app =>{
-    const {existsError} = app.api.validation
+    const {existsOrError} = app.api.validation
 
     const save = async(req, res)=>{
         const medicalExam = {... req.body}
 
         if(req.params.id) medicalExam.id = req.params.id
 
+        const dataValidade = medicalExam.examMonth.split("/")
+
+        medicalExam.validadeExam = new Date(parseInt(dataValidade[2]) +1, parseInt(dataValidade[1]) - 1, parseInt(dataValidade[0]))
+
         try{
-            existsError(medicalExam.validadeExam, "Por favor, Informe a Validade do Exame.")
-            existsError(medicalExam.examMonth, "Por favor, informe o mês do exame.")
-            existsError(medicalExam.idUser, "Por favor, informe o id do usuário")
+            existsOrError(medicalExam.validadeExam, "Por favor, Informe a Validade do Exame.")
+            existsOrError(medicalExam.examMonth, "Por favor, informe o mês do exame.")
+            existsOrError(medicalExam.idUser, "Por favor, informe o id do usuário")
         }catch(msg){
             return res.status(400).send(msg)
         }
@@ -35,7 +39,7 @@ module.exports = app =>{
         const count = parseInt(result.count)
         await app.db('medicalExams')
                 .limit(limit).offset(page*limit-limit)
-                .then(medicalExam=>res.json({data: medicalExama.rows, count, limit}))
+                .then(medicalExam=>res.json({data: medicalExam.rows, count, limit}))
                 .catch(err=>res.status(500).send(err))
     }
 
