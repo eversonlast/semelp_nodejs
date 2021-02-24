@@ -27,7 +27,8 @@
                     <div class="form-group col-md-12">
                         <label for="dtMonth">Data do Exame Médico</label>
                         <b-form-datepicker id="dtMonth" locale="pt-BR" startDate="01/01/2020"
-                        placeholder="Por favor, escolha uma data de exame." v-b-popover.hover.top="'Escolha uma data.'"></b-form-datepicker>
+                        placeholder="Por favor, escolha uma data de exame." v-b-popover.hover.top="'Escolha uma data.'"
+                        :options="usuario"></b-form-datepicker>
                     </div>
                 </div>
                 <div class="form-row">
@@ -66,13 +67,17 @@ export default {
         },
         async loadUsuario(){
             this.loadUser()
-            const url = `${baseApiUrl}/user`
+            const url = `${baseApiUrl}/users`
             await axios.get(url)
                     .then(res=>this.usuario = res.data.data.map(option=>{
                         return {value: option.id, text: (option.nome).toUpperCase()}
                     }))
                     .catch(showError)
+
         }
+    },
+    mounted(){
+        this.loadUsuario()
     }
 
 }
