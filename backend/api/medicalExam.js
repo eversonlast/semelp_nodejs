@@ -6,9 +6,10 @@ module.exports = app =>{
 
         if(req.params.id) medicalExam.id = req.params.id
 
-        const dataValidade = medicalExam.examMonth.split("/")
+        const dataValidade = medicalExam.examMonth.split("-")
+        console.log(dataValidade)
 
-        medicalExam.validadeExam = new Date(parseInt(dataValidade[2]) +1, parseInt(dataValidade[1]) - 1, parseInt(dataValidade[0]))
+        medicalExam.validadeExam = new Date(parseInt(dataValidade[0]) +1, parseInt(dataValidade[1]) - 1, parseInt(dataValidade[2]))
 
         try{
             existsOrError(medicalExam.validadeExam, "Por favor, Informe a Validade do Exame.")

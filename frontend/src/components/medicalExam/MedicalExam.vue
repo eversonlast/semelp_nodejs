@@ -12,7 +12,8 @@
                     <div class="form-group col-md-12">
                         <input type="text" class="form-control"
                         placeholder="Por favor, Digite aqui o nome do usuário."
-                        v-b-popover.hover.top="'Por favor, Digite o nome do usuário.'"/>
+                        v-b-popover.hover.top="'Por favor, Digite o nome do usuário.'"
+                        v-model="searchUser"/>
                     </div>
                 </div>
                 <div class="form-row">
@@ -20,7 +21,8 @@
                         <label for="userLists">Lista de Usuário</label>
                         <b-form-select id="userLists"
                         v-b-popover.hover.top="'Por favor, Escolha um usuário.'"
-                        :select-size="4"></b-form-select>
+                        :select-size="4" :options="resultUser" v-model="medicalExam.idUser" 
+                        v-on:change="loadSelectUser"></b-form-select>
                     </div>
                 </div>
                 <div class="form-row">
@@ -28,18 +30,27 @@
                         <label for="dtMonth">Data do Exame Médico</label>
                         <b-form-datepicker id="dtMonth" locale="pt-BR" startDate="01/01/2020"
                         placeholder="Por favor, escolha uma data de exame." v-b-popover.hover.top="'Escolha uma data.'"
-                        :options="usuario"></b-form-datepicker>
+                        v-model="medicalExam.examMonth" v-on:click="validateExam"></b-form-datepicker>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-12">
-                        <b-button class="Anexar" variant="success" v-b-popover.hover.top="'Clique para anexar.'">Anexar Atestado</b-button>
+                        <b-button class="Anexar" variant="success" 
+                        v-b-popover.hover.top="'Clique para anexar.'">Anexar Atestado</b-button>
                     </div>
                 </div>
             </div>
             <div class="card-body button">
-                <b-button variant="primary" class="mr-2" v-b-popover.hover.top="'Clique para salvar.'">Salvar</b-button>
+                <b-button variant="primary" class="mr-2" v-b-popover.hover.top="'Clique para salvar.'"
+                v-b-modal.modalRegisterMedicalExam v-on:click="validateExam">Salvar</b-button>
                 <b-button variant="outline-danger" v-b-popover.hover.top="'Clique para cancelar.'">Cancelar</b-button>
+            </div>
+            <div>
+                <b-modal id="modalRegisterMedicalExam" title="Verificação de Dados." @ok="saveMedicalExam"> 
+                    Usuário= {{medicalExam.idUser}} - {{nameUser}}<br>
+                    Data do exame = {{medicalExam.examMonth}} <br>
+                    Data da Validade = {{showDataValidate}}
+                </b-modal>
             </div>
         </div>
     </b-form>
@@ -56,7 +67,10 @@ export default {
     data: function(){
         return {
             medicalExam: {},
-            usuario: []
+            usuario: [],
+            searchUser: '',
+            showDataValidate: '',
+            nameUser: ''
         }
     },
     methods:{
@@ -70,14 +84,46 @@ export default {
             const url = `${baseApiUrl}/users`
             await axios.get(url)
                     .then(res=>this.usuario = res.data.data.map(option=>{
-                        return {value: option.id, text: (option.nome).toUpperCase()}
+                        return {value: option.id, text: (`${option.nome} - ${option.cpf}`).toUpperCase()}
                     }))
                     .catch(showError)
-
+        },
+        async saveMedicalExam(){
+            this.loadUser()
+            const id = this.$route.params.id ? `/${this.$route.params.id}` : ' '
+            const url = `${baseApiUrl}/medicalExam${id}`
+            const methods = this.$route.params.id ? 'put' : 'post'
+            await axios[methods](url, this.medicalExam)
+                    .then(()=>{
+                        this.$toasted.success('Cadastrado com sucesso.')
+                        this.medicalExam = {}
+                    })
+                    .catch(showError)
+        },
+        validateExam(){
+            const dataValidade = (this.medicalExam.examMonth).split("-")
+            this.showDataValidate = new Date(parseInt(dataValidade[0])+1, parseInt(dataValidade[1]), parseInt(dataValidade[2]))
+            this.showDataValidate = `${this.showDataValidate.getDate()}/${this.showDataValidate.getMonth()}/${this.showDataValidate.getFullYear()} `
+            // this.medicalExam.validadeExam = this.showDataValidate
+        },
+        loadSelectUser(){
+            var selectNameUser = document.getElementById('userLists')
+            this.nameUser = selectNameUser.options[selectNameUser.selectedIndex].text
         }
     },
     mounted(){
         this.loadUsuario()
+    }, 
+    computed:{
+        resultUser(){
+            if(this.searchUser == '' || this.searchUser== ' '){
+                return this.usuario
+            }else{
+                return this.usuario.filter(user=>{
+                    return user.text.match(this.searchUser.toUpperCase())
+                })
+            }
+        }
     }
 
 }
