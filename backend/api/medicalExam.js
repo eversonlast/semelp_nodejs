@@ -38,7 +38,9 @@ module.exports = app =>{
         const page = req.query.page || 1
         const result = await app.db('medicalExams').count('id').first()
         const count = parseInt(result.count)
-        await app.db('medicalExams')
+        await app.db('medicalExams as me')
+                .join('users as u', 'u.id', 'me.idUser')
+                .select('validadeExam', 'examMonth', 'activeExam', 'nome as NomeAluno',  'idUser')
                 .limit(limit).offset(page*limit-limit)
                 .then(medicalExam=>res.json({data: medicalExam.rows, count, limit}))
                 .catch(err=>res.status(500).send(err))

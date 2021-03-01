@@ -25,6 +25,7 @@ import ClassUsersById from '../components/turma/ClassUsersById'
 import ModalitiesByUser from '../components/users/ModalitiesByUser'
 import WaitingList from '../components/waitingLists/WaitingLists'
 import MedicalExam from '../components/medicalExam/MedicalExam'
+import ManagerMedicalExam from '../components/medicalExam/ManagerMedicalExam'
 
 import { userKey, baseApiUrl } from './global'
 import axios from 'axios'
@@ -128,6 +129,10 @@ const routes = [{
     name: 'medicalExam',
     path: '/medicalExam',
     component: MedicalExam
+},{
+    name: 'managerMedicalExam',
+    path: '/managerMedicalExam',
+    component: ManagerMedicalExam
 }]
 
 const router = new VueRouter({
@@ -137,9 +142,9 @@ const router = new VueRouter({
 
 router.beforeEach(async(to, from, next)=>{
     const json = localStorage.getItem(userKey)
-    const userData = JSON.parse(json)
+    //const userData = JSON.parse(json)
 
-    if(userData && to.path ==='/auth'){
+    if(userKey && to.path ==='/auth'){
         next({ path:'/'})
     }
     if(!userKey && to.path != '/auth'){

@@ -34,7 +34,10 @@ export default {
                 ]},
                 {text: 'Fazer Matrícula'},
                 {text: 'Lista de Espera'},
-                {text: 'Exame Médico'}
+                {text: 'Exame Médico', children:[
+                    {text: 'Cadastrar Exame Médico'},
+                    {text: 'Gerenciar Exame Médico'}
+                ]}
             ]
         }
     },
@@ -108,9 +111,15 @@ export default {
                     name: 'waitingLists'
                 })
             }
-            if(node.text == 'Exame Médico'){
+            if(node.text == 'Cadastrar Exame Médico'){
                 this.$router.push({
                     name: 'medicalExam'
+                })
+            }
+
+            if(node.text == "Gerenciar Exame Médico"){
+                this.$router.push({
+                    name: 'managerMedicalExam'
                 })
             }
         }

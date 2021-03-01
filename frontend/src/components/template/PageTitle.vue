@@ -7,7 +7,7 @@
         <h2>
             {{ sub }} {{ divisor }}  {{ responsability }}
         </h2>
-        <hr>
+        <hr> 
     </div>
 </template>
 

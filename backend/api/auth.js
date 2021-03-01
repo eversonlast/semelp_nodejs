@@ -1,4 +1,4 @@
-const { authSecret } = require('../.env')
+//const { authSecret } = require('../.env')
 const jwt = require('jwt-simple')
 const bcrypt = require('bcrypt-nodejs')
 
@@ -32,7 +32,7 @@ module.exports = app =>{
 
             res.json({
                 ...payload,
-                token: jwt.encode(payload, authSecret )
+                token: jwt.encode(payload, 'wiayrea57*6565#@21015478820ha#$%%nfcbdkla987464' )
             })
             
     }
@@ -41,7 +41,7 @@ module.exports = app =>{
         const userData = req.body || null
         try{
             if(userData){
-                const token = jwt.decode(userData.token, authSecret)
+                const token = jwt.decode(userData.token, 'wiayrea57*6565#@21015478820ha#$%%nfcbdkla987464')
                 if(new Date(token.exp * 1000) > new Date()){
                     return res.send(true)
                 }
@@ -55,7 +55,7 @@ module.exports = app =>{
         const userData = req.body || null
         try{
             if(userData){
-                const token = jwt.decode(userData.token, authSecret)
+                const token = jwt.decode(userData.token, 'wiayrea57*6565#@21015478820ha#$%%nfcbdkla987464')
                 const user = await app.db('users')
                     .where({ cpf: token.cpf })
                     .first()
