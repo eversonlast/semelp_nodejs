@@ -23,7 +23,9 @@ export default {
             page: 1,
             fields:[
                 {key: 'id', label:'Código', sortable: true},
-                
+                {key: 'validadeExam', label: 'Validade do Exame', sortable: true},
+                {key: 'examMonth', label: 'Mês do Exame', sortable: true},
+                {key: ''}
             ]
         }
     }

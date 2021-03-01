@@ -161,7 +161,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-4">
                                 <label for="bairro">Bairro</label>
-                                <input type="text" id="bairro" name="bairro"
+                                <input type="text" id="cep" name="cep"
                                     class="form-control "
                                     placeholder="Por favor Digite o nome do Bairro."
                                     v-model="cep.bairro" :readonly="stateAddress"
@@ -312,7 +312,7 @@
 
 <script>
 import axios from 'axios'
-import { baseApiUrl, showError} from '@/config/global'
+import { baseApiUrl, showError, userKey} from '@/config/global'
 import selectEstado from './json/selectEstados.json'
 import ddd from './json/ddd.json'
 import typeTelephone from './json/typeTelephone.json'
@@ -474,8 +474,9 @@ export default {
                 this.$toasted.error('Email inválido')
             }   
         },
-        buscarCep(cep){
-            axios.get(`https://viacep.com.br/ws/${cep}/json/`)
+       async buscarCep(cep){    
+           this.loadUser()        
+            await axios.get(` https://viacep.com.br/ws/${cep}/json/`, this.userKey)
                 .then(res => this.cep = res.data)
 
             
@@ -514,6 +515,11 @@ export default {
             this.ddd = ddd.map(option=>{
                 return { value: option.value, text: option.value}
             })
+        },
+         async loadUser(){
+            const json = localStorage.getItem(userKey)
+            const userData = JSON.parse(json)
+            await this.$store.commit('setUser', userData)
         }
     },
     mounted(){
