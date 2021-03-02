@@ -12,6 +12,7 @@ module.exports = app =>{
     app.post('/validateUser', app.api.auth.validateUser)
     app.post('/forgotPassword', app.api.forgotPassword.passwordForgotten)
     app.put('/resetPassword', app.api.forgotPassword.resetPasswordToken)
+    app.get('/consultarCep', app.api.apiCorreio.consultar)
    
     app.get('/modality', app.api.modality.get)
 

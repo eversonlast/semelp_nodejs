@@ -476,7 +476,7 @@ export default {
         },
        async buscarCep(cep){    
            this.loadUser()        
-            await axios.get(` https://viacep.com.br/ws/${cep}/json/`, this.userKey)
+            await axios.get(`${baseApiUrl}/consultarCep?cep=${cep}`)
                 .then(res => this.cep = res.data)
 
             
