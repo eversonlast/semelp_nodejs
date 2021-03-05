@@ -38,12 +38,15 @@ module.exports = app =>{
         const page = req.query.page || 1
         const result = await app.db('medicalExams').count('id').first()
         const count = parseInt(result.count)
-        await app.db('medicalExams as me')
-                .join('users as u', 'u.id', 'me.idUser')
-                .select('validadeExam', 'examMonth', 'activeExam', 'nome as NomeAluno',  'idUser')
-                .limit(limit).offset(page*limit-limit)
-                .then(medicalExam=>res.json({data: medicalExam.rows, count, limit}))
-                .catch(err=>res.status(500).send(err))
+        await app.db.raw(`SELECT u.id, TO_CHAR("examMonth", 'DD/MM/YYYY'), TO_CHAR("validadeExam", 'DD/MM/YYYY), "activeExam", nome as "NomeAluno", "idUser"`)
+        
+        
+        //('medicalExams as me')
+          //      .join('users as u', 'u.id', 'me.idUser')
+            //    .select(db.raw('TO_CHAR("examMonth", DD/MM/YYYY)','u.id', 'validadeExam', 'activeExam', 'nome as NomeAluno',  'idUser'))
+              //  .limit(limit).offset(page*limit-limit)
+                //.then(medicalExam=>res.json({data: medicalExam, count, limit}))
+                //.catch(err=>res.status(500).send(err))
     }
 
     const getById = async(req, res)=>{

@@ -50,6 +50,10 @@ export default {
                 await axios.get(`${baseApiUrl}/stats`)
                     .then(res => this.stat = res.data)
                 this.user = userData                
+            }else{
+                this.$router.push({
+                    name: 'auth'
+                })
             }
         },
         menuVisible(){

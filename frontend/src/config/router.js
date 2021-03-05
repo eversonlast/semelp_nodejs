@@ -144,7 +144,7 @@ router.beforeEach(async(to, from, next)=>{
     const json = localStorage.getItem(userKey)
     //const userData = JSON.parse(json)
 
-    if(userKey && to.path ==='/auth'){
+    if(userKey && to.path =='/auth'){
         next({ path:'/'})
     }
     if(!userKey && to.path != '/auth'){
