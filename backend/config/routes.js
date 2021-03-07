@@ -4,6 +4,22 @@ const userSecreAdmin = require('./accessControl/userSecreAdmin')
 const profAdmin = require('./accessControl/profAdmin')
 const secreProfAdmin = require('./accessControl/secreProfAdmin')
 
+
+
+const multer = require('multer')
+const path = require('path')
+const {uuid} = require('uuidv4')
+const uploadFolder =  path.resolve(__dirname, '../upload')
+
+const stogare = multer.diskStorage({
+    destination: uploadFolder,
+    filename(req, file, cb){
+           const filename = `${file.originalname}`
+           return cb(null, filename)
+       }
+   })
+   
+const upload = multer({storage: stogare})
 module.exports = app =>{
 
     app.post('/signin', app.api.auth.signin)
@@ -13,6 +29,9 @@ module.exports = app =>{
     app.post('/forgotPassword', app.api.forgotPassword.passwordForgotten)
     app.put('/resetPassword', app.api.forgotPassword.resetPasswordToken)
     app.get('/consultarCep', app.api.apiCorreio.consultar)
+    app.post('/upload', upload.single('file') ,(req, res)=>{
+        return res.send('Upload feito com sucesso!')
+    })
    
     app.get('/modality', app.api.modality.get)
 
@@ -147,7 +166,7 @@ module.exports = app =>{
         .delete(app.api.waitingList.removeWaitList)
 
     app.route('/medicalExam')
-        //.all(app.config.passport.authenticate())
+        .all(app.config.passport.authenticate())
         .post(app.api.medicalExam.save)
         .get(app.api.medicalExam.get)
 
@@ -155,6 +174,7 @@ module.exports = app =>{
         .all(app.config.passport.authenticate())
         .get(app.api.medicalExam.getById)
         .delete(app.api.medicalExam.remove)
+    
 
     
 }

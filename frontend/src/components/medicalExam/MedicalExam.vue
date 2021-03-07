@@ -35,8 +35,13 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-12">
-                        <b-button class="Anexar" variant="success" 
-                        v-b-popover.hover.top="'Clique para anexar.'">Anexar Atestado</b-button>
+                        <label for="pathMedicalExam">Anexar Exame Médico</label>
+                        <br>
+                        <input type="file"  @change="onChange" name="file" id="file" ref="files">
+                        <div id="preview">
+                            <img v-if="item.imageUrl" :src="item.imageUrl" width="250" height="200"/>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -61,7 +66,9 @@
 import PageTitle from '../template/PageTitle'
 import {baseApiUrl, showError, userKey} from '@/config/global'
 import axios from 'axios'
+
 export default {
+
     name: "MedicalExam",
     components: {PageTitle},
     data: function(){
@@ -70,7 +77,12 @@ export default {
             usuario: [],
             searchUser: '',
             showDataValidate: '',
-            nameUser: ''
+            nameUser: '',
+            item:{
+                image: null,
+                imageUrl: null                
+            },
+            inputFile: ''
         }
     },
     methods:{
@@ -93,6 +105,7 @@ export default {
             const id = this.$route.params.id ? `/${this.$route.params.id}` : ' '
             const url = `${baseApiUrl}/medicalExam${id}`
             const methods = this.$route.params.id ? 'put' : 'post'
+                        this.sendFile()
             await axios[methods](url, this.medicalExam)
                     .then(()=>{
                         this.$toasted.success('Cadastrado com sucesso.')
@@ -109,7 +122,34 @@ export default {
         loadSelectUser(){
             var selectNameUser = document.getElementById('userLists')
             this.nameUser = selectNameUser.options[selectNameUser.selectedIndex].text
-        }
+        },
+        async onChange(e){
+            const file = e.target.files[0]
+            this.image = file
+            this.item.imageUrl = URL.createObjectURL(file)
+            this.inputFile = e.target
+            
+        },
+        async sendFile(){
+            this.loadUser()
+            const formData = new FormData()
+            var selectIdUser = document.getElementById('userLists')
+            var test = selectIdUser.options[selectIdUser.selectedIndex].value
+            var dataAtual = new Date()
+            var dia = dataAtual.getDate()
+            var mes = dataAtual.getMonth()
+            var ano = dataAtual.getFullYear()
+            var nome = `${test} | ${dia}-${mes}-${ano}`
+            formData.append(this.inputFile.name, this.inputFile.files[0], `${nome}`)
+            const estaUrl = `${baseApiUrl}/upload`
+            await axios.post(estaUrl, formData,{
+               headers:{
+                   "Content-Type": `multipart/form-data; boundary=${formData._boundary}`
+               }
+           })
+           .then(()=> this.$toasted.success('Enviado Com Sucesso'))
+        },
+        
     },
     mounted(){
         this.loadUsuario()

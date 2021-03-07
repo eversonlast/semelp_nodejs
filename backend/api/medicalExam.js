@@ -1,5 +1,6 @@
 module.exports = app =>{
     const {existsOrError} = app.api.validation
+    const multer = require('multer')
 
     const save = async(req, res)=>{
         const medicalExam = {... req.body}
@@ -7,7 +8,6 @@ module.exports = app =>{
         if(req.params.id) medicalExam.id = req.params.id
 
         const dataValidade = medicalExam.examMonth.split("-")
-        console.log(dataValidade)
 
         medicalExam.validadeExam = new Date(parseInt(dataValidade[0]) +1, parseInt(dataValidade[1]) - 1, parseInt(dataValidade[2]))
 
@@ -43,7 +43,7 @@ module.exports = app =>{
                         inner join users as u on me."idUser" = u.id
                         limit ${limit} offset ${page*limit-limit}`)
                         .then(medicalExam=>res.json({data: medicalExam.rows, count, limit}))
-                        .catch(err=>res.status(500).send(err))
+                        // .catch(err=>res.status(500).send(err))
         
         
         //('medicalExams as me')
@@ -76,6 +76,12 @@ module.exports = app =>{
         }   
 
     }
+
+
+   
+
+   
+   
     return{save, get, getById, remove}
 
 }
