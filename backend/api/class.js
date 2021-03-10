@@ -1,5 +1,6 @@
 module.exports = app =>{
     const { existsOrError, notExistsOrError, daysOfClass } = app.api.validation
+    const knex = require('knex')
 
     const save = async(req, res)=>{
         const classes = {...req.body}
@@ -72,7 +73,7 @@ module.exports = app =>{
                 .join('users as u', 'u.id', 'c.idProfessorResponsability')
                 .join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')
                 .join('modalities as m', 'm.id', 'c.idModality')
-                .select('c.id', 'dias', 'horarios', 'faixaEtaria', 'u.nome as nomeProfessor', 'spt.nome as centroEsportivo', 'm.nomeModalidade')
+                .select(knex.raw('c.id, dias, horarios, "faixaEtaria", u.nome as nomeProfessor, spt.nome as centroEsportivo, "nomeModalidade"'))
                 .where({'c.id': idClass})
                 .first()
                 .then(classes=>res.json(classes))

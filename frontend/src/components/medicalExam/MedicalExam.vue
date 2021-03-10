@@ -104,14 +104,21 @@ export default {
             this.loadUser()
             const id = this.$route.params.id ? `/${this.$route.params.id}` : ' '
             const url = `${baseApiUrl}/medicalExam${id}`
-            const methods = this.$route.params.id ? 'put' : 'post'
-                        this.sendFile()
-            await axios[methods](url, this.medicalExam)
-                    .then(()=>{
-                        this.$toasted.success('Cadastrado com sucesso.')
-                        this.medicalExam = {}
+            if(id){
+                await axios.get(url)
+                    .then(res=>{
+                        this.medicalExam = res.data
                     })
                     .catch(showError)
+            }
+                const methods = this.$route.params.id ? 'put' : 'post' 
+                //this.sendFile()
+                await axios[methods](url, this.medicalExam)
+                        .then(()=>{
+                            this.$toasted.success('Cadastrado com sucesso.')
+                            this.medicalExam = {}
+                        })
+                        .catch(showError)
         },
         validateExam(){
             const dataValidade = (this.medicalExam.examMonth).split("-")

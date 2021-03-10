@@ -65,7 +65,7 @@
                         <label for="faixaEtaria">Máximo de Faltas por Mês que a Turma permite</label>
                         <div>
                             <input type="text" id="faixaEtaria" name="faixaEtaria" 
-                            class="form-control " v-model="turma.maximoFaltasMes" 
+                            class="form-control " v-model="turma.maxLackMounth" 
                             v-b-popover.hover.top="'Por favor, digite somente número'">
                         </div>
                     </div>

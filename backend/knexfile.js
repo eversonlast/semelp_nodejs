@@ -7,7 +7,7 @@ module.exports = {
     connection: {
       database: 'semelp_nodejs',
       user: 'postgres',
-      password: '1234',
+      password: '4021',
       host: '127.0.0.1'
     },
     pool: {

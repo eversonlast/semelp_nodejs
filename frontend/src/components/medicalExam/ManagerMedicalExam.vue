@@ -7,7 +7,7 @@
         v-b-popover.hover.top="'Por favor, digite o nome ou CPF.'"></b-form-input>
         <b-table striped hover :fields="fields" class='my-2' :items="medicalExams">
             <template slot="cell(actions)" slot-scope="data">
-                <b-button variant='warning' class="my-1 ml-1" 
+                <b-button variant='warning' class="my-1 ml-1" @click="updateButton(data.item)"
                 v-b-popover.hover.top="'Update'">
                     <i class="fa fa-pencil"></i>
                 </b-button>
@@ -62,6 +62,11 @@ export default {
             const json = localStorage.getItem(userKey)
             const userData = JSON.parse(json)
             await this.$store.commit('setUser', userData)
+        },
+        updateButton(medicalExam){
+            this.$router.push({
+                path: `/medicalExam/${medicalExam.id}`
+            })
         }
     },
     mounted(){
