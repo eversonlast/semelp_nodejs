@@ -28,7 +28,8 @@ export default {
         return{
             idSportParams: this.$route.params.id,
             sportCenter: {},
-            state: false
+            state: false, 
+            user: {}
         }
     },
     methods:{

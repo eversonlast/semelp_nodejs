@@ -18,15 +18,18 @@
                             v-on:change="clicar" v-b-popover.hover.top="'Escolha uma opçãode turma'">></b-form-select>
                         </div>
                         <div class="form-group col-md-12 mt-1">
-                            <label for="user">Escolha um Usuário</label>
-                            <input type="text" class="form-control mb-1 maiscula" v-model="searchUser"
-                            v-b-popover.hover.top="'Digite o nome do usuário'" placeholder="Digite o nome de uma usuário"/>
-                            <b-form-select v-model="userClass.idUser"
-                            :options="resultUser" :select-size="4"
-                            v-b-popover.hover.top="'Escolha uma opção de usuário'" id='userInput'></b-form-select>
-                            <b-form-checkbox class="mt-2" id="checkbox-1"
-                            v-model="userClass.activeClass">Ativar o aluno</b-form-checkbox>
-                            <div>Estado da matrícula do Aluno: <span :class="corDaLetra">{{userClass.activeClass == true ? "Ativo" : "Desativo"}}</span></div>
+                            <div v-if="this.user.tipoUsuario == 'admin'">                                
+                                <label for="user">Escolha um Usuário</label>
+                                <input type="text" class="form-control mb-1 maiscula" v-model="searchUser"
+                                v-b-popover.hover.top="'Digite o nome do usuário'" placeholder="Digite o nome de uma usuário"/>
+                                <b-form-select v-model="userClass.idUser"
+                                :options="resultUser" :select-size="4"
+                                v-b-popover.hover.top="'Escolha uma opção de usuário'" id='userInput'></b-form-select>
+                                <b-form-checkbox class="mt-2" id="checkbox-1"
+                                v-model="userClass.activeClass">Ativar o aluno</b-form-checkbox>
+                                <div>Estado da matrícula do Aluno: <span :class="corDaLetra">{{userClass.activeClass == true ? "Ativo" : "Desativo"}}</span></div>
+                                <input type="text" hiden v-model="userClass.idUser" v-if="this.user.tipoUsuario == 'user'"/>
+                            </div>
                         </div>
                         <div class="form-group col-md-12 mt-1 divButton" >
                             <b-button variant="primary" class="buttonSalvar mx-1"
@@ -72,6 +75,10 @@ export default {
             selectTurma: '',
             selectUser: '',
             controleButtonSaveUpdate: this.$route.params.id ? false : true,
+            user: {},
+            valorMaximoIdade: 0,
+            valorMinimoIdade: 0
+            
         }
     },
     methods: {
@@ -93,13 +100,23 @@ export default {
             const json = localStorage.getItem(userKey)
             const userData = JSON.parse(json)
             await this.$store.commit('setUser', userData)
+            this.user = userData
         },
         async loadClass(){
             this.loadUser()
             const url = `${baseApiUrl}/class`
             await axios.get(url)
                 .then(res=>{
-                    this.turmas = res.data.data.map(option=>{
+                    this.turmas = res.data.data
+                    .filter(res=>{
+                        if(this.user.tipoUsuario == 'user'){
+                            console.log(res.faixaEtaria.substring(res.faixaEtaria.indexOf("À") +2, res.faixaEtaria.indexOf("ANOS")))
+                            return res.faixaEtaria.substring(0, res.faixaEtaria.indexOf("À"))
+                        }else{
+                            return res
+                        }
+                    })
+                    .map(option=>{
                         return {value: option.id, text: (`${option.nomeModalidade} - ${option.dias} - ${option.horarios} -  ${option.centroEsportivo} | ${option.faixaEtaria}`).toUpperCase()}
                     })
                 })
@@ -116,14 +133,19 @@ export default {
                 valorMaximo = 60
                 this.anoMinimo = data.getFullYear() - valorMaximo
                 this.anoMaximo = 1900
+                this.valorMinimoIdade = 60
             }else{
                 valor = texto.substring(texto.indexOf("|") + 1)
                 var valorMinino = valor.substring(0, valor.indexOf("À"))
                 valorMaximo = valor.substring(valor.indexOf("À") + 1, valor.indexOf("A"))
+                this.valorMaximoIdade = valorMaximo
+                this.valorMinimoIdade = valorMinino
                 this.anoMinino = data.getFullYear() - valorMaximo
                 this.anoMaximo = data.getFullYear() - valorMinino
             }
-            this.loadUserSelect()
+            if(this.user.tipoUsuario == 'admin'){
+                this.loadUserSelect()                
+            }
         },
         async registerClassUser(){
             const url = `${baseApiUrl}/classUser`

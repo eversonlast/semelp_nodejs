@@ -38,7 +38,7 @@ export default {
     data: function(){
         return{
             stat: {},
-            user:{}
+            user:{} 
         }
     },
     methods: {        

@@ -19,7 +19,8 @@ export default {
                 {text: 'Usuário', children:[
                     {text: 'Atualizar Cadastro'},
                     {text: 'Trocar Senha'}
-                ]}
+                ]},
+                {text: 'Fazer Matrícula'}
             ]
         }
     },
@@ -42,7 +43,15 @@ export default {
                 this.$router.push({
                     path:`/forgotPasswordAuth/${this.user}`                           
                 })
-            } 
+            }
+            if(node.text == 'Fazer Matrícula'){
+                if(this.$mq === 'xs' || this.$mq === 'sm'){
+                    this.$store.commit('toggleMenu', false)
+                }
+                this.$router.push({
+                    path:'/registerUserClass'
+                })
+            }
         },
         async getUser(){
             const json = localStorage.getItem(userKey)

@@ -119,7 +119,8 @@ export default {
             nomeProfessor: '',
             nomeCentroEsportivo: '',
             nomeModalidade: '',
-            controleButton: true
+            controleButton: true,
+            user: {}
         }
     },
     methods: {
@@ -168,6 +169,7 @@ export default {
             const json = localStorage.getItem(userKey)
             const userData = JSON.parse(json)
             await this.$store.commit('setUser', userData)
+            this.user = userData
         },
         async loadSportCenter(){
             this.loadUser()
