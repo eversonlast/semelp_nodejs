@@ -9,14 +9,14 @@
                 </div>
                 <div class="card-body">
                     <div class="form-row">
-                          <div class="form-group col-md-12 mt-1" v-if="this.user.tipoUsuario == 'user'">
+                        <div class="form-group col-md-12 mt-1" v-if="this.user.tipoUsuario == 'user'">
                             <label for="turma">Escolha o Centro Esportivo</label>
                             <input type="text" v-model="searchSportCenter" class="form-control mb-1 maiscula" 
                             id="turma" placeholder="Digite um Centro Esportivo" v-b-popover.hover.top="'Digite um Centro Esportivo'"/>
-                            <b-form-select 
+                            <b-form-select v-on:change="clicarSportCenter"
                             :options="resultSportCenter" :select-size="4" id="CE"
-                            v-b-popover.hover.top="'Escolha uma opção de Centro Esportivo'">></b-form-select>
-                        </div>
+                            v-b-popover.hover.top="'Escolha uma opção de Centro Esportivo'"></b-form-select>
+                        </div>                        
                         <div class="form-group col-md-12 mt-1">
                             <label for="turma">Escolha a turma</label>
                             <input type="text" v-model="search" class="form-control mb-1 maiscula" 
@@ -36,7 +36,7 @@
                                 <b-form-checkbox class="mt-2" id="checkbox-1"
                                 v-model="userClass.activeClass">Ativar o aluno</b-form-checkbox>
                                 <div>Estado da matrícula do Aluno: <span :class="corDaLetra">{{userClass.activeClass == true ? "Ativo" : "Desativo"}}</span></div>
-                                <input type="text" hiden v-model="userClass.idUser" v-if="this.user.tipoUsuario == 'user'"/>
+                                <!--<input type="text" hiden v-model="userClass.idUser" v-if="this.user.tipoUsuario == 'user'"/>-->
                             </div>
                         </div>
                         <div class="form-group col-md-12 mt-1 divButton" >
@@ -87,7 +87,8 @@ export default {
             valorMaximoIdade: 0,
             valorMinimoIdade: 0,
             sportCenter: [],
-            searchSportCenter: ''
+            searchSportCenter: '',
+            selectSportCenter: ''
         }
     },
     methods: {
@@ -119,7 +120,6 @@ export default {
                     this.turmas = res.data.data
                     .filter(res=>{
                         if(this.user.tipoUsuario == 'user'){
-                            //console.log(res.faixaEtaria.substring(res.faixaEtaria.indexOf("À") +2, res.faixaEtaria.indexOf("ANOS")))
                             return res.faixaEtaria.substring(0, res.faixaEtaria.indexOf("À"))
                         }else{
                             return res
@@ -170,8 +170,12 @@ export default {
         loadControle(){
             var select = document.getElementById('teste')
             this.selectTurma = select.options[select.selectedIndex].text
-            select = document.getElementById('userInput')
-            this.selectUser = select.options[select.selectedIndex].text
+            if(this.user.tipoUsuario == 'admin'){
+                select = document.getElementById('userInput')
+                this.selectUser = select.options[select.selectedIndex].text
+            }else{
+                this.selectUser = this.user.nome 
+            }
         },
         cancelButton(){
             this.userClass = {}
@@ -179,22 +183,39 @@ export default {
             this.selectTurma = ''
         },
         async loadSportCenter(){
-            const url = `${baseApiUrl}/sportCenter`
             this.loadUser()
+            const url = `${baseApiUrl}/sportCenter`
             await axios.get(url)
                     .then(res=>{this.sportCenter = res.data.data
                                     .map(option=>{
-                                        return {value: option.id, text: option.nome.toUpperCase()}})
+                                        return {value: option.id, text: (`${option.nome}`).toUpperCase()}})
                                     })
                    .catch(showError)
         },
        async clicarSportCenter(){
-           var select = document.getElementById('CE')
+            var select = document.getElementById('CE')
+           // this.turmas = []
+            this.userClass.idUser = this.user.id
+            this.selectSportCenter = select.options[select.selectedIndex].value
+            const url = `${baseApiUrl}/sportCenterModality/${this.selectSportCenter}`
+            this.loadUser()
+            await axios.get(url)
+                    .then(res=>{
+                        this.turmas = res.data.data
+                            .map(option=>{
+                                return{value: option.classUser, text: (`${option.nomeModalidade} - ${option.dias} - ${option.horarios} | ${option.faixaEtaria}`).toUpperCase()}
+                            })
+                    })
+
         }
     },
-    mounted(){
-        this.loadClass()
-        this.loadSportCenter()
+   async mounted(){
+        await this.loadUser()
+        if(this.user.tipoUsuario == 'user'){
+            this.loadSportCenter()
+        }else{
+            this.loadClass()        
+        }
     },
     computed: {
         resultClass(){

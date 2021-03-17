@@ -94,7 +94,9 @@ module.exports = app=>{
    const getByIdClassDesactive = async(req, res)=>{
         const page = req.query.page || 1
         const idClass = req.params.id
-        const result = await app.db('classesUsers').count('id').first().where({idClass: idClass}).andWhere({activeClass: false, activeClass: null})
+        const result = await app.db('classesUsers').count('id').first()
+                .where({idClass: idClass})
+                .andWhere({activeClass: false, activeClass: null})
         const count = parseInt(result.count)
         await app.db('classesUsers as turma')
                 .join('users as u', 'u.id', 'turma.idUser')
@@ -105,7 +107,23 @@ module.exports = app=>{
                 .then(classUserDesactive=>res.json({data:classUserDesactive, count, limit}))
                 .catch(err=>res.status(500).send(err))
 
-   }
+   } 
+
+   const getAllClassDesactive = async(req, res)=>{
+    const page = req.query.page || 1
+    const idClass = req.params.id
+    const result = await app.db('classesUsers').count('id').first()
+            .andWhere({activeClass: false, activeClass: null})
+    const count = parseInt(result.count)
+    await app.db('classesUsers as turma')
+            .join('users as u', 'u.id', 'turma.idUser')
+            .select('u.nome', 'idUser', 'activeClass')
+            .andWhere({activeClass: false, activeClass: null})
+            .limit(limit).offset(page*limit-limit)
+            .then(classUserDesactive=>res.json({data:classUserDesactive, count, limit}))
+            .catch(err=>res.status(500).send(err))
+
+} 
 
    const getByIdUser = async(req, res)=>{
        const idUser = req.params.id
@@ -167,7 +185,7 @@ module.exports = app=>{
 
    
 
-    return { save, remove, getAll, getByIDClassActive, getByIdUser, saveLack, getByIdUserLack, getByIdClassDesactive, numberOfStudentsPerClass}
+    return { save, remove, getAll, getByIDClassActive, getByIdUser, saveLack, getByIdUserLack, getByIdClassDesactive, numberOfStudentsPerClass, getAllClassDesactive}
 }
 
 

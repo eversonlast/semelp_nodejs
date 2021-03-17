@@ -46,11 +46,12 @@ module.exports = app =>{
         const result = await app.db.raw(`select count("idSportCenter") from "modalitiesSportsCenters" where "idSportCenter" = ${req.params.id}`)
         const count = parseInt(result.rows[0].count)
 
-        app.db.raw(`select nome as "Local", "nomeModalidade", m.id as "idModalidade", departamento, "idResponsabilityModality"
-                    from "sportsCenters" 
-                    right join "modalitiesSportsCenters" as mdc on mdc."idSportCenter" = "sportsCenters".id
-                    right join modalities as m on mdc."idModality" = m.id
-                    where "idSportCenter" = ${req.params.id}        
+        app.db.raw(`select nome as "Local", "nomeModalidade", m.id as "idModalidade", departamento, "idResponsabilityModality", dias, horarios, "faixaEtaria", c.id as "classUser"
+                    from "sportsCenters" as spt
+                    inner join "modalitiesSportsCenters" as mdc on mdc."idSportCenter" = spt.id
+                    inner join modalities as m on mdc."idModality" = m.id
+                    inner join classes as c on c."idModality" = m.id
+                    where mdc."idSportCenter" = ${req.params.id}        
                     limit ${limit} offset ${page*limit-limit}`)
                 .then(modalities=> res.json({data: modalities.rows, count, limit}))
                 .catch(err=>res.status(500).send(err))
