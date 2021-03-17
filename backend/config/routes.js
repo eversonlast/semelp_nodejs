@@ -95,7 +95,7 @@ module.exports = app =>{
         .delete(admin(app.api.modalitySportCenter.remove))
 
     app.route('/sportCenterModality/:id')
-        .all(app.config.passport.authenticate())
+        //.all(app.config.passport.authenticate())
         .get(app.api.modalitySportCenter.getSportCenter)
         
     app.route('/modalitySportCenter/:id')

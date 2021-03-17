@@ -9,13 +9,21 @@
                 </div>
                 <div class="card-body">
                     <div class="form-row">
+                          <div class="form-group col-md-12 mt-1" v-if="this.user.tipoUsuario == 'user'">
+                            <label for="turma">Escolha o Centro Esportivo</label>
+                            <input type="text" v-model="searchSportCenter" class="form-control mb-1 maiscula" 
+                            id="turma" placeholder="Digite um Centro Esportivo" v-b-popover.hover.top="'Digite um Centro Esportivo'"/>
+                            <b-form-select 
+                            :options="resultSportCenter" :select-size="4" id="CE"
+                            v-b-popover.hover.top="'Escolha uma opção de Centro Esportivo'">></b-form-select>
+                        </div>
                         <div class="form-group col-md-12 mt-1">
                             <label for="turma">Escolha a turma</label>
                             <input type="text" v-model="search" class="form-control mb-1 maiscula" 
                             id="turma" placeholder="Digite uma turma" v-b-popover.hover.top="'Digite uma turma'"/>
                             <b-form-select v-model="userClass.idClass" 
                             :options="resultClass" :select-size="4" id="teste"
-                            v-on:change="clicar" v-b-popover.hover.top="'Escolha uma opçãode turma'">></b-form-select>
+                            v-on:change="clicar" v-b-popover.hover.top="'Escolha uma opção de turma'">></b-form-select>
                         </div>
                         <div class="form-group col-md-12 mt-1">
                             <div v-if="this.user.tipoUsuario == 'admin'">                                
@@ -77,8 +85,9 @@ export default {
             controleButtonSaveUpdate: this.$route.params.id ? false : true,
             user: {},
             valorMaximoIdade: 0,
-            valorMinimoIdade: 0
-            
+            valorMinimoIdade: 0,
+            sportCenter: [],
+            searchSportCenter: ''
         }
     },
     methods: {
@@ -110,7 +119,7 @@ export default {
                     this.turmas = res.data.data
                     .filter(res=>{
                         if(this.user.tipoUsuario == 'user'){
-                            console.log(res.faixaEtaria.substring(res.faixaEtaria.indexOf("À") +2, res.faixaEtaria.indexOf("ANOS")))
+                            //console.log(res.faixaEtaria.substring(res.faixaEtaria.indexOf("À") +2, res.faixaEtaria.indexOf("ANOS")))
                             return res.faixaEtaria.substring(0, res.faixaEtaria.indexOf("À"))
                         }else{
                             return res
@@ -168,10 +177,24 @@ export default {
             this.userClass = {}
             this.selectUser = ''
             this.selectTurma = ''
+        },
+        async loadSportCenter(){
+            const url = `${baseApiUrl}/sportCenter`
+            this.loadUser()
+            await axios.get(url)
+                    .then(res=>{this.sportCenter = res.data.data
+                                    .map(option=>{
+                                        return {value: option.id, text: option.nome.toUpperCase()}})
+                                    })
+                   .catch(showError)
+        },
+       async clicarSportCenter(){
+           var select = document.getElementById('CE')
         }
     },
     mounted(){
         this.loadClass()
+        this.loadSportCenter()
     },
     computed: {
         resultClass(){
@@ -183,6 +206,15 @@ export default {
                         
                 })
                
+            }
+        },
+        resultSportCenter(){
+            if(this.searchSportCenter == '' || this.searchSportCenter == ' '){
+                return this.sportCenter
+            }else{
+                return this.sportCenter.filter(sportCenter=>{
+                    return sportCenter.text.match(this.searchSportCenter.toUpperCase())
+                })
             }
         },
         resultUser(){
