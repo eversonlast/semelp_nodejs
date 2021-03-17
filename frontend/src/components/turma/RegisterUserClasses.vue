@@ -120,7 +120,7 @@ export default {
                     this.turmas = res.data.data
                     .filter(res=>{
                         if(this.user.tipoUsuario == 'user'){
-                            return res.faixaEtaria.substring(0, res.faixaEtaria.indexOf("À"))
+                            return res
                         }else{
                             return res
                         }
@@ -202,6 +202,14 @@ export default {
             await axios.get(url)
                     .then(res=>{
                         this.turmas = res.data.data
+                            .filter(option=>{
+                                if(option.faixaEtaria == "Acima de 60 anos"){
+                                    return option.faixaEtaria.substring(option.faixaEtaria.indexOf('de')+1, option.faixaEtaria.indexOf('anos')) < this.user.idade
+                                }else{
+                                    return option.faixaEtaria.substring(0, option.faixaEtaria.indexOf('À')) < this.user.idade &&
+                                            option.faixaEtaria.substring(option.faixaEtaria.indexOf("À")+2, option.faixaEtaria.indexOf("ANOS"))                                    
+                                }
+                            })
                             .map(option=>{
                                 return{value: option.classUser, text: (`${option.nomeModalidade} - ${option.dias} - ${option.horarios} | ${option.faixaEtaria}`).toUpperCase()}
                             })

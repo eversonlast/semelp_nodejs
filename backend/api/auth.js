@@ -20,12 +20,14 @@ module.exports = app =>{
             if(!isMatch) return res.status(400).send('CPF ou senha inválidos!')
 
             const now = Math.floor(Date.now() /1000)
+            const anoAtual = new Date().getFullYear()
 
             const payload = {
                 id: user.id,
                 cpf: user.cpf,
                 nome: user.nome,
                 tipoUsuario: user.tipoUsuario,
+                idade: anoAtual - user.dataNasc.getFullYear(),
                 iat: now,
                 exp: now + (60 * 60 * 24 * 3)//o primeiro número é segundos, o segundo é o minutos e o terceiro é um dia, e quarto é quantidade de dias 
             }
