@@ -181,6 +181,9 @@ export default {
             this.userClass = {}
             this.selectUser = ''
             this.selectTurma = ''
+            if(this.user.tipoUsuario == 'user'){
+                this.turmas = []
+            }
         },
         async loadSportCenter(){
             this.loadUser()
