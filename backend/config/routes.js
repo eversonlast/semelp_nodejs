@@ -128,9 +128,13 @@ module.exports = app =>{
         .put(app.api.classUser.save)
         .get(app.api.classUser.getByIDClassActive)
 
-    app.route('/classUserDesactive/')
+    app.route('/classUserDesactive/:id')
         .all(app.config.passport.authenticate())
         .get(app.api.classUser.getByIdClassDesactive)
+
+    app.route('/classUserDesactive')
+        //.all(app.config.passport.authenticate())
+        .get(app.api.classUser.getAllClassDesactive)
 
     app.route('/userClass/:id')
         .all(app.config.passport.authenticate())

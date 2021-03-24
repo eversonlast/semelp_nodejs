@@ -6,7 +6,11 @@
           placeholder="Por favor, digite o nome do Usuário, Modalidade ou Centro Esportivo."
           v-b-popover.hover.top="'Por favor, digite o nome do Usuário, Modalidade ou Centro Esportivo.'"></b-form-input>
           <b-table striped :fields="fields" :items="resultadoPesquisaUserWithClass" hover class="my-2">
-              
+              <template slot="cell(actions)" slot-scope="data">
+                <b-button variant="success" v-b-popover.hover.top="'Ativar Usuário'">
+                    <i class="icofont-check"></i>
+                </b-button>
+              </template>
           </b-table>
         <b-pagination size="md" v-model="page"
         :total-rows="countUsers" :per-page="limitUsers"/>
@@ -36,8 +40,10 @@ export default {
                 {key:'nomeModalidade', label: 'Modalidade'},
                 {key: 'centroEsportivo', label: 'Centro Esportivo'},
                 {key: 'quantidadesDeFalta', label: 'Quantidade de Falta'},
+                {key: 'activeClass', label: 'Usuário Ativo'},
                 {key: 'departamento', label: 'Departamento'},
-                {key: 'maximoFaltaMes', label:'Máximo de Faltas no Mês'}
+                {key: 'maximoFaltaMes', label:'Máximo de Faltas no Mês'},
+                {key: 'actions', label: 'Ações'}
             ]
         }
     },
@@ -47,7 +53,7 @@ export default {
             this.loadUser()
             await axios.get(url)
                 .then(res=>{
-                    this.usersWithClass = res.data.data
+                    this.usersWithClass = res.data.data 
                     this.countUsers = res.data.count
                     this.limitUsers = res.data.limit
                 })
