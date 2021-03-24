@@ -107,7 +107,7 @@ module.exports = app =>{
         .get(app.api.modality.getResponsability)
     
     app.route('/class')
-        .all(app.config.passport.authenticate())
+        //.all(app.config.passport.authenticate())
         .post(admin(app.api.class.save))
         .get(app.api.class.getAll)
 
@@ -118,7 +118,7 @@ module.exports = app =>{
         .delete(admin(app.api.class.remove))
 
     app.route('/classUser')
-        .all(app.config.passport.authenticate())
+        //.all(app.config.passport.authenticate())
         .post(app.api.classUser.save)
         .get(app.api.classUser.getAll)
     
@@ -129,7 +129,7 @@ module.exports = app =>{
         .get(app.api.classUser.getByIDClassActive)
 
     app.route('/classUserDesactive/')
-        //.all(app.config.passport.authenticate())
+        .all(app.config.passport.authenticate())
         .get(app.api.classUser.getByIdClassDesactive)
 
     app.route('/userClass/:id')
