@@ -32,7 +32,11 @@ export default {
                     {text: 'Cadastrar Turma'},
                     {text: 'Lista de Turma'}
                 ]},
-                {text: 'Fazer Matrícula'},
+                {text: 'Gerenciamente Matrícula', children:[
+                    {text: 'Fazer Matrícula'},
+                    {text: 'Lista de Matrícula Ativada'},
+                    {text: 'Lista de Matrícula Desativada'}
+                ]},
                 {text: 'Lista de Espera'},
                 {text: 'Exame Médico', children:[
                     {text: 'Cadastrar Exame Médico'},
@@ -120,6 +124,12 @@ export default {
             if(node.text == "Gerenciar Exame Médico"){
                 this.$router.push({
                     name: 'managerMedicalExam'
+                })
+            }
+
+            if(node.text == "Lista de Matrícula Desativada"){
+                this.$router.push({
+                    name: 'managerClassUsers'
                 })
             }
         }

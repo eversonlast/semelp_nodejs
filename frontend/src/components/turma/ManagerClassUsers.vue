@@ -7,7 +7,7 @@
           v-b-popover.hover.top="'Por favor, digite o nome do Usuário, Modalidade ou Centro Esportivo.'"></b-form-input>
           <b-table striped :fields="fields" :items="resultadoPesquisaUserWithClass" hover class="my-2">
               <template slot="cell(actions)" slot-scope="data">
-                <b-button variant="success" v-b-popover.hover.top="'Ativar Usuário'">
+                <b-button variant="success" v-b-popover.hover.top="'Ativar Usuário'" @click="activeClassUser(data.item)">
                     <i class="icofont-check"></i>
                 </b-button>
               </template>
@@ -30,6 +30,7 @@ export default {
             usersWithClass: [],
             countUsers: 0, 
             limitUsers: 0,
+            user: {},
             page: 1, 
             search: '',
             fields: [
@@ -64,6 +65,9 @@ export default {
             const userData = JSON.parse(json)
             await this.$store.commit('setUser', userData)
         },
+        async activeClassUser(user){
+            this.user = {...user}
+        }
     },
     mounted(){
         this.loadUsersWithClasses()
