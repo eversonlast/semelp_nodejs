@@ -132,6 +132,12 @@ export default {
                     name: 'managerClassUsers'
                 })
             }
+
+            if(node.text == "Lista de Matrícula Ativada"){
+                this.$router.push({
+                    name: 'managerClassUsersActive'
+                })
+            }
         }
     },
     mounted(){

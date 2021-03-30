@@ -1,6 +1,6 @@
 <template>
   <div>
-      <PageTitle main="Lista da Turma" icon="icofont-gears"/>
+      <PageTitle main="Lista de Usuários Desativados" icon="icofont-gears"/>
       <div class="base">
           <b-form-input type="text" id="usuarioDaTurma" class="my-2" v-model="search"
           placeholder="Por favor, digite o nome do Usuário, Modalidade ou Centro Esportivo."
@@ -40,17 +40,15 @@ export default {
                 {key: 'horarios', label: 'Horário da Aula'},
                 {key:'nomeModalidade', label: 'Modalidade'},
                 {key: 'centroEsportivo', label: 'Centro Esportivo'},
-                {key: 'quantidadesDeFalta', label: 'Quantidade de Falta'},
-                {key: 'activeClass', label: 'Usuário Ativo'},
                 {key: 'departamento', label: 'Departamento'},
-                {key: 'maximoFaltaMes', label:'Máximo de Faltas no Mês'},
+                {key: 'maximoFaltasMes', label:'Máximo de Faltas no Mês'},
                 {key: 'actions', label: 'Ações'}
             ]
         }
     },
     methods:{
         async loadUsersWithClasses(){
-            const url = `${baseApiUrl}/classUser?page=${this.page}`
+            const url = `${baseApiUrl}/classUserDesactive?page=${this.page}`
             this.loadUser()
             await axios.get(url)
                 .then(res=>{
@@ -66,7 +64,14 @@ export default {
             await this.$store.commit('setUser', userData)
         },
         async activeClassUser(user){
-            this.user = {...user}
+            const url = `${baseApiUrl}/classUserDesactive/${user.id}`
+            await axios.put(url)
+                    .then(()=>{
+                        this.$toasted.success('O aluno está ativado')    
+                        user = {}
+                    })
+                    .catch(showError)
+            this.loadUsersWithClasses()
         }
     },
     mounted(){

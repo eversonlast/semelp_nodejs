@@ -44,6 +44,26 @@ module.exports = app=>{
         }
    } 
 
+   const updateDesactive = async(req, res)=>{
+       const classUser = {}
+       classUser.activeClass = true
+       await app.db('classesUsers')
+                .update(classUser)
+                .where({id: req.params.id})
+                .then(_=>res.status(200).send('Usuário ativado com sucesso'))
+                .catch(err=>res.status(500).send(err))
+   }
+
+   const updateForDesactive = async(req, res)=>{
+       const classUserActive = {}
+       classUserActive.activeClass = false
+       await app.db('classesUsers')
+            .update(classUserActive)
+            .where({id: req.params.id})
+            .then(_=>res.status(200).send('Usuário desativado com sucesso'))
+            .catch(err=>res.status(500).send(err))
+   }
+
    const limit = 10
    const getAll = async(req, res)=>{
        const page = req.query.page || 1
@@ -113,20 +133,39 @@ module.exports = app=>{
     const page = req.query.page || 1
     const idClass = req.params.id
     const result = await app.db('classesUsers').count('id').first()
-            .andWhere({activeClass: false, activeClass: null})
+            .orWhere({activeClass: false, activeClass: null, activeClass: 'f'})
     const count = parseInt(result.count)
     await app.db('classesUsers as turma')
             .join('users as u', 'u.id', 'turma.idUser')
-            //.join('classes as c', 'c.id', 'turma.idClass')
-            //.join('modalities as m', 'm.id', 'c.idModality')
-            //.join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')
-            .select('u.nome', 'idUser', 'activeClass', 'turma.quantidadesDeFalta')
-            .orWhere({activeClass: false, activeClass: null})
+            .join('classes as c', 'c.id', 'turma.idClass')
+            .join('modalities as m', 'm.id', 'c.idModality')
+            .join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')
+            .select('u.nome as nomeAluno', 'idUser', 'activeClass', 'turma.id', 'dias',
+                    'horarios', 'm.nomeModalidade', 'spt.nome as centroEsportivo', 'm.departamento',  'maxLackMounth as maximoFaltasMes')
+            .orWhere({activeClass: false, activeClass: null, activeClass: 'f'})
             .limit(limit).offset(page*limit-limit)
             .then(classUserDesactive=>res.json({data:classUserDesactive, count, limit}))
             .catch(err=>res.status(500).send(err))
 
 } 
+
+    const getAllClassActive = async(req, res)=>{
+        const page = req.query.page || 1
+        const result = await app.db('classesUsers').count('id').first()
+                                .where({activeClass: true})
+        const count = parseInt(result.count)
+        await app.db('classesUsers as turma')
+            .join('users as u', 'u.id', 'turma.idUser')
+            .join('classes as c', 'c.id', 'turma.idClass')
+            .join('modalities as m', 'm.id', 'c.idModality')
+            .join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')
+            .select('turma.id', 'u.nome as nomeAluno', 'idUser', 'turma.quantidadesDeFalta', 'dias', 'horarios',
+                'm.nomeModalidade', 'spt.nome as centroEsportivo', 'm.departamento', 'maxLackMounth as maximoFaltasMes')
+            .where({activeClass: true})
+            .limit(limit).offset(page*limit-limit)
+            .then(classUserActive=>res.json({data: classUserActive, count, limit}))
+            .catch(err=>res.status(500).send(err))
+    }
 
    const getByIdUser = async(req, res)=>{
        const idUser = req.params.id
@@ -188,7 +227,7 @@ module.exports = app=>{
 
    
 
-    return { save, remove, getAll, getByIDClassActive, getByIdUser, saveLack, getByIdUserLack, getByIdClassDesactive, numberOfStudentsPerClass, getAllClassDesactive}
+    return { save, remove, getAll, getByIDClassActive, getByIdUser, saveLack, getByIdUserLack, getByIdClassDesactive, numberOfStudentsPerClass, getAllClassDesactive, updateDesactive, getAllClassActive, updateForDesactive}
 }
 
 

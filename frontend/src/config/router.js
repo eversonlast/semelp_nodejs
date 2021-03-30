@@ -27,6 +27,7 @@ import WaitingList from '../components/waitingLists/WaitingLists'
 import MedicalExam from '../components/medicalExam/MedicalExam'
 import ManagerMedicalExam from '../components/medicalExam/ManagerMedicalExam'
 import ManagerClassUsers from '../components/turma/ManagerClassUsers'
+import ManagerClassUsersActive from '../components/turma/ManagerClassUsersActive'
 
 import { userKey, baseApiUrl } from './global'
 import axios from 'axios'
@@ -136,8 +137,12 @@ const routes = [{
     component: ManagerMedicalExam
 },{
     name: 'managerClassUsers',
-    path: '/managerClassUsers',
+    path: '/managerClassUsersDesactive',
     component: ManagerClassUsers
+},{
+    name: 'managerClassUsersActive',
+    path: '/managerClassUsersActive',
+    component: ManagerClassUsersActive
 }]
 
 const router = new VueRouter({
