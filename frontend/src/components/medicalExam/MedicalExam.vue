@@ -5,7 +5,7 @@
         <div class="login-card card">
             <input type="hidden" id="medcialExam" v-model="medicalExam.id" />
             <div class="card-header">
-                Dados para Cadstramento de Exames Médicos
+                Dados para Cadastramento de Exames Médicos
             </div>
             <div class="card-body cadastro">
                 <div class="form-row">
@@ -30,7 +30,7 @@
                         <label for="dtMonth">Data do Exame Médico</label>
                         <b-form-datepicker id="dtMonth" locale="pt-BR" startDate="01/01/2020"
                         placeholder="Por favor, escolha uma data de exame." v-b-popover.hover.top="'Escolha uma data.'"
-                        v-model="medicalExam.examMonth" v-on:click="validateExam"></b-form-datepicker>
+                        v-model="medicalExam.examMonth" ></b-form-datepicker>
                     </div>
                 </div>
                 <div class="form-row">
@@ -104,19 +104,21 @@ export default {
             this.loadUser()
             const id = this.$route.params.id ? `/${this.$route.params.id}` : ' '
             const url = `${baseApiUrl}/medicalExam${id}`
-            if(id){
-                await axios.get(url)
-                    .then(res=>{
-                        this.medicalExam = res.data
-                    })
-                    .catch(showError)
-            }
+            await this.sendFile()
+           // if(id){
+               // await axios.get(url)
+               //     .then(res=>{
+               //         this.medicalExam = res.data
+              //      })
+                 //   .catch(showError)
+      //      }
                 const methods = this.$route.params.id ? 'put' : 'post' 
-                //this.sendFile()
                 await axios[methods](url, this.medicalExam)
                         .then(()=>{
                             this.$toasted.success('Cadastrado com sucesso.')
                             this.medicalExam = {}
+                            this.item.image= null
+                            this.item.imageUrl = null
                         })
                         .catch(showError)
         },
@@ -124,7 +126,8 @@ export default {
             const dataValidade = (this.medicalExam.examMonth).split("-")
             this.showDataValidate = new Date(parseInt(dataValidade[0])+1, parseInt(dataValidade[1]), parseInt(dataValidade[2]))
             this.showDataValidate = `${this.showDataValidate.getDate()}/${this.showDataValidate.getMonth()}/${this.showDataValidate.getFullYear()} `
-            // this.medicalExam.validadeExam = this.showDataValidate
+           // this.medicalExam.validadeExam = this.showDataValidate
+           // console.log(new Date(this.medicalExam.validadeExam))
         },
         loadSelectUser(){
             var selectNameUser = document.getElementById('userLists')
@@ -146,7 +149,7 @@ export default {
             var dia = dataAtual.getDate()
             var mes = dataAtual.getMonth()
             var ano = dataAtual.getFullYear()
-            var nome = `${test} | ${dia}-${mes}-${ano}`
+            var nome = `${test}-${dia}-${mes}-${ano}.jpg`
             formData.append(this.inputFile.name, this.inputFile.files[0], `${nome}`)
             const estaUrl = `${baseApiUrl}/upload`
             await axios.post(estaUrl, formData,{
@@ -154,7 +157,10 @@ export default {
                    "Content-Type": `multipart/form-data; boundary=${formData._boundary}`
                }
            })
-           .then(()=> this.$toasted.success('Enviado Com Sucesso'))
+           .then(res=> {
+               this.$toasted.success("Arquivo enviado com sucesso")
+               this.medicalExam.pathMedicalExam = `${res.data.path}/${nome}`
+               })
         },
         
     },

@@ -10,7 +10,7 @@ module.exports = app =>{
 
         if(req.params.id) medicalExam.id = req.params.id
 
-        const dataValidade = medicalExam.examMonth.split("-")
+        const dataValidade = String(medicalExam.examMonth).split("-")
 
         medicalExam.validadeExam = new Date(parseInt(dataValidade[0]) +1, parseInt(dataValidade[1]) - 1, parseInt(dataValidade[2]))
 

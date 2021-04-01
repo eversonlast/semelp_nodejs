@@ -10,17 +10,17 @@ const secreProfAdmin = require('./accessControl/secreProfAdmin')
 const multer = require('multer')
 const path = require('path')
 const {uuid} = require('uuidv4')
-const uploadFolder =  path.resolve(__dirname, '../upload')
+const uploadFolder =  path.resolve('./upload/atestado')
 
-const stogare = multer.diskStorage({
+const storage = multer.diskStorage({
     destination: uploadFolder,
     filename(req, file, cb){
-           const filename = `${file.originalname}`
+        const filename = `${file.originalname}`
            return cb(null, filename)
        }
    })
    
-const upload = multer({storage: stogare})
+const upload = multer({storage: storage})
 module.exports = app =>{
 
     app.post('/signin', app.api.auth.signin)
@@ -31,7 +31,7 @@ module.exports = app =>{
     app.put('/resetPassword', app.api.forgotPassword.resetPasswordToken)
     app.get('/consultarCep', app.api.apiCorreio.consultar)
     app.post('/upload', upload.single('file') ,(req, res)=>{
-        return res.send('Upload feito com sucesso!')
+        return res.json({path: `./upload/atestado`})
     })
    
     app.get('/modality', app.api.modality.get)
