@@ -180,7 +180,7 @@ module.exports = app =>{
         .delete(app.api.waitingList.removeWaitList)
 
     app.route('/medicalExam')
-        .all(app.config.passport.authenticate())
+      //  .all(app.config.passport.authenticate())
         .post(app.api.medicalExam.save)
         .get(app.api.medicalExam.get)
 

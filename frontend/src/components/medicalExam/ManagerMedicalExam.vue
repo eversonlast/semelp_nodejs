@@ -2,10 +2,10 @@
 <div>
     <PageTitle main="Lista de Exame Médico" sub="Gerenciar Exame Médico" icon="icofont-medical-sign" />
     <div class="base">
-        <b-form-input type="text" id="medicalExam" class="my-2" 
-        placeholder="Por favor, digite o nome ou CPF do aluno."
-        v-b-popover.hover.top="'Por favor, digite o nome ou CPF.'"></b-form-input>
-        <b-table striped hover :fields="fields" class='my-2' :items="medicalExams">
+        <b-form-input type="text" id="medicalExam" class="my-2" v-model="search"
+        placeholder="Por favor, digite o nome ou data do Exame." 
+        v-b-popover.hover.top="'Por favor, digite o nome ou data do Exame.'"></b-form-input>
+        <b-table striped :fields="fields" :items="resultadoPesquisaUser" hover class='my-2' :per-page="perPage" :current-page="page">
             <template slot="cell(actions)" slot-scope="data">
                 <b-button variant='warning' class="my-1 ml-1" @click="updateButton(data.item)"
                 v-b-popover.hover.top="'Update'">
@@ -16,6 +16,8 @@
                 </b-button>
             </template>
         </b-table>
+        <b-pagination size="md" v-model="page" aria-controls="medicalExam"
+        :total-rows="medicalExams.count" :per-page="perPage" id="pagination-Exam"/>
     </div>
 </div>
   
@@ -31,7 +33,7 @@ export default {
     data: function(){
         return{
             medicalExams: [],
-            limit: 0,
+            perPage: 10,
             count: 0, 
             page: 1,
             search: '',
@@ -52,9 +54,7 @@ export default {
             const url = `${baseApiUrl}/medicalExam`
             await axios.get(url)
                     .then(res=>{
-                        this.medicalExams = res.data.data
-                        this.limit = res.data.limit
-                        this.count = res.data.count
+                        this.medicalExams = res.data
                     })
                     .catch(showError)
         },
@@ -71,6 +71,20 @@ export default {
     },
     mounted(){
         this.loadMedicalExam()
+    },
+    computed:{
+        resultadoPesquisaUser(){
+            if(this.search == '' || this.search == ' '){
+                return this.medicalExams.data
+            }else{
+                return this.medicalExams.data
+                .filter(medicalExam=>{                    
+                    return  medicalExam.NomeAluno.toUpperCase().match(this.search.toUpperCase())||
+                       medicalExam.examMonth.toUpperCase().match(this.search.toUpperCase())
+                })
+                
+            }
+        }
     }
 }
 </script>

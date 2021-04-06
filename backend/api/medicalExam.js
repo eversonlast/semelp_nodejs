@@ -41,10 +41,10 @@ module.exports = app =>{
         const page = req.query.page || 1
         const result = await app.db('medicalExams').count('id').first()
         const count = parseInt(result.count)
-        await app.db.raw(`SELECT u.id, TO_CHAR("examMonth", 'DD/MM/YYYY') as "examMonth", TO_CHAR("validadeExam", 'DD/MM/YYYY') as "validadeExam", "activeExam", nome as "NomeAluno", "idUser"
+        await app.db.raw(`SELECT me.id, TO_CHAR("examMonth", 'DD/MM/YYYY') as "examMonth", TO_CHAR("validadeExam", 'DD/MM/YYYY') as "validadeExam", "activeExam", nome as "NomeAluno", "idUser"
                         from "medicalExams" as me
                         inner join users as u on me."idUser" = u.id
-                        limit ${limit} offset ${page*limit-limit}`)
+                        `)
                         .then(medicalExam=>res.json({data: medicalExam.rows, count, limit}))
                         // .catch(err=>res.status(500).send(err))
         
