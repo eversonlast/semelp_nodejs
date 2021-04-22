@@ -189,7 +189,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-4">
                                 <label for="tipo">Tipo de telefone</label>
-                                <b-form-select v-model="user.typePhone"  :options="typeTel"></b-form-select>  
+                                <b-form-select v-model="user.typePhone"  :options="typeTel" ></b-form-select>  
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="ddd">DDD</label>
@@ -197,8 +197,8 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="numeroTelefon">Numero</label>
-                                <input type="text" id="numeroTelefone" name="numeroTelefone"
-                                    class="form-control"
+                                <input type="text" id="numeroTelefone" name="numeroTelefone" formControlName="sGPTypeDeliveryId"
+                                    class="form-control" pattern="[0-9]+$"
                                     placeholder="Digite um número de Telefone."
                                     required="required" v-model="user.numeroTelefone">
                             </div>
@@ -218,8 +218,8 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="numeroTelefone1">Numero</label>
-                                <input type="text" id="numeroTelefone1" name="numeroTelefone1"
-                                    class="form-control"
+                                <input type="text" id="numeroTelefone1" name="numeroTelefone1" formControlName="sGPTypeDeliveryId"
+                                    class="form-control" pattern="[0-9]+$"
                                     placeholder="Digite um número de Telefone."
                                     required="required" v-model="user.numeroTelefone1">
                             </div>
@@ -239,8 +239,8 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="numeroTelefone2">Numero</label>
-                                <input type="text" id="numeroTelefone2" name="numeroTelefone2"
-                                    class="form-control"
+                                <input type="text" id="numeroTelefone2" name="numeroTelefone2" formControlName="sGPTypeDeliveryId"
+                                    class="form-control" pattern="[0-9]+$"
                                     placeholder="Digite um número de Telefone."
                                     required="required" v-model="user.numeroTelefone2">
                             </div>
@@ -350,8 +350,8 @@ export default {
             this.stateTelephone2 = !this.stateTelephone2
         },
     
-        signup(){
-            axios.post(`${baseApiUrl}/signup`, this.user)
+        async signup(){
+           await axios.post(`${baseApiUrl}/signup`, this.user)
                 .then(() => {
                     this.$toasted.global.defaultSuccess()
                     this.user = {}

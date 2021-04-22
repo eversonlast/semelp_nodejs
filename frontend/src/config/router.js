@@ -146,7 +146,7 @@ const routes = [{
     component: ManagerClassUsersActive
 },{
     name: 'medicalExamActive',
-    path: '/medicalExamActive/:id',
+    path: '/medicalExamActive',
     component: MedicalExamActive
 }]
 

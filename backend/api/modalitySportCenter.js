@@ -46,26 +46,34 @@ module.exports = app =>{
         const result = await app.db.raw(`select count("idSportCenter") from "modalitiesSportsCenters" where "idSportCenter" = ${req.params.id}`)
         const count = parseInt(result.rows[0].count)
 
-        app.db.raw(`select nome as "Local", "nomeModalidade", m.id as "idModalidade", departamento, "idResponsabilityModality", dias, horarios, "faixaEtaria", c.id as "classUser"
-                    from "sportsCenters" as spt
-                    inner join "modalitiesSportsCenters" as mdc on mdc."idSportCenter" = spt.id
-                    inner join modalities as m on mdc."idModality" = m.id
-                    inner join classes as c on c."idModality" = m.id
-                    where mdc."idSportCenter" = ${req.params.id}        
-                    limit ${limit} offset ${page*limit-limit}`)
-                .then(modalities=> res.json({data: modalities.rows, count, limit}))
-                .catch(err=>res.status(500).send(err))
-    }
+        await app.db('modalitiesSportsCenters as msc')
+                    .limit(limit).offset(page*limit-limit)
+                    .join('sportsCenters as spt', 'msc.idSportCenter', 'spt.id')
+                    .join('modalities as md', 'msc.idModality', 'md.id')
+                    .select('idModality as idModalidade', 'nomeModalidade') 
+                    .where({idSportCenter: req.params.id})       
+                    .then(modalities=> res.json({data: modalities, count, limit}))
+                    .catch(err=>res.status(500).send(err))
+
+
+                    //raw(`select nome as "Local", "nomeModalidade", m.id as "idModalidade", departamento, "idResponsabilityModality", dias, horarios, "faixaEtaria", c.id as "classUser"
+                      //          from "sportsCenters" as spt
+                        //        inner join "modalitiesSportsCenters" as mdc on mdc."idSportCenter" = spt.id
+                          //      inner join modalities as m on mdc."idModality" = m.id
+                            //    inner join classes as c on c."idModality" = m.id
+                              //  where mdc."idSportCenter" = ${req.params.id}        
+                                //limit ${limit} offset ${page*limit-limit}`)
+                }
 
     const getModality = async(req, res)=>{
         const page = req.query.page || 1
         const result = await app.db.raw(`select count("idModality") from "modalitiesSportsCenters" where "idModality" = ${req.params.id}`)
         const count = parseInt(result)
 
-        app.db.raw(`select nome, "nomeModalidade", "sportsCenters".id
+        await app.db.raw(`select nome, "nomeModalidade", "sportsCenters".id
                     from "sportsCenters" 
-                    right join "modalitiesSportsCenters" as mdc on mdc."idSportCenter" = "sportsCenters".id
-                    right join modalities as m on mdc."idModality" = m.id
+                    inner join "modalitiesSportsCenters" as mdc on mdc."idSportCenter" = "sportsCenters".id
+                    inner join modalities as m on mdc."idModality" = m.id
                     where "idModality" = ${req.params.id}
                     limit ${limit} offset ${page*limit-limit}`)
                 .then(sportCenter=> res.json({data: sportCenter.rows, count, limit}))

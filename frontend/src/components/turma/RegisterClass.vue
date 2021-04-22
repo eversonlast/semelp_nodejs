@@ -202,6 +202,7 @@ export default {
            this.nomeModalidade = selectModalidade.options[selectModalidade.selectedIndex].text
         },
         async saveClasses(){
+            this.loadUser()
             const id = this.$route.params.id ? `/${this.$route.params.id}` : ''
             const url = `${baseApiUrl}/class${id}`
             const method = this.$route.params.id ? 'put' : 'post'

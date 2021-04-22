@@ -1,6 +1,6 @@
 <template>
 <div>
-    <PageTitle main="Lista de Exame Médico" sub="Gerenciar Exame Médico" icon="icofont-medical-sign" />
+    <PageTitle main="Lista de Exame Médico Desativados" sub="Gerenciar Exame Médico" icon="icofont-medical-sign" />
     <div class="base">
         <b-form-input type="text" id="medicalExam" class="my-2" v-model="search"
         placeholder="Por favor, digite o nome ou data do Exame." 
@@ -11,7 +11,7 @@
                 v-b-popover.hover.top="'Update'">
                     <i class="fa fa-pencil"></i>
                 </b-button>
-                <b-button variant='success' class="ml-1" v-b-popover.hover.top="'Ativar o atestado'">
+                <b-button variant='success' class="ml-1" v-b-popover.hover.top="'Ativar o atestado'" @click="activeMedicalExam(data.item)">
                     <i class="fa fa-check-circle"></i>
                 </b-button>
             </template>
@@ -67,10 +67,23 @@ export default {
             this.$router.push({
                 path: `/medicalExam/${medicalExam.id}`
             })
+        },
+        async activeMedicalExam(medicalExam){
+            this.loadUser()
+            const url = `${baseApiUrl}/medicalExam/${medicalExam.id}`
+            await axios.put(url)
+                        .then(()=>{
+                            this.$toasted.success('Ativado com sucesso!')
+                            this.loadMedicalExam()
+                        })
+                        .catch(showError)
         }
     },
     mounted(){
         this.loadMedicalExam()
+    },
+    watch(){
+        this.medicalExams
     },
     computed:{
         resultadoPesquisaUser(){

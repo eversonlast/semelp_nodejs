@@ -40,7 +40,8 @@ export default {
                 {text: 'Lista de Espera'},
                 {text: 'Exame Médico', children:[
                     {text: 'Cadastrar Exame Médico'},
-                    {text: 'Gerenciar Exame Médico'}
+                    {text: 'Gerenciar Exame Médico Desativados'},
+                    {text: 'Gerenciar Exame Médico Ativados'}
                 ]}
             ]
         }
@@ -121,9 +122,15 @@ export default {
                 })
             }
 
-            if(node.text == "Gerenciar Exame Médico"){
+            if(node.text == "Gerenciar Exame Médico Desativados"){
                 this.$router.push({
                     name: 'managerMedicalExam'
+                })
+            }
+
+            if(node.text == "Gerenciar Exame Médico Ativados"){
+                this.$router.push({
+                    name:'medicalExamActive'
                 })
             }
 

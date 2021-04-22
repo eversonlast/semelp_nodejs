@@ -8,9 +8,14 @@ const secreProfAdmin = require('./accessControl/secreProfAdmin')
 
 
 const multer = require('multer')
+const fs = require('fs')
 const path = require('path')
 const {uuid} = require('uuidv4')
-const uploadFolder =  path.resolve('./upload/atestado')
+const ano = new Date().getFullYear()
+const uploadFolder = path.resolve(`./${ano}/upload/atestado`)
+//if(!fs.existsSync(uploadFolder)){
+  //  fs.mkdirSync(uploadFolder)
+//}
 
 const storage = multer.diskStorage({
     destination: uploadFolder,
@@ -95,7 +100,7 @@ module.exports = app =>{
         .delete(admin(app.api.modalitySportCenter.remove))
 
     app.route('/sportCenterModality/:id')
-        //.all(app.config.passport.authenticate())
+        .all(app.config.passport.authenticate())
         .get(app.api.modalitySportCenter.getSportCenter)
         
     app.route('/modalitySportCenter/:id')
@@ -107,7 +112,7 @@ module.exports = app =>{
         .get(app.api.modality.getResponsability)
     
     app.route('/class')
-        //.all(app.config.passport.authenticate())
+        .all(app.config.passport.authenticate())
         .post(admin(app.api.class.save))
         .get(app.api.class.getAll)
 
@@ -118,7 +123,7 @@ module.exports = app =>{
         .delete(admin(app.api.class.remove))
 
     app.route('/classUser')
-        //.all(app.config.passport.authenticate())
+        .all(app.config.passport.authenticate())
         .post(app.api.classUser.save)
         .get(app.api.classUser.getAll)
     
@@ -138,11 +143,11 @@ module.exports = app =>{
         .put(app.api.classUser.updateForDesactive)
 
     app.route('/classUserDesactive')
-        //.all(app.config.passport.authenticate())
+        .all(app.config.passport.authenticate())
         .get(app.api.classUser.getAllClassDesactive)
 
     app.route('/classUserActive')
-        //.all(app.config.passport.authenticate())
+        .all(app.config.passport.authenticate())
         .get(app.api.classUser.getAllClassActive)
 
     app.route('/userClass/:id')
@@ -180,15 +185,19 @@ module.exports = app =>{
         .delete(app.api.waitingList.removeWaitList)
 
     app.route('/medicalExam')
-      //  .all(app.config.passport.authenticate())
+        .all(app.config.passport.authenticate())
         .post(app.api.medicalExam.save)
-        .get(app.api.medicalExam.get)
+        .get(app.api.medicalExam.getDesactive)
 
     app.route('/medicalExam/:id')
         .all(app.config.passport.authenticate())
         .get(app.api.medicalExam.getById)
         .delete(app.api.medicalExam.remove)
-    
+        .put(app.api.medicalExam.activeExam)   
+
+    app.route('/medicalExamActive')
+        .all(app.config.passport.authenticate())
+        .get(app.api.medicalExam.getActive)
 
     
 }

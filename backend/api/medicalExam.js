@@ -12,7 +12,8 @@ module.exports = app =>{
 
         const dataValidade = String(medicalExam.examMonth).split("-")
 
-        medicalExam.validadeExam = new Date(parseInt(dataValidade[0]) +1, parseInt(dataValidade[1]) - 1, parseInt(dataValidade[2]))
+        medicalExam.validadeExam = new Date(parseInt(dataValidade[0]) +1, parseInt(dataValidade[1]) - 1, parseInt(dataValidade[2]));
+        medicalExam.activeExam = false;
 
         try{
             existsOrError(medicalExam.validadeExam, "Por favor, Informe a Validade do Exame.")
@@ -37,16 +38,17 @@ module.exports = app =>{
     }
 
     const limit = 10
-    const get = async(req, res)=>{
+    const getDesactive = async(req, res)=>{
         const page = req.query.page || 1
         const result = await app.db('medicalExams').count('id').first()
         const count = parseInt(result.count)
-        await app.db.raw(`SELECT me.id, TO_CHAR("examMonth", 'DD/MM/YYYY') as "examMonth", TO_CHAR("validadeExam", 'DD/MM/YYYY') as "validadeExam", "activeExam", nome as "NomeAluno", "idUser"
+        await app.db.raw(`SELECT me.id, TO_CHAR("examMonth", 'DD/MM/YYYY') as "examMonth", TO_CHAR("validadeExam", 'DD/MM/YYYY') as "validadeExam", "activeExam", 
+                        nome as "NomeAluno", "idUser"
                         from "medicalExams" as me
                         inner join users as u on me."idUser" = u.id
-                        `)
+                        where me."activeExam" = false`)
                         .then(medicalExam=>res.json({data: medicalExam.rows, count, limit}))
-                        // .catch(err=>res.status(500).send(err))
+                        .catch(err=>res.status(500).send(err))
         
         
         //('medicalExams as me')
@@ -56,6 +58,18 @@ module.exports = app =>{
                 //.then(medicalExam=>res.json({data: medicalExam, count, limit}))
                 //.catch(err=>res.status(500).send(err))
     }
+    const getActive = async(req, res)=>{
+        const page = req.query.page || 1
+        const result = await app.db('medicalExams').count('id').first()
+        const count = parseInt(result.count)
+        await app.db.raw(`SELECT me.id, TO_CHAR("examMonth", 'DD/MM/YYYY') as "examMonth", TO_CHAR("validadeExam", 'DD/MM/YYYY') as "validadeExam", "activeExam", 
+                        nome as "NomeAluno", "idUser"
+                        from "medicalExams" as me
+                        inner join users as u on me."idUser" = u.id
+                        where me."activeExam" = true`)
+                        .then(medicalExam=>res.json({data: medicalExam.rows, count, limit}))
+                        .catch(err=>res.status(500).send(err))
+    }
 
     const getById = async(req, res)=>{
         await app.db('medicalExams as me')
@@ -63,7 +77,7 @@ module.exports = app =>{
                 .select(knex.raw(`u.id, TO_CHAR("validadeExam", 'DD/MM/YYYY') as "validadeExam", TO_CHAR("examMonth", 'DD/MM/YYYY') as "examMonth", "activeExam", nome as "NomeAluno", "idUser"`))
                 .whereRaw(`me.id = ${req.params.id}`)
                 .then(medicalExam=>res.json(medicalExam))
-                //.catch(err=>res.status(500).send(err))
+                .catch(err=>res.status(500).send(err))
     }
 
     const remove = async(req, res)=>{
@@ -78,15 +92,24 @@ module.exports = app =>{
             res.status(200).send("Deletado com sucesso.")
         }catch(msg){
             res.status(500).send(msg)
-        }   
+        }
+        
+    }
 
+    const activeExam = async(req, res)=>{
+        await app.db('medicalExams')
+                .update({activeExam: true})
+                .where({id: req.params.id})
+                .then(medicalExam=>res.json(medicalExam))
+                .catch(err=>res.status(500).send(err))
     }
 
 
+
    
 
    
    
-    return{save, get, getById, remove}
+    return{save, getDesactive, getById, remove, activeExam, getActive}
 
 }

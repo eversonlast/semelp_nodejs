@@ -48,7 +48,7 @@ module.exports = app =>{
             await app.db('classes')
                 .insert(classes)
                 .then(_=>res.status(200).send({success: 'Salvo com sucesso'}))
-               // .catch(err=>res.status(500).send(err))
+                .catch(err=>res.status(500).send(err))
         }
     }
 

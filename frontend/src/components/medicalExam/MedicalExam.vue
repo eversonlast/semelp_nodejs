@@ -157,16 +157,16 @@ export default {
                    "Content-Type": `multipart/form-data; boundary=${formData._boundary}`
                }
            })
-           .then(res=> {
+           .then(()=> {
                this.$toasted.success("Arquivo enviado com sucesso")
-               this.medicalExam.pathMedicalExam = `${res.data.path}/${nome}`
+               this.medicalExam.pathMedicalExam = `./${ano}/upload/atestado/${nome}`
                })
         },
         
     },
     mounted(){
         this.loadUsuario()
-    }, 
+    },
     computed:{
         resultUser(){
             if(this.searchUser == '' || this.searchUser== ' '){
