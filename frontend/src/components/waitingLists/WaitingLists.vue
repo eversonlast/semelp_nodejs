@@ -35,7 +35,7 @@
                           <b-button variant="success" v-else
                           v-b-popover.hover.top="'Clique para Atualizar os Dados'">Atualizar</b-button>
                           <b-button variant="outline-danger" class='ml-1' @click="btnCancel"
-                          v-b-popover.hover.top="'Clique para limpar os Dados'">Cancelar</b-button>
+                          v-b-popover.hover.top="'Clique para limpar os Dados'" >Cancelar</b-button>
                       </div>
                       <div>
                           <b-modal id="ModalRegisterWaitList" title="Confirmação de Dados da Lista de Espera" 
@@ -146,6 +146,9 @@ export default {
             this.idadeDoUsuario = 0
             this.nomeUsuario = ''
             this.nomeModalidade = ''
+            this.$router.push({
+                name: 'home'
+            })
         }
     },
     mounted(){

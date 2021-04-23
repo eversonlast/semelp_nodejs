@@ -62,6 +62,11 @@ export default {
             const json = localStorage.getItem(userKey)
             const userData = JSON.parse(json)
             await this.$store.commit('setUser', userData)
+        },
+        updateButton(exam){
+            this.$router.push({
+                path: `/medicalExam/${exam.id}`
+            })
         }
     },
     mounted(){

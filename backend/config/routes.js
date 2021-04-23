@@ -12,7 +12,7 @@ const fs = require('fs')
 const path = require('path')
 const {uuid} = require('uuidv4')
 const ano = new Date().getFullYear()
-const uploadFolder = path.resolve(`./${ano}/upload/atestado`)
+const uploadFolder = path.resolve(`../frontend/public/${ano}/upload/atestado`)
 //if(!fs.existsSync(uploadFolder)){
   //  fs.mkdirSync(uploadFolder)
 //}
@@ -193,11 +193,14 @@ module.exports = app =>{
         .all(app.config.passport.authenticate())
         .get(app.api.medicalExam.getById)
         .delete(app.api.medicalExam.remove)
-        .put(app.api.medicalExam.activeExam)   
+        .put(app.api.medicalExam.activeExam)        
 
     app.route('/medicalExamActive')
         .all(app.config.passport.authenticate())
         .get(app.api.medicalExam.getActive)
 
+    app.route('/medicalExamUpdate/:id')
+        .all(app.config.passport.authenticate())
+        .put(app.api.medicalExam.save)
     
 }

@@ -29,6 +29,7 @@ import ManagerMedicalExam from '../components/medicalExam/ManagerMedicalExam'
 import ManagerClassUsers from '../components/turma/ManagerClassUsers'
 import ManagerClassUsersActive from '../components/turma/ManagerClassUsersActive'
 import MedicalExamActive from '../components/medicalExam/MedicalExamActive'
+import MedicalExamUpdate from '../components/medicalExam/MedicalExamUpdate'
 
 import { userKey, baseApiUrl } from './global'
 import axios from 'axios'
@@ -148,6 +149,10 @@ const routes = [{
     name: 'medicalExamActive',
     path: '/medicalExamActive',
     component: MedicalExamActive
+},{
+    name:'medicalExamUpdate',
+    path: '/medicalExam/:id',
+    component: MedicalExamUpdate
 }]
 
 const router = new VueRouter({

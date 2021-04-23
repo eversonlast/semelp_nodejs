@@ -184,6 +184,9 @@ export default {
             if(this.user.tipoUsuario == 'user'){
                 this.turmas = []
             }
+            this.$router.push({
+                name: 'home'
+            })
         },
         async loadSportCenter(){
             this.loadUser()

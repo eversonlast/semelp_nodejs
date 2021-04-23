@@ -74,7 +74,7 @@ module.exports = app =>{
     const getById = async(req, res)=>{
         await app.db('medicalExams as me')
                 .join('users as u', 'u.id', 'me.idUser')
-                .select(knex.raw(`u.id, TO_CHAR("validadeExam", 'DD/MM/YYYY') as "validadeExam", TO_CHAR("examMonth", 'DD/MM/YYYY') as "examMonth", "activeExam", nome as "NomeAluno", "idUser"`))
+                .select(knex.raw(`u.id, TO_CHAR("validadeExam", 'DD/MM/YYYY') as "validadeExam", TO_CHAR("examMonth", 'DD/MM/YYYY') as "examMonth", "activeExam", nome as "NomeAluno", "idUser", "pathMedicalExam" as "caminho"`))
                 .whereRaw(`me.id = ${req.params.id}`)
                 .then(medicalExam=>res.json(medicalExam))
                 .catch(err=>res.status(500).send(err))

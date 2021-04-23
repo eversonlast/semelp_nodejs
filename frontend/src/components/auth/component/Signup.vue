@@ -361,6 +361,9 @@ export default {
         reset(){
             this.user={}
             this.$parent.state = 'L'
+            this.$router.push({
+                name: 'home'
+            })
         },
         checkform: function(){
             if(!this.user.cpf){
