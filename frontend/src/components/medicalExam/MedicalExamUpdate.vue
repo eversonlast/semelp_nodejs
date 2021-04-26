@@ -10,11 +10,17 @@
                 <div class="form-row">
                     <div class="form-group col-sm-6">
                         <label for="data-validade">Mês do Exame</label>
-                        <b-input type="text" v-model="medicalExam.examMonth" readonly />               
+                        <b-input type="text" v-model="medicalExam.examMonth" readonly v-if="!editMedicalExam"/>                
+                        <b-form-datepicker id="dtMonth" locale="pt-BR" startDate="01/01/2020"
+                        placeholder="Por favor, escolha uma data de exame." v-b-popover.hover.top="'Escolha uma data.'"
+                        v-model="medicalExam.examMonth" v-else></b-form-datepicker>           
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="data-validade">Data de Validade do Exame</label>
-                        <b-input type="text" v-model="medicalExam.validadeExam" readonly />   
+                        <b-input type="text" v-model="medicalExam.validadeExam" readonly v-if="!editMedicalExam" />   
+                        <b-form-datepicker id="dtValidade" locale="pt-BR" startDate="01/01/2020"
+                        placeholder="Por favor, escolha uma data de exame." v-b-popover.hover.top="'Escolha uma data.'"
+                        v-model="medicalExam.validadeExam" v-else></b-form-datepicker>
                     </div>
                 </div>
                 <div class="form-row">
@@ -38,7 +44,7 @@
                 </div>
             </div>
             <div class="card-body button">
-                    <b-button variant="primary" class="mx-1">Alterar</b-button>
+                    <b-button variant="primary" class="mx-1" @click="btnAlterar">Alterar</b-button>
                     <b-button variant="outline-danger" @click="btnCancelar"
                     v-b-popover.hover.top="'Clique para cancelar!'"
                     >Cancelar</b-button>               
@@ -59,7 +65,8 @@ export default {
     components: {PageTitle},
     data: function(){
         return {
-            medicalExam: {}
+            medicalExam: {},
+            editMedicalExam: false
         }
     },
     methods:{
@@ -83,6 +90,9 @@ export default {
                 path: '/managerMedicalExam'
             })
 
+        },
+        btnAlterar(){
+            this.editMedicalExam = !this.editMedicalExam
         }
     },
     mounted(){
