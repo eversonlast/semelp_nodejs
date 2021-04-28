@@ -18,7 +18,8 @@ export default {
             items: [
                 {text: 'Usuário', children:[
                     {text: 'Atualizar Cadastro'},
-                    {text: 'Trocar Senha'}
+                    {text: 'Trocar Senha'},
+                    {text: 'Adicionar uma foto'}
                 ]},
                 {text: 'Fazer Matrícula'}
             ]
@@ -35,8 +36,7 @@ export default {
                 })
             }
 
-            if(node.text == 'Trocar Senha'){ 
-                  
+            if(node.text == 'Trocar Senha'){                   
                 if(this.$mq ==='xs' || this.$mq === 'sm'){
                     this.$store.commit('toggleMenu', false)
             }             
@@ -50,6 +50,15 @@ export default {
                 }
                 this.$router.push({
                     path:'/registerUserClass'
+                })
+            }
+
+            if(node.text == 'Adicionar uma foto'){
+                if(this.$mq == 'xs' || this.$mq == 'sm'){
+                    this.$store.commit('toggleMenu', false)
+                }
+                this.$router.push({
+                    path: '/uploadPhoto'
                 })
             }
         },

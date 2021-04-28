@@ -27,6 +27,7 @@ module.exports = app =>{
                 cpf: user.cpf,
                 nome: user.nome,
                 tipoUsuario: user.tipoUsuario,
+                pathPhoto: user.pathPhoto,
                 idade: anoAtual - user.dataNasc.getFullYear(),
                 iat: now,
                 exp: now + (60 * 60 * 24 * 3)//o primeiro número é segundos, o segundo é o minutos e o terceiro é um dia, e quarto é quantidade de dias 

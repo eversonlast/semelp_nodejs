@@ -65,7 +65,7 @@ module.exports = app =>{
                 .update({nome: user.nome, mae: user.mae, pai:user.pai, tipoDocumento:user.tipoDocumento,
                     documento: user.documento, cpf: user.cpf, email: user.email, 
                     naturalidade: user.naturalidade, dataNasc: user.dataNasc, tipoUsuario: user.tipoUsuario, 
-                    estado: user.estado, escolaTrabalho: user.escolaTrabalho})
+                    estado: user.estado, escolaTrabalho: user.escolaTrabalho, pathPhoto: user.pathPhoto})
                 .where({id: user.id})
             
             const idAddress = await app.db('addresses')
@@ -132,7 +132,7 @@ module.exports = app =>{
                     .insert({nome: user.nome, mae: user.mae, pai:user.pai, tipoDocumento:user.tipoDocumento,
                         documento: user.documento, cpf: user.cpf, password:user.password, email: user.email, 
                         naturalidade: user.naturalidade, dataNasc: user.dataNasc, tipoUsuario: user.tipoUsuario, 
-                        estado: user.estado, escolaTrabalho: user.escolaTrabalho})
+                        estado: user.estado, escolaTrabalho: user.escolaTrabalho, pathPhoto: user.pathPhoto})
                         
                 const idUser = await app.db('users')
                         .select('id')
@@ -181,8 +181,8 @@ module.exports = app =>{
     }
 
     const getById = async(req, res)=>{
-        const ResultgetById = await app.db.raw(`select  u.id, nome, cpf, mae, pai, TO_CHAR("dataNasc",'DD/MM/YYYY') as "dataNasc", "tipoDocumento", documento,  
-                            "nomeLogradouro", "numeroCasa", bairro, "escolaTrabalho", naturalidade, estado, email,
+            await app.db.raw(`select  u.id, nome, cpf, mae, pai, TO_CHAR("dataNasc",'DD/MM/YYYY') as "dataNasc", "tipoDocumento", documento,  
+                            "nomeLogradouro", "numeroCasa", bairro, "escolaTrabalho", naturalidade, estado, email, u."pathPhoto",
                             ddd, "numeroTelefone", "typePhone", "estadoEndereco", cep, cidade, t.id as idtel
                     from addresses a, telephones t, users u 
                     where "idUserAddress" = ? and u.id = ? and "idUserTelephone"= ?;`, [req.params.id, req.params.id, req.params.id])
@@ -191,7 +191,7 @@ module.exports = app =>{
                         if(users.rows.length === 3){
                             res.json({"id": users.rows[0].id, "nome":users.rows[0].nome, "pai": users.rows[0].pai, "cpf": users.rows[0].cpf, "mae": users.rows[0].mae,
                                 "dataNasc": users.rows[0].dataNasc, "estado": users.rows[0].estado, "naturalidade": users.rows[0].naturalidade, "tipoDocumento": users.rows[0].tipoDocumento, "documento": users.rows[0].documento,
-                                "email": users.rows[0].email, "nomeLogradouro": users.rows[0].nomeLogradouro, "numeroCasa": users.rows[0].numeroCasa,
+                                "email": users.rows[0].email, "pathPhoto": users.rows[0].pathPhoto, "nomeLogradouro": users.rows[0].nomeLogradouro, "numeroCasa": users.rows[0].numeroCasa,
                                 "bairro": users.rows[0].bairro,"cidade": users.rows[0].cidade, "estadoEndereco": users.rows[0].estadoEndereco, "cep": users.rows[0].cep,  "escolaTrabalho": users.rows[0].escolaTrabalho,
                                
                                     "ddd": users.rows[0].ddd, "numeroTelefone": users.rows[0].numeroTelefone, "typePhone": users.rows[0].typePhone, "idTel": users.rows[0].idtel, 
@@ -201,7 +201,7 @@ module.exports = app =>{
                         }else if(users.rows.length ===2){
                             res.json({"id": users.rows[0].id, "nome":users.rows[0].nome,"pai": users.rows[0].pai, "cpf": users.rows[0].cpf, "mae": users.rows[0].mae,
                             "dataNasc": users.rows[0].dataNasc, "estado": users.rows[0].estado, "naturalidade": users.rows[0].naturalidade, "tipoDocumento": users.rows[0].tipoDocumento, "documento": users.rows[0].documento,
-                            "email": users.rows[0].email, "nomeLogradouro": users.rows[0].nomeLogradouro, "numeroCasa": users.rows[0].numeroCasa,
+                            "email": users.rows[0].email, "pathPhoto": users.rows[0].pathPhoto, "nomeLogradouro": users.rows[0].nomeLogradouro, "numeroCasa": users.rows[0].numeroCasa,
                             "bairro": users.rows[0].bairro,"cidade": users.rows[0].cidade, "estadoEndereco": users.rows[0].estadoEndereco, "cep": users.rows[0].cep,  "escolaTrabalho": users.rows[0].escolaTrabalho,
                             
                                 "ddd": users.rows[0].ddd, "numeroTelefone": users.rows[0].numeroTelefone, "typePhone": users.rows[0].typePhone, "idTel": users.rows[0].idtel,
@@ -210,13 +210,14 @@ module.exports = app =>{
                         }else if(users.rows.length === 1){
                             res.json({"id": users.rows[0].id, "nome":users.rows[0].nome, "mae": users.rows[0].mae,"pai": users.rows[0].pai, "cpf": users.rows[0].cpf,
                                 "dataNasc": users.rows[0].dataNasc, "estado": users.rows[0].estado, "naturalidade": users.rows[0].naturalidade, "tipoDocumento": users.rows[0].tipoDocumento, "documento": users.rows[0].documento,
-                                "email": users.rows[0].email, "nomeLogradouro": users.rows[0].nomeLogradouro, "numeroCasa": users.rows[0].numeroCasa,
+                                "email": users.rows[0].email, "pathPhoto": users.rows[0].pathPhoto, "nomeLogradouro": users.rows[0].nomeLogradouro, "numeroCasa": users.rows[0].numeroCasa,
                                 "bairro": users.rows[0].bairro,"cidade": users.rows[0].cidade, "estadoEndereco": users.rows[0].estadoEndereco, "cep": users.rows[0].cep,  "escolaTrabalho": users.rows[0].escolaTrabalho,
                                
                                     "ddd": users.rows[0].ddd, "numeroTelefone": users.rows[0].numeroTelefone, "typePhone": users.rows[0].typePhone, "idTel": users.rows[0].idtel
                             })
                         }
-                    })               
+                    })
+                    .catch(err=>res.status(500).send(err))            
     }
     const remove =  async(req, res)=>{
         try{
@@ -232,5 +233,26 @@ module.exports = app =>{
             res.status(500).send(msg)
         }
     }
-    return {save, get, getById, remove }
+
+    const savePhoto = async(req, res)=>{
+        const userPhoto = {...req.body}
+        try{
+            existsOrError(userPhoto.pathPhoto, "Por favor, Informe o caminho da photo")
+        }catch(msg){
+            return res.status(400).send(msg)
+        }
+
+        if(req.params.id) {
+            userPhoto.id = req.params.id
+        }else{
+            return res.status(500).send({error: "Por favor, informe o id."})
+        }
+
+        await app.db('users')
+            .update({pathPhoto: userPhoto.pathPhoto})
+            .where({id: userPhoto.id})
+            .then(()=>res.status(200).send("Caminho salvo com sucesso"))
+            .catch(err=>res.status(500).send(err))
+    }
+    return {save, get, getById, remove, savePhoto}
 }

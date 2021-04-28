@@ -3,7 +3,8 @@
         <div class="user-button">
             <span class="d-none d-sm-block"> {{ user.nome }}</span>
             <div class="user-dropdown-img">
-                <Gravatar :cpf="user.cpf" alt="User" />
+                <img :src="user.pathPhoto" v-if="user.pathPhoto"/>
+                <Gravatar :cpf="user.cpf" alt="User" v-else/>
             </div>
             <i class="fa fa-angle-down"></i>
         </div>
@@ -16,6 +17,9 @@
             </router-link>
             <router-link to="/admin" v-if="user.tipoUsuario == 'prof'">
                 <i class="fa fa-cogs" ></i>Administrador
+            </router-link>
+             <router-link to="/uploadPhoto">
+                <i class="fa fa-image" ></i>Foto do Perfil
             </router-link>
             <a href @click="logout"><i class="fa fa-sign-out"></i>Sair</a>
         </div>
@@ -42,7 +46,7 @@ export default {
             this.$router.push({ path: '/auth' })
             localStorage.removeItem(userKey)
             this.$store.commit('setUser', null)
-        }
+        },
     },
 }
 </script>
@@ -71,7 +75,7 @@ export default {
 
     .user-dropdown-img > img{
         max-height: 37px;
-        border-radius: 50px;
+        border-radius: 70px;
     }
 
     .user-dropdown-content{

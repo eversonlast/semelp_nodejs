@@ -16,7 +16,7 @@ export default {
             items:[
                 {text: 'Usuários', children:[
                     {text: 'Lista de Usuários'},
-                    {text: 'Cadastro de Usuários'}
+                    {text: 'Cadastro de Usuários'},
                 ]},
                 {text: 'Modalidades', children:[
                     {text: 'Por Centro Esportivo'},

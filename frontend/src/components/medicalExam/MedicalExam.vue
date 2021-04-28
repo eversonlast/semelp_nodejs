@@ -161,6 +161,7 @@ export default {
                this.$toasted.success("Arquivo enviado com sucesso")
                this.medicalExam.pathMedicalExam = `/${ano}/upload/atestado/${nome}`
                })
+            .catch(showError)
         },
         
     },

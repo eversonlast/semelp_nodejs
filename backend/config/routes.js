@@ -12,20 +12,29 @@ const fs = require('fs')
 const path = require('path')
 const {uuid} = require('uuidv4')
 const ano = new Date().getFullYear()
-const uploadFolder = path.resolve(`../frontend/public/${ano}/upload/atestado`)
+const uploadFolderAtestado = path.resolve(`../frontend/public/${ano}/upload/atestado`)
+const uploadFolderPhoto = path.resolve(`../frontend/public/img/fotosUsers`)
 //if(!fs.existsSync(uploadFolder)){
   //  fs.mkdirSync(uploadFolder)
 //}
 
 const storage = multer.diskStorage({
-    destination: uploadFolder,
+    destination: uploadFolderAtestado,
     filename(req, file, cb){
         const filename = `${file.originalname}`
            return cb(null, filename)
        }
    })
-   
-const upload = multer({storage: storage})
+
+const storagePhoto = multer.diskStorage({
+    destination: uploadFolderPhoto,
+    filename(req, file, cb){
+        const filename = `${file.originalname}`
+        return cb(null, filename)
+    }
+})
+const uploadAtestado = multer({storage: storage})
+const upload = multer({storage: storagePhoto})
 module.exports = app =>{
 
     app.post('/signin', app.api.auth.signin)
@@ -35,17 +44,25 @@ module.exports = app =>{
     app.post('/forgotPassword', app.api.forgotPassword.passwordForgotten)
     app.put('/resetPassword', app.api.forgotPassword.resetPasswordToken)
     app.get('/consultarCep', app.api.apiCorreio.consultar)
-    app.post('/upload', upload.single('file') ,(req, res)=>{
-        return res.json({path: `./upload/atestado`})
+    app.post('/upload', uploadAtestado.single('file') ,(req, res)=>{
+        return res.json({path: `${uploadFolderAtestado}`})
+    })
+
+    app.post('/uploadPhoto', upload.single('file'), (req, res)=>{
+        return res.json({path: `${uploadFolderPhoto}`})
     })
    
+    
     app.get('/modality', app.api.modality.get)
-
+    
     app.route('/users')
         .all(app.config.passport.authenticate())
         .post(secreAdmin(app.api.users.save))
         .get(secreAdmin(app.api.users.get))
     
+    app.route('/usersPhoto/:id')
+        .all(app.config.passport.authenticate())
+        .put(app.api.users.savePhoto)
     
     app.route('/users/:id')
         .all(app.config.passport.authenticate())    
