@@ -10,15 +10,20 @@
                 <div class="form-row">
                     <div class="form-group col-md-12 mt-1">
                         <label for="diasTurma">Dias da Turma</label>
-                        <b-form-select v-model="turma.dias" :options="diasDaTurma"
-                        v-b-popover.hover.top="'Escolha uma opção.'"></b-form-select>
+                        <div v-if="controleButton">                            
+                            <b-form-select v-model="turma.dias" :options="diasDaTurma"
+                            v-b-popover.hover.top="'Escolha uma opção.'"></b-form-select>
+                        </div>
+                        <div v-else>
+                            <b-input type="text" readonly v-model="turma.dias" />
+                        </div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-12 mt-1">
                         <label for="horarios">Horário da Turma</label>
-                        <div>
-                            <b-form-select  class="form-group col-md-4" id="periodo" 
+                        <div v-if="controleButton">
+                            <b-form-select  class="form-group col-md-4" id="periodo"  
                             v-on:change="escolherHorario" v-model="controle.value" :options="optionHorarios" 
                             v-b-popover.hover.top="'Escolha uma opção.'"></b-form-select>
                             <b-form-select v-model="turma.horarios" :options="horarios" id="horarios" name="horarios" class="form-group col-md-7 mx-md-1" v-if="statusDigite==false"
@@ -27,29 +32,47 @@
                             class="form-control col-md-12" v-model="turma.horarios" v-else
                             v-b-popover.hover.top="'Digite uma opção, com formato 00hs00min'">
                         </div>
+                        <div v-else>
+                            <b-input type="text" readonly v-model="turma.horarios"/>
+                        </div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <label for="teacherResponsability">Professor Responsável pela Turma</label>
-                        <b-form-select id="idProfessorResponsability"                        
-                         :options="teacherResponsable"  v-model="turma.idProfessorResponsability"
-                         v-b-popover.hover.top="'Escolha uma opção.'"></b-form-select>
+                        <div v-if="controleButton">
+                            <b-form-select id="idProfessorResponsability"                        
+                            :options="teacherResponsable"  v-model="turma.idProfessorResponsability"
+                            v-b-popover.hover.top="'Escolha uma opção.'"></b-form-select>
+                        </div>
+                        <div v-else>
+                            <b-input type="text" readonly v-model="turma.nomeProfessor"/>
+                        </div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <label for="idSportCenter">Centro Esportivo da Turma</label>
-                        <b-form-select id="idSportCenter" v-model="turma.idSportCenter" 
-                        :options="sportCenter" v-on:change="loadModalitiesBySportCenter"
-                        v-b-popover.hover.top="'Escolha uma opção'"></b-form-select>
+                        <div v-if="controleButton">
+                            <b-form-select id="idSportCenter" v-model="turma.idSportCenter" 
+                            :options="sportCenter" v-on:change="loadModalitiesBySportCenter"
+                            v-b-popover.hover.top="'Escolha uma opção'"></b-form-select>
+                        </div>
+                        <div v-else>
+                            <b-input type="text" readonly v-model="turma.centroEsportivo" />
+                        </div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <label for="Modality">Modalidade</label>
-                        <b-form-select id="idModalidade" v-model="turma.idModality" 
-                        :options="modalities" v-b-popover.hover.top="'Escolha uma opção.'"></b-form-select>
+                        <div v-if="controleButton">
+                            <b-form-select id="idModalidade" v-model="turma.idModality" 
+                            :options="modalities" v-b-popover.hover.top="'Escolha uma opção.'"></b-form-select>
+                        </div>
+                        <div v-else>
+                            <b-input type="text" readonly v-model="turma.nomeModalidade"/>
+                        </div>
                     </div>
                 </div>
                  <div class="form-row">
@@ -75,8 +98,8 @@
                 <b-button variant="primary" class="mr-2" v-on:click="loadControle"
                 v-b-modal.modalRegisterClass v-if="controleButton"
                 v-b-popover.hover.top="'Clique para salvar.'">Salvar</b-button>
-                 <b-button variant="primary" class="mr-2" v-on:click="loadControle" 
-                 v-b-modal.modalRegisterClass v-else>Atualizar</b-button>
+                 <b-button variant="primary" class="mr-2" v-on:click="btnAtualizar" 
+                 v-else>Atualizar</b-button>
                 <b-button variant="outline-danger" class="mr-2" @click="buttonReset"
                 v-b-popover.hover.top="'Clique para limpar todos os dados.'">Cancelar</b-button>
             </div>
@@ -235,6 +258,9 @@ export default {
             }else{
                 return
             }
+        },
+        btnAtualizar(){
+            this.controleButton = !this.controleButton
         }
     },
     mounted(){

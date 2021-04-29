@@ -73,7 +73,7 @@ module.exports = app =>{
                 .join('users as u', 'u.id', 'c.idProfessorResponsability')
                 .join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')
                 .join('modalities as m', 'm.id', 'c.idModality')
-                .select(knex.raw('c.id, dias, horarios, "faixaEtaria", u.nome as nomeProfessor, spt.nome as centroEsportivo, "nomeModalidade"'))
+                .select('c.id', 'dias', 'horarios', 'faixaEtaria', 'u.nome as nomeProfessor', 'spt.nome as centroEsportivo', 'nomeModalidade')
                 .where({'c.id': idClass})
                 .first()
                 .then(classes=>res.json(classes))

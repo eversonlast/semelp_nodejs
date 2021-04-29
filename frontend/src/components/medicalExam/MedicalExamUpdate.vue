@@ -17,10 +17,10 @@
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="data-validade">Data de Validade do Exame</label>
-                        <b-input type="text" v-model="medicalExam.validadeExam" readonly v-if="!editMedicalExam" />   
-                        <b-form-datepicker id="dtValidade" locale="pt-BR" startDate="01/01/2020"
+                        <b-input type="text" v-model="medicalExam.validadeExam" readonly />   
+                        <!-- <b-form-datepicker id="dtValidade" locale="pt-BR" startDate="01/01/2020"
                         placeholder="Por favor, escolha uma data de exame." v-b-popover.hover.top="'Escolha uma data.'"
-                        v-model="medicalExam.validadeExam" v-else></b-form-datepicker>
+                        v-model="medicalExam.validadeExam" v-else></b-form-datepicker> -->
                     </div>
                 </div>
                 <div class="form-row">
@@ -31,25 +31,25 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-sm-12">
-                        <b-form-checkbox id="checkbox-1" v-model="medicalExam.activeExam" value="true">Situação do Atestado</b-form-checkbox>
+                        <b-form-checkbox id="checkbox-1" v-model="medicalExam.activeExam" >Situação do Atestado</b-form-checkbox>
                         <div>Estado: <strong>{{medicalExam.activeExam ? "Ativo" : "Desativado" }}</strong></div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-sm-12">
-                        <a :href="'http://localhost:8080'+medicalExam.caminho" target="_blank">
-                            <img :src="medicalExam.caminho" width="250"  />
+                        <a :href="'http://localhost:8080'+medicalExam.pathMedicalExam" target="_blank">
+                            <img :src="medicalExam.pathMedicalExam" width="250"  />
                         </a>
                     </div>
                 </div>
             </div>
             <div class="card-body button">
-                    <b-button variant="primary" class="mx-1" @click="btnAlterar">Alterar</b-button>
+                    <b-button variant="primary" class="mx-1" @click="btnAlterar" v-if="!editMedicalExam">Alterar</b-button>
+                    <b-button variant="primary" class="mx-1" @click="btnSalvar" v-if="editMedicalExam">Salvar</b-button>
                     <b-button variant="outline-danger" @click="btnCancelar"
                     v-b-popover.hover.top="'Clique para cancelar!'"
                     >Cancelar</b-button>               
             </div>
-
         </b-form>
     </div>
 </div>
@@ -93,6 +93,22 @@ export default {
         },
         btnAlterar(){
             this.editMedicalExam = !this.editMedicalExam
+        },
+        async btnSalvar(){
+            this.loadUser()
+            const saveMedicalExam = {"activeExam": this.medicalExam.activeExam, "pathMedicalExam": this.medicalExam.pathMedicalExam, "examMonth": this.medicalExam.examMonth,
+                                    "id": this.medicalExam.id, "idUser": this.medicalExam.idUser}
+            const url = `${baseApiUrl}/medicalExamUpdate/${this.$route.params.id}`
+            await axios.put(url, saveMedicalExam)
+                    .then(()=>{
+                        this.$toasted.success('Alterado com sucesso')
+                    })
+                    .catch(showError)
+
+            this.editMedicalExam = !this.editMedicalExam
+            this.$router.push({
+                path:'/medicalExamActive'
+            })
         }
     },
     mounted(){
