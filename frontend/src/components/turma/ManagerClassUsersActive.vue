@@ -5,15 +5,16 @@
           <b-form-input type="text" id="usuarioDaTurma" class="my-2" v-model="search"
           placeholder="Por favor, digite o nome do Usuário, Modalidade ou Centro Esportivo"
           v-b-popover.hover.top="'Por favor, digite o nome do Usuário, Modalidade ou Centro Esportivo'"></b-form-input>
-          <b-table striped :fields="fields" :items="resultadoUserAllClassActive" hover class="my-2">
+          <b-table striped :fields="fields" :items="resultadoUserAllClassActive" hover class="my-2"
+          :per-page="perPage" :current-page="page" id="mytable">
               <template slot="cell(actions)" slot-scope="data">
                   <b-button variant="danger" v-b-popover.hover.top="'Desativar o aluno'" @click="updateUserActive(data.item)">
                       <i class="icofont-close"></i>
                   </b-button>
               </template>
           </b-table>
-          <b-pagination size="md" v-model="page" 
-          :total-rows="countUsers" :per-page="limitUsers" />
+          <b-pagination size="md" v-model="page" aria-controls="usuarioDaTurma"
+          :total-rows="usersWithClassActive.count" :per-page="perPage" id="paginationClass"/>
       </div>
   </div>
 </template>
@@ -28,9 +29,10 @@ export default {
     components: {PageTitle},
     data: function(){
         return{
-            usersWithClassActive: {},
+            usersWithClassActive: [],
             countUsers: 0,
             limitUsers: 0,
+            perPage: 10,
             page: 1,
             user: {},
             search: '',
@@ -77,6 +79,9 @@ export default {
     },
     mounted(){
         this.loadUserAllClassActive()
+    },
+    watch(){
+        this.usersWithClassActive
     },
     computed:{
         resultadoUserAllClassActive(){

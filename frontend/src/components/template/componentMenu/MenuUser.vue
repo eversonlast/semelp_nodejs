@@ -21,14 +21,15 @@ export default {
                     {text: 'Trocar Senha'},
                     {text: 'Adicionar uma foto'}
                 ]},
-                {text: 'Fazer Matrícula'}
+                {text: 'Fazer Matrícula'},
+                {text: 'Atestado de Afastamento de Aula'}
             ]
         }
     },
     methods:{
        onNodeSelected(node){
             if(node.text=='Atualizar Cadastro'){
-                if(this.$mq ==='xs' || this.$mq === 'sm'){
+                if(this.$mq =='xs' || this.$mq == 'sm'){
                     this.$store.commit('toggleMenu', false)
                 }      
                 this.$router.push({
@@ -37,7 +38,7 @@ export default {
             }
 
             if(node.text == 'Trocar Senha'){                   
-                if(this.$mq ==='xs' || this.$mq === 'sm'){
+                if(this.$mq =='xs' || this.$mq == 'sm'){
                     this.$store.commit('toggleMenu', false)
             }             
                 this.$router.push({
@@ -45,7 +46,7 @@ export default {
                 })
             }
             if(node.text == 'Fazer Matrícula'){
-                if(this.$mq === 'xs' || this.$mq === 'sm'){
+                if(this.$mq == 'xs' || this.$mq == 'sm'){
                     this.$store.commit('toggleMenu', false)
                 }
                 this.$router.push({
@@ -59,6 +60,15 @@ export default {
                 }
                 this.$router.push({
                     path: '/uploadPhoto'
+                })
+            }
+
+            if(node.text == 'Atestado de Afastamento de Aula'){
+                if(this.$mq == 'xs' || this.$mq == 'sm'){
+                    this.$store.commit('toggleMenu', false)
+                }
+                this.$router.push({
+                    path:'/examMedicalAfast'
                 })
             }
         },

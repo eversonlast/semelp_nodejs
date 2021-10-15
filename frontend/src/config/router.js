@@ -31,6 +31,7 @@ import ManagerClassUsersActive from '../components/turma/ManagerClassUsersActive
 import MedicalExamActive from '../components/medicalExam/MedicalExamActive'
 import MedicalExamUpdate from '../components/medicalExam/MedicalExamUpdate'
 import UploadPhoto from '../components/users/UploadPhoto'
+import ExamMedicalAfast from '../components/users/MedicalExamAfast'
 
 import { userKey, baseApiUrl } from './global'
 import axios from 'axios'
@@ -158,6 +159,10 @@ const routes = [{
     name: 'uploadPhoto',
     path: '/uploadPhoto',
     component: UploadPhoto
+},{
+    name: 'examMedicalAfast',
+    path: '/examMedicalAfast',
+    component: ExamMedicalAfast
 }]
 
 const router = new VueRouter({

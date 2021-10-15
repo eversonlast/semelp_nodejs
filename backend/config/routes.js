@@ -14,6 +14,7 @@ const {uuid} = require('uuidv4')
 const ano = new Date().getFullYear()
 const uploadFolderAtestado = path.resolve(`../frontend/public/${ano}/upload/atestado`)
 const uploadFolderPhoto = path.resolve(`../frontend/public/img/fotosUsers`)
+const uploadFolderAtestadoAfastamento = path.resolve(`../frontend/public/img/${ano}/atestadoAfastamento`)
 //if(!fs.existsSync(uploadFolder)){
   //  fs.mkdirSync(uploadFolder)
 //}
@@ -33,6 +34,16 @@ const storagePhoto = multer.diskStorage({
         return cb(null, filename)
     }
 })
+
+const storageAtestAfastamento = multer.diskStorage({
+    destination: uploadFolderAtestadoAfastamento,
+    filename(req, file, cb){
+        const filename = `${file.originalname}`
+        return cb(null, filename)
+    }
+})
+
+const uplaodAtestafoAfast = multer({storage: storageAtestAfastamento})
 const uploadAtestado = multer({storage: storage})
 const upload = multer({storage: storagePhoto})
 module.exports = app =>{
@@ -44,6 +55,7 @@ module.exports = app =>{
     app.post('/forgotPassword', app.api.forgotPassword.passwordForgotten)
     app.put('/resetPassword', app.api.forgotPassword.resetPasswordToken)
     app.get('/consultarCep', app.api.apiCorreio.consultar)
+    
     app.post('/upload', uploadAtestado.single('file') ,(req, res)=>{
         return res.json({path: `${uploadFolderAtestado}`})
     })
@@ -52,6 +64,9 @@ module.exports = app =>{
         return res.json({path: `${uploadFolderPhoto}`})
     })
    
+    app.post('/uploadAtestadoAfast', uplaodAtestafoAfast.single('file'), (req, res)=>{
+        return res.json({path: `${uploadFolderAtestadoAfastamento}`})
+    })
     
     app.get('/modality', app.api.modality.get)
     
@@ -139,6 +154,10 @@ module.exports = app =>{
         .put(admin(app.api.class.save))
         .delete(admin(app.api.class.remove))
 
+    app.route('/classSport/:id')
+        .all(app.config.passport.authenticate())
+        .get(app.api.modalitySportCenter.getClassBySportCenter)
+
     app.route('/classUser')
         .all(app.config.passport.authenticate())
         .post(app.api.classUser.save)
@@ -219,5 +238,25 @@ module.exports = app =>{
     app.route('/medicalExamUpdate/:id')
         .all(app.config.passport.authenticate())
         .put(app.api.medicalExam.save)
+
+    app.route('/countUser/:idClass')
+       .all(app.config.passport.authenticate())
+        .get(app.api.classUser.countUser)   
     
+
+    app.route('/numberClass/:idClass')
+        .get(app.api.classUser.verifyNumberStudents)
+
+
+    app.route('/atestadoMedicoAfast')
+        .post(app.api.examMedicalAfast.save)
+        .get(app.api.examMedicalAfast.listAllExamAfast)
+
+    app.route('/atestadoMedicoAfast/:idUser')
+        .get(app.api.examMedicalAfast.getAtestadoByIdUser)
+
+    app.route('/atestadoMedicoAfastDate/:idUserDate')
+        .get(app.api.examMedicalAfast.getAtestadoByDate)
 }
+
+

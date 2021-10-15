@@ -2,7 +2,6 @@ const knexfile = require('../knexfile')
 
 module.exports = app =>{
     const {existsOrError} = app.api.validation
-    const multer = require('multer')
     const knex = require('knex')(knexfile)
 
     const save = async(req, res)=>{
@@ -28,7 +27,7 @@ module.exports = app =>{
                     .update(medicalExam)
                     .where({id: medicalExam.id})
                     .then(_=>res.status(200).send({success: "Exame Alterado com sucesso"}))
-                    // .catch(err=>res.status(500).send(err))
+                    .catch(err=>res.status(500).send(err))
         }else{
             await app.db('medicalExams')
                     .insert(medicalExam)
@@ -40,7 +39,7 @@ module.exports = app =>{
     const limit = 10
     const getDesactive = async(req, res)=>{
         const page = req.query.page || 1
-        const result = await app.db('medicalExams').count('id').first()
+        const result = await app.db('medicalExams').where({activeExam: false}).count('id').first()
         const count = parseInt(result.count)
         await app.db.raw(`SELECT me.id, TO_CHAR("examMonth", 'DD/MM/YYYY') as "examMonth", TO_CHAR("validadeExam", 'DD/MM/YYYY') as "validadeExam", "activeExam", 
                         nome as "NomeAluno", "idUser"
@@ -60,7 +59,7 @@ module.exports = app =>{
     }
     const getActive = async(req, res)=>{
         const page = req.query.page || 1
-        const result = await app.db('medicalExams').count('id').first()
+        const result = await app.db('medicalExams').where({activeExam: true}).count('id').first()
         const count = parseInt(result.count)
         await app.db.raw(`SELECT me.id, TO_CHAR("examMonth", 'DD/MM/YYYY') as "examMonth", TO_CHAR("validadeExam", 'DD/MM/YYYY') as "validadeExam", "activeExam", 
                         nome as "NomeAluno", "idUser"

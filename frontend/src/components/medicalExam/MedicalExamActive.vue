@@ -5,7 +5,8 @@
           <b-form-input type="text" id="medicalExam" class="my-2" 
           placeholder="Por favor, digite o nome ou a data de Exame" v-model="search"
           v-b-popover.hover.top="'Por favor, digite o nome ou a data de Exame'"/>
-          <b-table striped hover :fields="fields" :items="resultSearchMedicalActive" :per-page="perPage" :current-page="page" id="mytable">
+          <b-table striped hover :fields="fields" :items="resultSearchMedicalActive" 
+          :per-page="perPage" :current-page="page" id="mytable">
               <template slot="cell(actions)" slot-scope="data">
                   <b-button variant="warning" class="my-1 ml-1" @click="updateButton(data.item)" 
                   v-b-popover.hover.top="'Update'">
@@ -17,7 +18,7 @@
                   </b-button>
                 </template> 
           </b-table>
-             <b-pagination size="md" v-model="page" aria-controls="mytable" 
+             <b-pagination size="md" v-model="page" aria-controls="medicalExam" 
         :total-rows="medicalExams.count" :per-page="perPage" id="pagination-Exam"/>
       </div>
   </div>
@@ -33,7 +34,7 @@ export default {
     data: function(){
         return {
             medicalExams: [],
-            perPage: 0,
+            perPage: 10,
             count: 0,
             page: 1,
             search: '',

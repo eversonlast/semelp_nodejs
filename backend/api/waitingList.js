@@ -13,8 +13,8 @@ module.exports = app=>{
 
     const saveWaitingList = async(req, res)=>{
         
-        const rowsVerifyUser = await waitingList.findOne({$and:[{idUser:req.params.id}, {idClass: req.query.class}]})
-        const rowsVerifyUserClassBody = await waitingList.findOne({$and:[{idUser: req.body.idUser}, {idClass: req.body.idClass}]})
+        const rowsVerifyUser = await waitingList.find({$and:[{idUser:req.params.id}, {idClass: req.query.class}]})
+        const rowsVerifyUserClassBody = await waitingList.find({$and:[{idUser: req.body.idUser}, {idClass: req.body.idClass}]})
         const existsUser = await app.db('users').select('id', 'nome', 'dataNasc').first().where({id: req.body.idUser})
         const existsClass = await app.db('classes as c').join('modalities as m', 'm.id', 'c.idModality')
                                 .select('c.id', 'm.nomeModalidade', 'c.faixaEtaria').first().where({'c.id': req.body.idClass})
@@ -59,7 +59,7 @@ module.exports = app=>{
             }catch(msg){
                 return res.status(400).send(msg)
             }
-            await waitingList.findOneAndUpdate({_id:rowsVerifyUser._id},
+            await waitingList.findAndUpdate({_id:rowsVerifyUser._id},
                                 {$set:{idUser: req.body.idUser, idClass: req.body.idClass}})
                             .then(waitList=> res.json(waitList))
         }else{
@@ -79,7 +79,7 @@ module.exports = app=>{
     }
 
     const countUserWaitingList = async(req, res)=>{
-        const dataInscricaoUser = await waitingList.findOne({idUser: req.body.idUser}, {_id: 0, dataInscricao: 1})
+        const dataInscricaoUser = await waitingList.find({idUser: req.body.idUser}, {_id: 0, dataInscricao: 1})
         await waitingList.aggregate([ {$match:{dataInscricao:{$gte:new Date(dataInscricaoUser)}}},
                     {$group:{_id:null, count:{$sum: 1}}},
                     {$project:{_id:0}}])

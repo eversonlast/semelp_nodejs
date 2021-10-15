@@ -76,7 +76,7 @@
                     </div>
                 </div>
                  <div class="form-row">
-                    <div class="form-group col-md-6 mt-1">
+                    <div class="form-group col-md-4 mt-1">
                         <label for="faixaEtaria">Faixa Etária</label>
                         <div>
                             <input type="text" id="faixaEtaria" name="faixaEtaria" 
@@ -84,11 +84,19 @@
                             v-b-popover.hover.top="'Por favor, digite a faixa etária no formato 7 À 8 anos ou acima de 65 anos'">
                         </div>
                     </div>
-                    <div class="form-group col-md-6 mt-1">
+                    <div class="form-group col-md-4 mt-1">
                         <label for="faixaEtaria">Máximo de Faltas por Mês que a Turma permite</label>
                         <div>
                             <input type="text" id="faixaEtaria" name="faixaEtaria" 
                             class="form-control " v-model="turma.maxLackMounth" 
+                            v-b-popover.hover.top="'Por favor, digite somente número'">
+                        </div>
+                    </div>
+                        <div class="form-group col-md-4 mt-1">
+                        <label for="numerosDeAlunos">Números de Alunos na turma</label>
+                        <div>
+                            <input type="text" id="numerosDeAlunos" name="numerpsDeAlunos" 
+                            class="form-control " v-model="turma.studentsNumber" 
                             v-b-popover.hover.top="'Por favor, digite somente número'">
                         </div>
                     </div>
@@ -109,7 +117,10 @@
                     Horário: {{turma.horarios}}<br>
                     Professor Responsável:  {{turma.idProfessorResponsability}} - {{nomeProfessor}} <br>
                     Centro Esportivo: {{turma.idSportCenter}} - {{nomeCentroEsportivo}} <br>
-                    Modalidade: {{turma.idModalidade }} - {{nomeModalidade}}        
+                    Modalidade: {{turma.idModality }} - {{nomeModalidade}}        <br>
+                    Faixa Etária: {{turma.faixaEtaria}} - 
+                    Máximo de Faltas na turma: {{turma.maxLackMounth}} <br>
+                    Número de Alunos na Turma: {{turma.studentsNumber}}
                 </b-modal>
             </div>
         </div>

@@ -27,7 +27,6 @@
 </template>
 
 <script>
-
 import { mapState } from 'vuex'
 import Gravatar from 'vue-gravatar'
 import { userKey } from '@/config/global'
@@ -74,8 +73,8 @@ export default {
     }
 
     .user-dropdown-img > img{
-        max-height: 37px;
-        border-radius: 70px;
+        max-height: 40px;
+        border-radius: 50%;
     }
 
     .user-dropdown-content{

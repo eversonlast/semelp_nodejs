@@ -18,7 +18,9 @@ module.exports = app=>{
                 .then(_=>res.status(200).send('Alterado com sucesso'))
                 .catch(err=>res.status(500).send(err))
         }else{
-            app.db('classesUsers')
+
+            
+            await app.db('classesUsers')
                 .insert(classUser)
                 .then(_=>res.status(200).send('Salvo com sucesso'))
                 .catch(err=>res.status(500).send(err))
@@ -109,6 +111,19 @@ module.exports = app=>{
                 .andWhere({'c.id': parseInt(req.params.idClass)})
                 .then(resultStudent=>res.json(parseInt(resultStudent.count)))
                 .catch(err=>res.status(500).send(err))
+   }
+   const countUser =  async(req, res)=>{
+       await app.db('classesUsers')
+                .count('id')
+                .where({idClass: req.params.idClass})
+                .then(resultCount=> res.json(parseInt(resultCount[0].count)))
+   }
+
+   const verifyNumberStudents = async(req, res)=>{
+       await app.db('classes')
+                .where({id: req.params.idClass})
+                .select('studentsNumber')
+                .then(resultNumberClass=> res.json(parseInt(resultNumberClass[0].studentsNumber)))
    }
 
    const getByIdClassDesactive = async(req, res)=>{
@@ -227,7 +242,8 @@ module.exports = app=>{
 
    
 
-    return { save, remove, getAll, getByIDClassActive, getByIdUser, saveLack, getByIdUserLack, getByIdClassDesactive, numberOfStudentsPerClass, getAllClassDesactive, updateDesactive, getAllClassActive, updateForDesactive}
+    return { save, remove, getAll, getByIDClassActive, getByIdUser, saveLack, getByIdUserLack, getByIdClassDesactive, numberOfStudentsPerClass, getAllClassDesactive, 
+        updateDesactive, getAllClassActive, updateForDesactive, countUser, verifyNumberStudents}
 }
 
 

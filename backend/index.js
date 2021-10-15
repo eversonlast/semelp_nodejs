@@ -6,7 +6,7 @@ const session = require('express-session')
 
 require('./config/mongodb')
 
-app.db =db
+app.db = db
 app.mongoose = mongoose
 app.session = session
 

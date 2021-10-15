@@ -6,7 +6,7 @@ module.exports = {
     client: 'postgresql',
     connection: {
       database: 'semelp_nodejs',
-      user: 'postgres',
+      user: 'everson',
       password: '4021',
       host: '127.0.0.1'
     },

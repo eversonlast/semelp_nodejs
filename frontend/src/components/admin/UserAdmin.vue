@@ -2,7 +2,8 @@
     <div class="admin-user">
         <b-form-input id="type-text" type="text" v-model="search" placeholder="Buscar o nome ou CPF" class="my-2"></b-form-input>
           <b-table hover striped stacked="md" :items="resutaldoBusca" :fields="fields" class="table-responsive-md">
-            <template slot="cell(actions)" slot-scope="data" class="acoes"> 
+            <template slot="cell(actions)" slot-scope="data" class="acoes"
+            :per-page="perPage" :current-page="page" id="mytable"> 
                 <a href @click.prevent="update(data.item)">
                     <b-button variant="warning" class="mr-1" v-b-popover.hover.top="'Editar Usuário'">
                         <i class="fa fa-pencil" ></i>
@@ -33,8 +34,8 @@
             <p>CPF: {{user.cpf}}</p>
             <b-form-select v-model="typeUser" :options="options" size="sm" class="mt-3"></b-form-select>
         </b-modal>
-         <b-pagination size="md" v-model="page" 
-            :total-rows="count" :per-page="limit"/>
+         <b-pagination size="md" v-model="page" arial-controls="type-text"
+            :total-rows="users.count" :per-page="perPage"/>
         </div>
     </div>
 </template>
@@ -54,7 +55,7 @@ export default {
             typeUser: {},
             bodyTypeUser: {},
             page: 1,
-            count: 0,
+            perPage: 10,
             limit: 0,
             getTypeUser:{},
             fields: [

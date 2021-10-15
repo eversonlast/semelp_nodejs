@@ -91,5 +91,14 @@ module.exports = app =>{
         }
     }
 
-    return { save, remove, getSportCenter, getModality, getID }
+    const getClassBySportCenter = async(req, res)=>{
+        await app.db('classes as cl')
+            .join('modalities as m', 'm.id', 'cl.idModality')
+            .join('sportsCenters as spt', 'spt.id', 'cl.idSportCenter')
+            .where({idSportCenter: req.params.id})
+            .select('faixaEtaria', 'nomeModalidade', 'nome as centroEsportivo', 'dias', 'horarios')
+            .then(classSport=>res.json({data: classSport}))
+    }
+
+    return { save, remove, getSportCenter, getModality, getID, getClassBySportCenter }
 }

@@ -160,6 +160,7 @@ export default {
             const url = `${baseApiUrl}/classUser`
             this.loadUser()
             const methods = this.$route.params.id ? 'put' : 'post'
+            await axios 
             await axios[methods](url, this.userClass)
                     .then(()=>{
                         this.$toasted.success('O usuário matriculado com sucesso')
@@ -203,19 +204,20 @@ export default {
            // this.turmas = []
             this.userClass.idUser = this.user.id
             this.selectSportCenter = select.options[select.selectedIndex].value
-            const url = `${baseApiUrl}/sportCenterModality/${this.selectSportCenter}`
+            //console.log(this.selectSportCenter)
+            const url = `${baseApiUrl}/classSport/${this.selectSportCenter}`
             this.loadUser()
             await axios.get(url)
                     .then(res=>{
                         this.turmas = res.data.data
-                            .filter(option=>{
-                                if(option.faixaEtaria == "Acima de 60 anos"){
-                                    return option.faixaEtaria.substring(option.faixaEtaria.indexOf('de')+1, option.faixaEtaria.indexOf('anos')) < this.user.idade
+                           .filter(option=>{
+                               if(this.user.idade >= 60){
+                                    return option.faixaEtaria.toLowerCase() == "acima de 60 anos"
                                 }else{
-                                    return option.faixaEtaria.substring(0, option.faixaEtaria.indexOf('À')) < this.user.idade &&
-                                            option.faixaEtaria.substring(option.faixaEtaria.indexOf("À")+2, option.faixaEtaria.indexOf("ANOS"))                                    
+                                    return option.faixaEtaria.substring(0, option.faixaEtaria.toLowerCase().indexOf('à')) <= this.user.idade &&
+                                  option.faixaEtaria.substring(option.faixaEtaria.toLowerCase().indexOf("à")+2, option.faixaEtaria.toLowerCase().indexOf("anos")) >= this.user.idade                                   
                                 }
-                            })
+})
                             .map(option=>{
                                 return{value: option.classUser, text: (`${option.nomeModalidade} - ${option.dias} - ${option.horarios} | ${option.faixaEtaria}`).toUpperCase()}
                             })
