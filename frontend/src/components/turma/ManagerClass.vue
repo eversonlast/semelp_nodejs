@@ -8,12 +8,12 @@
     <b-table striped hover :fields="fields"  :items="resultadoPesquisa" class="my-2"
     :per-page="perPage" :current-page="page" id="mytable">
         <template slot="cell(actions)" slot-scope="data" >
-            <b-button variant="warning" @click="updateButton(data.item)" class="update-button my-1 ml-1"
+            <b-button variant="warning" @click="updateButton(data.item)" v-if="user.tipoUsuario == 'admin'" class="update-button my-1 ml-1"
             v-b-popover.hover.top="'Update'">
                 <i class="fa fa-pencil"></i>
             </b-button>
             <b-button variant="outline-danger" @click="loadClass(data.item)" class="ml-1"
-            v-b-popover.hover.top="'Delete'"
+            v-b-popover.hover.top="'Delete'" v-if="user.tipoUsuario == 'admin'"
             v-b-modal.remove>
                 <i class="fa fa-trash "></i>
             </b-button>
@@ -47,6 +47,7 @@ export default {
     data: function(){
         return{
             turmas: [],
+            user: {},
             turma:{},
             limit: 0,
             perPage: 10,
@@ -81,6 +82,7 @@ export default {
             const json = localStorage.getItem(userKey)
             const userData = JSON.parse(json)
             await this.$store.commit('setUser', userData)
+            this.user = userData
         },
         loadClass(turma){
             this.turma = {...turma}
@@ -111,6 +113,7 @@ export default {
     },
     mounted(){
         this.loadClasses()
+        this.loadUser()
     },
     watch:{
         turmas(n,a){

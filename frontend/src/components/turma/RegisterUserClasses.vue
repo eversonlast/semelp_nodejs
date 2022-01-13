@@ -23,10 +23,10 @@
                             id="turma" placeholder="Digite uma turma" v-b-popover.hover.top="'Digite uma turma'"/>
                             <b-form-select v-model="userClass.idClass" 
                             :options="resultClass" :select-size="4" id="teste"
-                            v-on:change="clicar" v-b-popover.hover.top="'Escolha uma opção de turma'">></b-form-select>
+                            v-on:change="clicar" v-b-popover.hover.top="'Escolha uma opção de turma'"></b-form-select>
                         </div>
                         <div class="form-group col-md-12 mt-1">
-                            <div v-if="this.user.tipoUsuario == 'admin'">                                
+                            <div v-if="this.user.tipoUsuario != 'user'">                                
                                 <label for="user">Escolha um Usuário</label>
                                 <input type="text" class="form-control mb-1 maiscula" v-model="searchUser"
                                 v-b-popover.hover.top="'Digite o nome do usuário'" placeholder="Digite o nome de uma usuário"/>
@@ -152,7 +152,7 @@ export default {
                 this.anoMinino = data.getFullYear() - valorMaximo
                 this.anoMaximo = data.getFullYear() - valorMinino
             }
-            if(this.user.tipoUsuario == 'admin'){
+            if(this.user.tipoUsuario != 'user'){
                 this.loadUserSelect()                
             }
         },
@@ -160,7 +160,6 @@ export default {
             const url = `${baseApiUrl}/classUser`
             this.loadUser()
             const methods = this.$route.params.id ? 'put' : 'post'
-            await axios 
             await axios[methods](url, this.userClass)
                     .then(()=>{
                         this.$toasted.success('O usuário matriculado com sucesso')

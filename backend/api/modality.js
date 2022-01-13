@@ -78,5 +78,15 @@ module.exports = app =>{
         }
     }
 
-    return { save, get, getById, remove, getResponsability }
+    const getModalityBySportCenter = async(req, res)=>{
+        await app.db('modalities as m')
+                .select('m.nomeModalidade', 'm.departamento', 'u.nome as nomeProfessor')
+                .join('modalitiesSportsCenters as mspt', 'm.id', 'mspt.idModality')
+                .join('users as u', 'u.id', 'm.idResponsabilityModality')
+                .where("mspt.idSportCenter", req.query.idSport)
+                .then(modality=>res.json(modality))
+                .catch(err=>res.status(500).send(err))
+    }
+
+    return { save, get, getById, remove, getResponsability, getModalityBySportCenter }
 }

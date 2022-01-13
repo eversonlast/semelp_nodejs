@@ -4,6 +4,10 @@ module.exports = app =>{
         if(Array.isArray(value) && value.length === 0) throw msg
         if(typeof value === 'string' && !value.trim()) throw msg
     }
+
+    function existsElementOrError(value, msg){
+        if(value !== 0) throw msg
+    }
     
     function notExistsOrError(value, msg) {
         try {
@@ -71,5 +75,5 @@ module.exports = app =>{
             throw msg
         }
     }
-    return { existsOrError, notExistsOrError, equalsOrError, typeUser, typeAddress, TestaCPF, daysOfClass}
+    return { existsOrError, notExistsOrError, equalsOrError, typeUser, typeAddress, TestaCPF, daysOfClass, existsElementOrError}
 }

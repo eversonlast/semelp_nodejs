@@ -8,7 +8,8 @@ module.exports = app=>{
         nome: String,
         dataNasc: Date,
         idClass: Number,
-        nomeModalidade: String
+        nomeModalidade: String,
+
     })
 
     const saveWaitingList = async(req, res)=>{
@@ -64,7 +65,7 @@ module.exports = app=>{
                             .then(waitList=> res.json(waitList))
         }else{
             try{
-                if(rowsVerifyUserClassBody) throw 'Este usuário já está na lista de espera desta modalidade, por favor verifique no Sistema'
+                if(rowsVerifyUserClassBody.length !== 0) throw 'Este usuário já está na lista de espera desta modalidade, por favor verifique no Sistema'
             }catch(msg){
                 return res.status(400).send(msg)
             }
@@ -72,10 +73,12 @@ module.exports = app=>{
                     .then(waitList=> res.json(waitList))
         }
     }
-
+    const limit = 10
     const getWaitByClass = async(req, res)=>{
-        await waitingList.find({idClass: req.params.idClass})
-                    .then(waitByClass=>res.json(waitByClass))
+        const page = req.query.page || 1
+        const count = await waitingList.countDocuments()
+        await waitingList.find({idClass: req.params.idClass}).limit(limit).skip(page*limit-limit)
+                    .then(waitByClass=>res.json({data: waitByClass, limit: limit, count: count}))
     }
 
     const countUserWaitingList = async(req, res)=>{

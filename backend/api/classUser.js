@@ -1,5 +1,15 @@
 module.exports = app=>{
-    const { existsOrError } = app.api.validation
+    const { existsOrError, existsElementOrError } = app.api.validation
+
+    const waitingList = app.mongoose.model('waitingLists',{
+        dataInscricao: {type:Date},
+        idUser: Number,
+        nome: String,
+        dataNasc: Date,
+        idClass: Number,
+        nomeModalidade: String,
+
+    })
 
     const save = async (req, res)=>{
         const classUser = {... req.body}
@@ -18,12 +28,25 @@ module.exports = app=>{
                 .then(_=>res.status(200).send('Alterado com sucesso'))
                 .catch(err=>res.status(500).send(err))
         }else{
-
+            const result = await app.db('classesUsers').count("id")
+                        .where({idUser: classUser.idUser})
+                        .andWhere({idClass: classUser.idClass})
+                        .first()
+            console.log(result.count)
+            try {
+                if(result.count != 0) throw "Existe matrícula com este aluno"            
+            } catch (msg) {
+                return res.status(400).send(msg)
+            }
             
             await app.db('classesUsers')
                 .insert(classUser)
                 .then(_=>res.status(200).send('Salvo com sucesso'))
                 .catch(err=>res.status(500).send(err))
+
+            await waitingList.remove({idUser: classUser.idUser, 
+                idClass: classUser.idClass})
+                .then(removeWaitUser=>res.json(removeWaitUser))
         }
     }
    
@@ -146,9 +169,8 @@ module.exports = app=>{
 
    const getAllClassDesactive = async(req, res)=>{
     const page = req.query.page || 1
-    const idClass = req.params.id
     const result = await app.db('classesUsers').count('id').first()
-            .orWhere({activeClass: false, activeClass: null, activeClass: 'f'})
+            .orWhere({activeClass: false, activeClass: 'f'}).orWhereNull('activeClass')
     const count = parseInt(result.count)
     await app.db('classesUsers as turma')
             .join('users as u', 'u.id', 'turma.idUser')
@@ -156,8 +178,9 @@ module.exports = app=>{
             .join('modalities as m', 'm.id', 'c.idModality')
             .join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')
             .select('u.nome as nomeAluno', 'idUser', 'activeClass', 'turma.id', 'dias',
-                    'horarios', 'm.nomeModalidade', 'spt.nome as centroEsportivo', 'm.departamento',  'maxLackMounth as maximoFaltasMes')
-            .orWhere({activeClass: false, activeClass: null, activeClass: 'f'})
+                'horarios', 'm.nomeModalidade', 'spt.nome as centroEsportivo', 'm.departamento',  'maxLackMounth as maximoFaltasMes')
+            .orWhere({activeClass: false, activeClass: 'f'})
+            .orWhereNull('activeClass')
             .limit(limit).offset(page*limit-limit)
             .then(classUserDesactive=>res.json({data:classUserDesactive, count, limit}))
             .catch(err=>res.status(500).send(err))

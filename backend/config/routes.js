@@ -160,7 +160,7 @@ module.exports = app =>{
 
     app.route('/classUser')
         .all(app.config.passport.authenticate())
-        .post(app.api.classUser.save)
+        .post(app.api.classUser.save) 
         .get(app.api.classUser.getAll)
     
     app.route('/classUser/:id')
@@ -180,7 +180,7 @@ module.exports = app =>{
 
     app.route('/classUserDesactive')
         .all(app.config.passport.authenticate())
-        .get(app.api.classUser.getAllClassDesactive)
+        .get(app.api.classUser.getAllClassDesactive) 
 
     app.route('/classUserActive')
         .all(app.config.passport.authenticate())
@@ -245,18 +245,26 @@ module.exports = app =>{
     
 
     app.route('/numberClass/:idClass')
+        .all(app.config.passport.authenticate())
         .get(app.api.classUser.verifyNumberStudents)
 
 
     app.route('/atestadoMedicoAfast')
+        .all(app.config.passport.authenticate())
         .post(app.api.examMedicalAfast.save)
         .get(app.api.examMedicalAfast.listAllExamAfast)
 
     app.route('/atestadoMedicoAfast/:idUser')
+        .all(app.config.passport.authenticate())
         .get(app.api.examMedicalAfast.getAtestadoByIdUser)
 
     app.route('/atestadoMedicoAfastDate/:idUserDate')
+        .all(app.config.passport.authenticate())
         .get(app.api.examMedicalAfast.getAtestadoByDate)
+
+    app.route('/allModalityBySport')
+        .all(app.config.passport.authenticate())
+        .get(app.api.modality.getModalityBySportCenter)
 }
 
 

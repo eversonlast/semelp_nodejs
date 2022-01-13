@@ -65,6 +65,7 @@ export default {
                     .then(res=>{
                         this.$store.commit('setUser', res.data)
                         localStorage.setItem(userKey, JSON.stringify(res.data))
+                        localStorage.setItem('tipoUsuario', res.data.tipoUsuario)
                         this.$router.push({name: 'home'})
                     })
                     .catch(showError)
