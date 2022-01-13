@@ -1,15 +1,6 @@
 module.exports = app=>{
     const { existsOrError, existsElementOrError } = app.api.validation
-
-    const waitingList = app.mongoose.model('waitingLists',{
-        dataInscricao: {type:Date},
-        idUser: Number,
-        nome: String,
-        dataNasc: Date,
-        idClass: Number,
-        nomeModalidade: String,
-
-    })
+    const { removeWaitList, waitingList } = app.api.waitingList
 
     const save = async (req, res)=>{
         const classUser = {... req.body}
@@ -44,9 +35,9 @@ module.exports = app=>{
                 .then(_=>res.status(200).send('Salvo com sucesso'))
                 .catch(err=>res.status(500).send(err))
 
-            await waitingList.remove({idUser: classUser.idUser, 
-                idClass: classUser.idClass})
-                .then(removeWaitUser=>res.json(removeWaitUser))
+           await waitingList.remove({idUser: classUser.idUser, 
+               idClass: classUser.idClass})
+               .then(removeWaitUser=>res.json(removeWaitUser))
         }
     }
    
@@ -90,7 +81,7 @@ module.exports = app=>{
    }
 
    const limit = 10
-   const getAll = async(req, res)=>{
+   const getAll = async(req, res)=>{ 
        const page = req.query.page || 1
        const result = await app.db('classesUsers').count('id').first()
        const count = parseInt(result.count)
