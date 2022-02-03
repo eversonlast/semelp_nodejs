@@ -2,18 +2,31 @@
   <div>
       <PageTitle main="Lista de Usuários Desativados" icon="icofont-gears"/>
       <div class="base">
-          <b-form-input type="text" id="usuarioDaTurma" class="my-2" v-model="search"
-          placeholder="Por favor, digite o nome do Usuário, Modalidade ou Centro Esportivo."
-          v-b-popover.hover.top="'Por favor, digite o nome do Usuário, Modalidade ou Centro Esportivo.'"></b-form-input>
-          <b-table striped :fields="fields" :items="resultadoPesquisaUserWithClass" hover class="my-2">
-              <template slot="cell(actions)" slot-scope="data">
-                <b-button variant="success" v-b-popover.hover.top="'Ativar Usuário'" @click="activeClassUser(data.item)">
-                    <i class="icofont-check"></i>
-                </b-button>
-              </template>
-          </b-table>
-        <b-pagination size="md" v-model="page"
-        :total-rows="countUsers" :per-page="limitUsers"/>
+          <div class="row">
+              <div class="col-md-10 mx-1">
+                <b-form-input type="text" id="usuarioDaTurma" class="my-2" v-model="searchNome"
+                placeholder="Por favor, digite o nome do Usuário."
+                v-b-popover.hover.top="'Por favor, digite o nome do Usuário.'"
+                @keydown.enter.prevent="findByNameClassUserDesactive()"></b-form-input>
+              </div>
+              <div class="col-md-1 my-2">
+                  <b-button variant="primary" @click="findByNameClassUserDesactive()"
+                  v-b-popover.hover.top="'Por favor, Clique para realizar a Pesquisa.'">Pesquisar</b-button>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-12">
+                    <b-table striped :fields="fields" :items="usersWithClass" hover class="my-2" responsive>
+                        <template slot="cell(actions)" slot-scope="data" :current-page="page" :per-page="perPage">
+                            <b-button variant="success" v-b-popover.hover.top="'Ativar Usuário'" @click="activeClassUser(data.item)">
+                                <i class="icofont-check"></i>
+                            </b-button>
+                        </template>
+                    </b-table>
+                    <b-pagination size="md" v-model="page"
+                    :total-rows="countUsers" :per-page="perPage"/>
+              </div>
+          </div>
       </div>
   </div>
 </template>
@@ -29,10 +42,11 @@ export default {
         return{
             usersWithClass: [],
             countUsers: 0, 
-            limitUsers: 0,
+            perPage: 10,
             user: {},
             page: 1, 
             search: '',
+            searchNome: '',
             fields: [
                 {key: 'id', label: 'Código', sortable: true},
                 {key: 'nomeAluno', label:'Nome do Aluno', sortable: true},
@@ -54,7 +68,7 @@ export default {
                 .then(res=>{
                     this.usersWithClass = res.data.data 
                     this.countUsers = res.data.count
-                    this.limitUsers = res.data.limit
+                    
                 })
                 .catch(showError)
         },
@@ -72,11 +86,26 @@ export default {
                     })
                     .catch(showError)
             this.loadUsersWithClasses()
+        },
+        async findByNameClassUserDesactive(){
+            this.loadUser();
+            const url = `${baseApiUrl}/classByNameDesactive?nome=${this.searchNome}`
+            await axios.get(url)
+                .then(res=>{
+                    this.usersWithClass = res.data
+                    this.countUsers = 10
+                    this.perPage = 100
+                })
         }
     },
     mounted(){
         this.loadUsersWithClasses()
     },
+watch:{
+    page(){
+        this.loadUsersWithClasses()
+    }
+},
     computed:{
         resultadoPesquisaUserWithClass(){
             if(this.search=='' || this.search== ' '){

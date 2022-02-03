@@ -23,7 +23,7 @@ module.exports = app=>{
                         .where({idUser: classUser.idUser})
                         .andWhere({idClass: classUser.idClass})
                         .first()
-            console.log(result.count)
+
             try {
                 if(result.count != 0) throw "Existe matrícula com este aluno"            
             } catch (msg) {
@@ -34,10 +34,7 @@ module.exports = app=>{
                 .insert(classUser)
                 .then(_=>res.status(200).send('Salvo com sucesso'))
                 .catch(err=>res.status(500).send(err))
-
-           await waitingList.remove({idUser: classUser.idUser, 
-               idClass: classUser.idClass})
-               .then(removeWaitUser=>res.json(removeWaitUser))
+a
         }
     }
    
@@ -95,6 +92,7 @@ module.exports = app=>{
             .select('clu.id', 'clu.idUser', 'clu.idClass', 'clu.quantidadesDeFalta', 'clu.activeClass',
             'm.nomeModalidade', 'dias', 'horarios', 'faixaEtaria', 'u.nome as nomeAluno', 'spt.nome as centroEsportivo', 
             'm.departamento', 'maxLackMounth as maximoFaltasMes')
+            .limit(limit).offset(page*limit-limit)
             .then(classUser=>res.json({data: classUser, count, limit}))
             .catch(err=>res.status(500).send(err))
    }
@@ -173,7 +171,7 @@ module.exports = app=>{
             .orWhere({activeClass: false, activeClass: 'f'})
             .orWhereNull('activeClass')
             .limit(limit).offset(page*limit-limit)
-            .then(classUserDesactive=>res.json({data:classUserDesactive, count, limit}))
+            .then(classUserDesactive=>res.json({data:classUserDesactive, count}))
             .catch(err=>res.status(500).send(err))
 
 } 
@@ -254,10 +252,24 @@ module.exports = app=>{
             .then(userLacks=>res.json(userLacks))
    }
 
+   const getClassByNameDesactive = async(req, res)=>{
+       const nomeAluno = req.query.nome == null ? "".trim() : req.query.nome
+       await app.db('classesUsers as turma')
+                .join('users as u', 'u.id','=', 'turma.idUser')
+                .join('classes as c', 'c.id','=', 'turma.idClass')
+                .join('modalities as m', 'm.id', 'c.idModality')
+                .join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')
+                .select('u.nome as nomeAluno', 'idUser', 'activeClass', 'turma.id', 'dias',
+                'horarios', 'm.nomeModalidade', 'spt.nome as centroEsportivo', 'm.departamento',  'maxLackMounth as maximoFaltasMes')
+                .whereRaw('UPPER(u.nome) like ?', `%${nomeAluno.toUpperCase()}%`)
+                .then(userClass=>res.json(userClass))
+//                .catch(err=>res.status(500).send(err))?
+
+   }
    
 
     return { save, remove, getAll, getByIDClassActive, getByIdUser, saveLack, getByIdUserLack, getByIdClassDesactive, numberOfStudentsPerClass, getAllClassDesactive, 
-        updateDesactive, getAllClassActive, updateForDesactive, countUser, verifyNumberStudents}
+        updateDesactive, getAllClassActive, updateForDesactive, countUser, verifyNumberStudents, getClassByNameDesactive}
 }
 
 

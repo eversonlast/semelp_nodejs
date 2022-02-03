@@ -96,7 +96,7 @@ module.exports = app=>{
     }
 
     const removeWaitList = async(req, res)=>{
-        await waitingList.remove({idUser: req.params.idUser, 
+        await waitingList.deleteOne({idUser: req.params.idUser, 
                     idClass: req.query.idClass})
                     .then(removeWaitUser=>res.json(removeWaitUser))
 

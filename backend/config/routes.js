@@ -180,7 +180,11 @@ module.exports = app =>{
 
     app.route('/classUserDesactive')
         .all(app.config.passport.authenticate())
-        .get(app.api.classUser.getAllClassDesactive) 
+        .get(app.api.classUser.getAllClassDesactive)
+
+    app.route('/classByNameDesactive')
+        .all(app.config.passport.authenticate())
+        .get(app.api.classUser.getClassByNameDesactive)
 
     app.route('/classUserActive')
         .all(app.config.passport.authenticate())

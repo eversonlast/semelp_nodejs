@@ -21,8 +21,16 @@
                       </div>
                   </div>
                   <div class="form-row">
+                      <div class="form-group col-md-12 mt-1">
+                          <label for="turma">Digite o nome do Aluno:</label>
+                          <input type="text" class="form-control mb-1" v-model="searchListEspera"
+                          placeholder="Digite o nome do aluno que queria pesquisar..." id="turma" 
+                          v-b-popover.hover.top="'Digite nome do Aluno'" />
+                      </div>
+                  </div>
+                  <div class="form-row">
                       <b-table striped hover :fields="fields"
-                        :items="listaEspera"
+                        :items="resultListaEspera"
                        class="my-2"
                       id="tableEspera" >
                         <template slot="cell(actions)" slot-scope="data" :per-page="perPage" :current-page="page">
@@ -37,6 +45,8 @@
                         </template>
 
                       </b-table>
+                       <b-pagination size="md" v-model="page" aria-controls="turma"
+                        :total-rows="resultListaEspera.length" :per-page="perPage" id="paginationManagerClass"/>
                     <div>
                         <b-modal id="modalChamarAluno" title="Confirmação de Matrícula" @ok="salveClassUser">
                             Código da Turma: {{userClass.idClass}}<br>
@@ -63,10 +73,12 @@ export default {
             idTurma: '',
             turmas: {},
             searchTurma: '',
+            searchListEspera: '',
             user: {},
             userClass: {}, 
             limit: 0,
             perPage: 10,
+            countList: 0,
             page: 1,
             fields: [
                 {key: 'idUser', label: 'Código do Aluno', sortable: true},
@@ -86,7 +98,7 @@ export default {
         },
         async loadClasses(){
             this.loadUser()
-            const url = `${baseApiUrl}/class`
+            const url = `${baseApiUrl}/class?page=${this.page}`
             await axios.get(url)
                     .then(res=>{
                         this.turmas = res.data.data.map(option=>{
@@ -103,6 +115,8 @@ export default {
                         this.listaEspera = res.data.data.map(user=>{
                             return {nome: user.nome, dataNasc: user.dataNasc.slice(0, 10).split("-").reverse().join("-"), dataInscricao: user.dataInscricao.slice(0, 10).split("-").reverse().join("-"), idClass: user.idClass, idUser: user.idUser}
                         })
+                        this.countList = res.data.count
+
                     })
                     .catch(showError)
         },
@@ -116,6 +130,7 @@ export default {
         async salveClassUser(){
             this.loadUser()
             const url = `${baseApiUrl}/classUser`
+            const urlDel = `${baseApiUrl}/waitingListUser/${this.userClass.idUser}?idClass=${this.userClass.idClass}`
             this.userClass.activeClass = false;
             await axios.post(url, this.userClass)
                     .then(()=>{
@@ -123,6 +138,10 @@ export default {
                         this.userClass = {}
                     })
                     .catch(showError)
+            await axios.delete(urlDel)
+                    .then(()=>{
+                        this.$toasted.success('Usuário retirado com sucesso da Lista de Espera!')
+                    })
         }
     },
     mounted(){
@@ -135,6 +154,15 @@ export default {
             }else{
                 return this.turmas.filter(turma=>{
                     return turma.text.match(this.searchTurma.toUpperCase())
+                })
+            }
+        },
+        resultListaEspera(){
+            if(this.searchListEspera == '' || this.searchListEspera == ' '){
+                return this.listaEspera
+            }else{
+                this.listaEspera.filter(Lista=>{
+                    Lista.nome.match(this.searchListEspera.toUpperCase())
                 })
             }
         }
