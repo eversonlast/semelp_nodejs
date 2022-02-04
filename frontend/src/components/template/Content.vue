@@ -2,11 +2,14 @@
     <div class="content">
         <router-view></router-view>
         <div class="lgpd" v-if="state === 'A'">
-            <p class="my-1">
+            <div class="lgpd-center">
+                 <p class="my-1">
                 Este site usa dados pessoais para fornecer o serviço
-            </p>
-            <b-button variant="primary" @click="mudancaState()" class="mx-2 my-1">Aceito</b-button>
-            <b-button variant="danger" class="my-1">Não Aceito </b-button>
+                </p>
+                <b-button variant="primary" @click="mudancaState()" class="mx-2 my-1">Aceito</b-button>
+                <b-button variant="danger" class="my-1">Não Aceito </b-button>
+            </div>
+           
         </div>
     </div>
 </template>
@@ -44,11 +47,14 @@ export default {
         grid-area: content;
         background-color: #ddf3db;
         padding: 20px;
+
+    }
+    .lgpd{
         display: flex;
         justify-content: center;
     }
 
-    .lgpd{
+    .lgpd-center{
         width: 80%;
         background-color: #41a848;
         margin-right: 0px;
@@ -59,15 +65,16 @@ export default {
         z-index: 99;
         position: fixed;
         top: 90%;
+        border-radius:10px;
     }
-    .lgpd p{
+    .lgpd-center p{
         margin-left: 10px;
         color: white;
     }
 
     @media only screen and (max-width: 600px){
         .lgpd{
-            width: 80%;
+            width: 100%;
             background-color: #41a848;
             margin-right: 0px;
             margin-left: -1.15%;

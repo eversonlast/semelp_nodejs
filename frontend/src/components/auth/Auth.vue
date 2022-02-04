@@ -1,8 +1,7 @@
 <template>
     <Login v-if="state === 'L'"/>
     <Signup v-else-if="state === 'S'"/>
-    <ForgotPassword v-else-if="state === 'F'"/>
-    
+    <ForgotPassword v-else-if="state === 'F'"/>    
 </template>
 
 <script>
