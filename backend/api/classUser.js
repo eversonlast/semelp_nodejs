@@ -261,15 +261,31 @@ a
                 .join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')
                 .select('u.nome as nomeAluno', 'idUser', 'activeClass', 'turma.id', 'dias',
                 'horarios', 'm.nomeModalidade', 'spt.nome as centroEsportivo', 'm.departamento',  'maxLackMounth as maximoFaltasMes')
-                .whereRaw('UPPER(u.nome) like ?', `%${nomeAluno.toUpperCase()}%`)
+                //.andWhere({activeClass: false, activeClass: 'f'})
+                .whereRaw('UPPER(u.nome) like ? and (turma."activeClass"= false or turma."activeClass" is null) ', `%${nomeAluno.toUpperCase()}%`)
+                //.orWhereNull('activeClass')
                 .then(userClass=>res.json(userClass))
-//                .catch(err=>res.status(500).send(err))?
-
+                //.catch(err=>res.status(500).send(err))
    }
+
+   const getClassByNameActive = async (req, res)=>{
+    const nomeAluno = req.query.nome == null ? "".trim() : req.query.nome
+    await app.db('classesUsers as turma')
+            .join('users as u', 'u.id','=', 'turma.idUser')
+            .join('classes as c', 'c.id','=', 'turma.idClass')
+            .join('modalities as m', 'm.id', 'c.idModality')
+            .join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')
+            .select('u.nome as nomeAluno', 'idUser', 'activeClass', 'turma.id', 'dias',
+            'horarios', 'm.nomeModalidade', 'spt.nome as centroEsportivo', 'm.departamento',  'maxLackMounth as maximoFaltasMes')
+            .whereRaw('UPPER(u.nome) like ?', `%${nomeAluno.toUpperCase()}%`)
+            .andWhere({activeClass: true, activeClass: 't'})
+            .then(userClass=>res.json(userClass))
+            .catch(err=>res.status(500).send(err))
+}
    
 
     return { save, remove, getAll, getByIDClassActive, getByIdUser, saveLack, getByIdUserLack, getByIdClassDesactive, numberOfStudentsPerClass, getAllClassDesactive, 
-        updateDesactive, getAllClassActive, updateForDesactive, countUser, verifyNumberStudents, getClassByNameDesactive}
+        updateDesactive, getAllClassActive, updateForDesactive, countUser, verifyNumberStudents, getClassByNameDesactive, getClassByNameActive}
 }
 
 

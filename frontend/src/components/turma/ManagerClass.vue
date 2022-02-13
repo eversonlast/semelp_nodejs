@@ -2,36 +2,48 @@
 <div>
     <PageTitle main="Lista de Turma" sub="Gerenciar Turmas" icon="icofont-users"/>
     <div class='base'>
-    <b-form-input type="text" id="turma" class="my-2" v-model="search" 
-    placeholder="Por favor, digite a turma..."
-    v-b-popover.hover.top="'Por favor, digite a turma.'"></b-form-input>
-    <b-table striped hover :fields="fields"  :items="resultadoPesquisa" class="my-2"
-    :per-page="perPage" :current-page="page" id="mytable">
-        <template slot="cell(actions)" slot-scope="data" >
-            <b-button variant="warning" @click="updateButton(data.item)" v-if="user.tipoUsuario == 'admin'" class="update-button my-1 ml-1"
-            v-b-popover.hover.top="'Update'">
-                <i class="fa fa-pencil"></i>
-            </b-button>
-            <b-button variant="outline-danger" @click="loadClass(data.item)" class="ml-1"
-            v-b-popover.hover.top="'Delete'" v-if="user.tipoUsuario == 'admin'"
-            v-b-modal.remove>
-                <i class="fa fa-trash "></i>
-            </b-button>
-            <b-button variant="success" @click="loadTurma(data.item)" class="ml-1"
-            v-b-popover.hover.top="'Ver Turma'"
-            >
-                <i class="icofont-eye"></i>                
-            </b-button>
-        </template>
-    </b-table>
-    <b-pagination size="md" v-model="page" aria-controls="turma"
-        :total-rows="turmas.count" :per-page="perPage" id="paginationManagerClass"/>
-    <b-modal id="remove" title="Deletar de Cadastro" @ok="remove">
-        <p>Você tem certeza que quer Deletar?</p>
-        <p>{{turma.nomeModalidade}}</p>
-        <p>{{turma.dias}} - {{turma.horarios}}</p>
-        <p>{{turma.centroEsportivo}}</p>
-    </b-modal>
+        <div class="row">
+            <div class="col-md-10 mx-1">
+                <b-form-input type="text" id="turma" class="my-2" v-model="search" 
+                placeholder="Por favor, digite a turma..."
+                v-b-popover.hover.top="'Por favor, digite a turma.'"></b-form-input>
+            </div>
+            <div class="col-md-1 my-2">
+                <b-button variant="primary"
+                v-b-popover.hover.top="'Por favor, clique para realizar a Pesquisa'">Pesquisar</b-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <b-table striped hover :fields="fields"  :items="turmas" class="my-2"
+                :per-page="perPage" :current-page="page" id="mytable">
+                    <template slot="cell(actions)" slot-scope="data" >
+                        <b-button variant="warning" @click="updateButton(data.item)" v-if="user.tipoUsuario == 'admin'" class="update-button my-1 ml-1"
+                        v-b-popover.hover.top="'Update'">
+                            <i class="fa fa-pencil"></i>
+                        </b-button>
+                        <b-button variant="outline-danger" @click="loadClass(data.item)" class="ml-1"
+                        v-b-popover.hover.top="'Delete'" v-if="user.tipoUsuario == 'admin'"
+                        v-b-modal.remove>
+                            <i class="fa fa-trash "></i>
+                        </b-button>
+                        <b-button variant="success" @click="loadTurma(data.item)" class="ml-1"
+                        v-b-popover.hover.top="'Ver Turma'"
+                        >
+                            <i class="icofont-eye"></i>                
+                        </b-button>
+                    </template>
+                </b-table>
+                <b-pagination size="md" v-model="page" aria-controls="turma"
+                    :total-rows="count" :per-page="perPage" id="paginationManagerClass"/>
+                <b-modal id="remove" title="Deletar de Cadastro" @ok="remove">
+                    <p>Você tem certeza que quer Deletar?</p>
+                    <p>{{turma.nomeModalidade}}</p>
+                    <p>{{turma.dias}} - {{turma.horarios}}</p>
+                    <p>{{turma.centroEsportivo}}</p>
+                </b-modal>
+            </div>
+        </div>
     </div>
 </div>
 </template>
@@ -51,6 +63,7 @@ export default {
             turma:{},
             limit: 0,
             perPage: 10,
+            count: 0,
             page: 1,
             fields:[
                 {key: 'id', label: 'Código', sortable:true},
@@ -116,8 +129,8 @@ export default {
         this.loadUser()
     },
     watch:{
-        turmas(n,a){
-            n = a
+        page(){
+            this.loadClasses()
         }
     },
     computed:{

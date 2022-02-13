@@ -2,19 +2,31 @@
   <div>
       <PageTitle main="Lista de Usuários Ativos" icon="icofont-gears" />
       <div class="base">
-          <b-form-input type="text" id="usuarioDaTurma" class="my-2" v-model="search"
-          placeholder="Por favor, digite o nome do Usuário, Modalidade ou Centro Esportivo"
-          v-b-popover.hover.top="'Por favor, digite o nome do Usuário, Modalidade ou Centro Esportivo'"></b-form-input>
-          <b-table striped :fields="fields" :items="resultadoUserAllClassActive" hover class="my-2"
-          :per-page="perPage" :current-page="page" id="mytable">
-              <template slot="cell(actions)" slot-scope="data">
-                  <b-button variant="danger" v-b-popover.hover.top="'Desativar o aluno'" @click="updateUserActive(data.item)">
-                      <i class="icofont-close"></i>
-                  </b-button>
-              </template>
-          </b-table>
-          <b-pagination size="md" v-model="page" aria-controls="usuarioDaTurma"
-          :total-rows="usersWithClassActive.count" :per-page="perPage" id="paginationClass"/>
+          <div class="row">
+            <div class="col-md-10 mx-1">
+                <b-form-input type="text" id="usuarioDaTurma" class="my-2" v-model="searchNome"
+                placeholder="Por favor, digite o nome do Usuário, Modalidade ou Centro Esportivo"
+                v-b-popover.hover.top="'Por favor, digite o nome do Usuário, Modalidade ou Centro Esportivo'"></b-form-input>
+            </div>
+            <div class="col-md-1 my-2">
+                <b-button variant="primary" @click="findByNameClassActive()"
+                v-b-popover.hover.top="'Por favor, clique para realizar a pesquisa'">Pesquisar</b-button>
+            </div>
+          </div>
+          <div class="row">
+              <div class="col-md-12">
+                <b-table striped :fields="fields" :items="usersWithClassActive" hover class="my-2"
+                :per-page="perPage" :current-page="page" id="mytable" responsive>
+                    <template slot="cell(actions)" slot-scope="data">
+                        <b-button variant="danger" v-b-popover.hover.top="'Desativar o aluno'" @click="updateUserActive(data.item)">
+                            <i class="icofont-close"></i>
+                        </b-button>
+                    </template>
+                </b-table>
+                <b-pagination size="md" v-model="page" aria-controls="usuarioDaTurma"
+                :total-rows="countUsers" :per-page="perPage" id="paginationClass"/>
+              </div>
+          </div>
       </div>
   </div>
 </template>
@@ -36,6 +48,7 @@ export default {
             page: 1,
             user: {},
             search: '',
+            searchNome: '',
             fields: [
                 {key: 'id', label: 'Código', sortable: true},
                 {key: 'nomeAluno', label: 'Nome do Aluno', sortable: true},
@@ -51,7 +64,7 @@ export default {
     },
     methods:{
         async loadUserAllClassActive(){
-            const url = `${baseApiUrl}/classUserActive`
+            const url = `${baseApiUrl}/classUserActive?page${this.page}`
             this.loadUser()
             await axios.get(url)
                 .then(res=>{
@@ -75,13 +88,25 @@ export default {
                     })
                     .catch(showError)
         this.loadUserAllClassActive()
+        },
+        async findByNameClassActive(){
+            this.loadUser()
+            const url  = `${baseApiUrl}/classByNameActive?nome=${this.searchNome}`
+            await axios.get(url)
+                .then(res=>{
+                    this.usersWithClassActive = res.data
+                    this.countUsers = 100
+                    this.perPage  = 100
+                })
         }
     },
     mounted(){
         this.loadUserAllClassActive()
     },
-    watch(){
-        this.usersWithClassActive
+    watch:{
+        page(){
+            this.loadUserAllClassActive()
+        }
     },
     computed:{
         resultadoUserAllClassActive(){

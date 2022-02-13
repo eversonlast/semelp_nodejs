@@ -186,6 +186,10 @@ module.exports = app =>{
         .all(app.config.passport.authenticate())
         .get(app.api.classUser.getClassByNameDesactive)
 
+    app.route('/classByNameActive')
+        .all(app.config.passport.authenticate())
+        .get(app.api.classUser.getClassByNameActive)
+
     app.route('/classUserActive')
         .all(app.config.passport.authenticate())
         .get(app.api.classUser.getAllClassActive)

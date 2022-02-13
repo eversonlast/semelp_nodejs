@@ -44,7 +44,7 @@ export default {
             countUsers: 0, 
             perPage: 10,
             user: {},
-            page: 1, 
+            page: 1,
             search: '',
             searchNome: '',
             fields: [
