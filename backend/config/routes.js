@@ -173,7 +173,7 @@ module.exports = app =>{
         .all(app.config.passport.authenticate())
         .get(app.api.classUser.getByIdClassDesactive)
         .put(app.api.classUser.updateDesactive)
-
+ 
     app.route('/classUserByActive/:id')
         .all(app.config.passport.authenticate())
         .put(app.api.classUser.updateForDesactive)

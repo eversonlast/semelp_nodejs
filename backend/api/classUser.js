@@ -2,6 +2,8 @@ module.exports = app=>{
     const { existsOrError, existsElementOrError } = app.api.validation
     const { removeWaitList, waitingList } = app.api.waitingList
 
+    const{ sendEmail } = require('../api/email')
+
     const save = async (req, res)=>{
         const classUser = {... req.body}
         if(req.params.id) classUser.id = req.params.id
@@ -60,11 +62,29 @@ a
    const updateDesactive = async(req, res)=>{
        const classUser = {}
        classUser.activeClass = true
-       await app.db('classesUsers')
-                .update(classUser)
-                .where({id: req.params.id})
-                .then(_=>res.status(200).send('Usuário ativado com sucesso'))
-                .catch(err=>res.status(500).send(err))
+       try{
+            await app.db('classesUsers')
+                    .update(classUser)
+                    .where({id: req.params.id})
+                    .then(_=>res.status(200).send('Usuário ativado com sucesso'))
+                    .catch(err=>res.status(500).send(err))
+
+            const userFromDB = await app.db('users')
+                .select('email')
+                .where({idUser: req.params.id}).first()
+            
+            const email = userFromDB.email
+            const msg = "A sua matrícula foi ativada pela secretaria, por favor comparece até secretaria para confirmar sua matrícula";
+            const titulo = "Ativação da Matrícula"
+    
+            await sendEmail(msg, email, titulo)
+        }catch (e){
+            return res.status(400).send("Não foi enviado o email.")
+        }
+
+
+
+
    }
 
    const updateForDesactive = async(req, res)=>{
@@ -282,7 +302,7 @@ a
             .then(userClass=>res.json(userClass))
             .catch(err=>res.status(500).send(err))
 }
-   
+    
 
     return { save, remove, getAll, getByIDClassActive, getByIdUser, saveLack, getByIdUserLack, getByIdClassDesactive, numberOfStudentsPerClass, getAllClassDesactive, 
         updateDesactive, getAllClassActive, updateForDesactive, countUser, verifyNumberStudents, getClassByNameDesactive, getClassByNameActive}

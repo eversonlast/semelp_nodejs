@@ -155,7 +155,7 @@
                     <div class="card-body identificacao">
                         <div class="form-row">
                             <div class="form-group col-md-3">
-                                <label for="tipo">Tipo de telefone</label>
+                                <label for="tipo">Tipo de telefone1</label>
                                 <b-form-select v-model="user.typePhone" :options="typeTel"></b-form-select>  
                             </div>
                             <div class="form-group col-md-3">
@@ -167,7 +167,7 @@
                                 <input type="text" id="numero" name="numero"
                                     class="form-control"
                                     placeholder="Digite um número de Telefone."
-                                    required="required" v-model="user.numeroTelefone">
+                                    required="required" v-model="user.numeroTelefone" maxlength="9">
                             </div>
                             <div class="form-group col-md-2 botoes">
                                 <b-button variant="secondary" v-if="stateTelephone1 === false" @click="addTelephone1">+</b-button>
@@ -197,14 +197,14 @@
                                 <input type="text" id="numero" name="numero"
                                     class="form-control"
                                     placeholder="Digite um número de Telefone."
-                                    required="required" v-model="user.numeroTelefone1">
+                                    required="required" v-model="user.numeroTelefone1" maxlength="9">
                             </div>
                             <div class="form-group col-md-4" v-else>
                                 <label for="numero">Numero</label>
                                 <input type="text" id="numero" name="numero"
                                     class="form-control"
                                     placeholder="Digite um número de Telefone."
-                                    required="required" v-model="telephone.numeroTelefone">
+                                    required="required" v-model="telephone.numeroTelefone" maxlength="9">
                             </div>
                             <input type="hidden" id="idTelephone" v-model="telephone.id">
                             <div class="form-group col-md-2 botoes">
@@ -253,7 +253,7 @@
                                 <input type="text" id="numero" name="numero"
                                     class="form-control"
                                     placeholder="Digite um número de Telefone."
-                                    required="required" v-model="telephone.numeroTelefone">
+                                    required="required" v-model="telephone.numeroTelefone" >  
                             </div>
                              <div class="form-group col-md-2 botoes">
                                 <b-button variant="danger ml-1" v-if="user.ddd2" v-b-modal.modal-4><i class="fa fa-trash"></i></b-button>

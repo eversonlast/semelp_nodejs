@@ -14,6 +14,8 @@ module.exports = app =>{
             const userId = parseInt(userFromDB.id)
             const token =crypto.randomBytes(10).toString('hex')
             const email = userFromDB.email
+            const msg = "Utiliza este código para trocar a senha " + token
+            const titulo = "Troca de senha"
             const now = new Date();
             now.setDate(now.getDate()+1)
             
@@ -23,7 +25,7 @@ module.exports = app =>{
                 .then(_=>res.json(email.replace(email.substr(3, email.indexOf('@')-3),"***")))
                 .catch(err=>res.status(500).send(err))
     
-            await sendEmail(token, email)
+            await sendEmail(msg, email, titulo)
         }else{
             existsOrError(userFromDB, 'CPF não cadastrado!')
         }

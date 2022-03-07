@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer')
 //const { mail } = require('../.env')
 
 module.exports = app=>{
-    const sendEmail = (token, email)=>{            
+    const sendEmail = (msg, email, titulo)=>{            
         const transporter = nodemailer.createTransport( {
             host: 'smtp.gmail.com',
              port: 587,
@@ -20,11 +20,12 @@ module.exports = app=>{
             const sentMailer = await transporter.sendMail({
                 from: "apinodesemelp@gmail.com",
                 to:[email],
-                subject: "Nova Senha",
-                text: "Utilize este códgio de verificação: " + token
+                subject: titulo,
+                text: msg
             })
         }
         run()
     }
     return { sendEmail } 
 }
+ 

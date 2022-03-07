@@ -13,7 +13,7 @@
                                 class="form-control"
                                 placeholder="Digite somente número, Ex.:999999999"
                                 v-model="user.cpf"
-                                maxlength="12" >
+                                maxlength="11" >
                         </div>   
                                                  
                         <div class="form-group col-md-2">
@@ -200,7 +200,7 @@
                                 <input type="text" id="numeroTelefone" name="numeroTelefone" formControlName="sGPTypeDeliveryId"
                                     class="form-control" pattern="[0-9]+$"
                                     placeholder="Digite um número de Telefone."
-                                    required="required" v-model="user.numeroTelefone">
+                                    required="required" v-model="user.numeroTelefone" maxlength="9">
                             </div>
                             <div class="form-group col-md-1 botoes">
                                 <b-button variant="secondary" v-if="stateTelephone1 === false" @click="addTelephone1">+</b-button>
@@ -221,7 +221,7 @@
                                 <input type="text" id="numeroTelefone1" name="numeroTelefone1" formControlName="sGPTypeDeliveryId"
                                     class="form-control" pattern="[0-9]+$"
                                     placeholder="Digite um número de Telefone."
-                                    required="required" v-model="user.numeroTelefone1">
+                                    required="required" v-model="user.numeroTelefone1" maxlength="9">
                             </div>
                             <div class="form-group col-md-1 botoes">
                                 <b-button variant="secondary" v-if="stateTelephone2 === false" @click="addTelephone2">+</b-button>
@@ -242,7 +242,7 @@
                                 <input type="text" id="numeroTelefone2" name="numeroTelefone2" formControlName="sGPTypeDeliveryId"
                                     class="form-control" pattern="[0-9]+$"
                                     placeholder="Digite um número de Telefone."
-                                    required="required" v-model="user.numeroTelefone2">
+                                    required="required" v-model="user.numeroTelefone2" maxlength="9">
                             </div>
                         </div>
                     </div>

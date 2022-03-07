@@ -42,7 +42,7 @@ export default {
     computed: mapState(['user']),
     methods:{
         logout(){
-            this.$router.push({ path: '/auth' })
+            this.$router.push({ path: '/dist' })
             localStorage.removeItem(userKey)
             this.$store.commit('setUser', null)
         },

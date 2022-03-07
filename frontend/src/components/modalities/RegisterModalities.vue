@@ -27,7 +27,7 @@
                             <b-form-select id="responsavelModalidade" :options="responsabilityModality" v-model="modality.idResponsabilityModality"></b-form-select>
                         </div> 
                     </div>
-                    <div class="form-row" v-if="!(modality.departamento== 'lazer')">
+                    <div class="form-row">
                         <div class="form-group col-md-12">
                             <label for="precisaAtestado">Necessita de Atestado</label>
                             <b-form-select id="responsavelModalidade" :options="needAttestation" v-model="modality.needAttestation"

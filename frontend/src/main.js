@@ -1,4 +1,5 @@
 import 'font-awesome/css/font-awesome.css'
+import '../src/config/icofont/icofont.min.css'
 
 import Vue from 'vue'
 
