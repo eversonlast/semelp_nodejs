@@ -218,7 +218,7 @@ export default {
                                 }
 })
                             .map(option=>{
-                                return{value: option.classUser, text: (`${option.nomeModalidade} - ${option.dias} - ${option.horarios} | ${option.faixaEtaria}`).toUpperCase()}
+                                return{value: option.id, text: (`${option.nomeModalidade} - ${option.dias} - ${option.horarios} | ${option.faixaEtaria}`).toUpperCase()}
                             })
                     })
 

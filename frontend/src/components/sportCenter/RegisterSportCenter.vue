@@ -88,7 +88,7 @@
                             </div>                 
                         </div>
                 </div>
-            <div class="card-body button">
+            <div class="card-body buttonCadastro">
                 <b-button variant="primary" class="mr-2" v-b-modal.modalRegister v-if="stateButton == 't'"
                 v-b-popover.hover.top="'Clique para Salvar.'">Salvar</b-button> 
                 <b-button variant="primary" class="mr-2" v-b-modal.modalRegister v-else

@@ -36,7 +36,6 @@ module.exports = app=>{
                 .insert(classUser)
                 .then(_=>res.status(200).send('Salvo com sucesso'))
                 .catch(err=>res.status(500).send(err))
-a
         }
     }
    

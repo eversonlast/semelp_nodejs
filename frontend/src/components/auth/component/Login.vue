@@ -32,7 +32,11 @@
             <input v-model="user.password" type="password" name="password" placeholder="Senha" v-on:keyup.enter="signin">
            
             <div class="div-botao">
-                <b-button variant="primary" class="button mr-2" @click="signin">Entrar</b-button>
+              <!--
+
+                  <b-button variant="primary" class="button mr-2" @click="signin">Entrar</b-button>
+              --> 
+                <button class="button mr-2" @click="signin">Entrar</button>
                 <b-button variant="outline-info ml-2" @click="forgotPassword">Esqueci à Senha</b-button>
             </div>
             <div class="footer-link" >
@@ -96,7 +100,7 @@ export default {
         background-color: #FFF;
         width: 350px;
         padding: 35px;
-        box-shadow: 0 1px 5px rgba(0, 0, 0, .15);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, .1);
 
         display: flex;
         flex-direction: column;
@@ -153,5 +157,17 @@ export default {
         justify-items: center;
         margin-top:45%;
         margin-left: 45%;
+    }
+
+    .button{
+        border: none;
+        background-color: #31A839;
+        color: #FFF;
+        padding: 6px 10px;
+        transition: 1s;
+    }
+
+    .button:hover{
+        background-color: #47F553;
     }
 </style>

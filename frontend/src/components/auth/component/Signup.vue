@@ -246,7 +246,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-body button">                    
+                    <div class="card-body buttonCadastro">                    
                         <b-button variant="primary" class="mr-2" @click="checkform" v-b-modal.modal-1>Salvar</b-button>
                         <b-button variant="outline-danger" class="ml-2" @click="reset">Cancelar</b-button>                  
                     </div>
@@ -537,7 +537,7 @@ export default {
 </script>
 
 <style>
-    .button{
+    .buttonCadastro{
         display:flex;
         align-self: center;
     }

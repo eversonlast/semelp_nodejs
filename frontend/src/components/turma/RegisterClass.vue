@@ -102,7 +102,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body button">
+            <div class="card-body buttonCadastro">
                 <b-button variant="primary" class="mr-2" v-on:click="loadControle"
                 v-b-modal.modalRegisterClass v-if="controleButton"
                 v-b-popover.hover.top="'Clique para salvar.'">Salvar</b-button>

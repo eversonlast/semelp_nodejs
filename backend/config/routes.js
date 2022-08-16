@@ -147,7 +147,15 @@ module.exports = app =>{
         .all(app.config.passport.authenticate())
         .post(admin(app.api.class.save))
         .get(app.api.class.getAll)
+    
+    app.route('/class/idadeLimit')
+        .all(app.config.passport.authenticate())
+        .post(admin(app.api.class.salveAgeLimit))
 
+    app.route('/class/idadeLimit/:id')
+        .all(app.config.passport.authenticate())
+        .put(admin(app.api.class.salveAgeLimit))
+ 
     app.route('/class/:id')
         .all(app.config.passport.authenticate())
         .get(app.api.class.getById)

@@ -31,7 +31,7 @@
 			</div>
 		</div>
 		
-		<div class="card-body button">
+		<div class="card-body buttonAfastamento">
 			<b-button variant="success" class="mr-2" v-b-popover.hover.top="'Clique para enviar.'"
 			v-on:click="save"
 			>Enviar Atestado</b-button>
@@ -130,5 +130,8 @@ export default {
 </script>
 
 <style>
-
+.buttonAfastamento{
+	display: flex;
+	justify-content: center;
+}
 </style>

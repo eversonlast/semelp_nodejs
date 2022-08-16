@@ -35,7 +35,7 @@
                         </div> 
                     </div>
                 </div> 
-            <div class="card-body button">
+            <div class="card-body d-flex justify-content-center">
                 <b-button variant="primary" class="mr-2" v-b-modal.modalRegisterModality v-if="stateButton == 't'">Salvar</b-button> 
                 <b-button variant="primary" class="mr-2" v-b-modal.modalRegisterModality v-else>Alterar</b-button> 
                 <b-button variant="outline-danger" class="ml-2" @click="resetModality">Cancelar</b-button>

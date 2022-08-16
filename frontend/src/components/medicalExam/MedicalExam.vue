@@ -45,7 +45,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body button">
+            <div class="card-body buttonCadastro">
                 <b-button variant="primary" class="mr-2" v-b-popover.hover.top="'Clique para salvar.'"
                 v-b-modal.modalRegisterMedicalExam v-on:click="validateExam">Salvar</b-button>
                 <b-button variant="outline-danger" v-b-popover.hover.top="'Clique para cancelar.'">Cancelar</b-button>

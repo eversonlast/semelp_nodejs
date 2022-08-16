@@ -95,5 +95,31 @@ module.exports = app =>{
             return res.status(500).send(msg)
         }
     }
-    return { save, getAll, getById, remove }
+
+    const salveAgeLimit = async(req, res)=>{
+        const salveAge = {...req.body}
+
+        if(req.params.id) salveAge.id = req.params.id;
+
+        try{
+            existsOrError(salveAge.age, "Por favor, informe a idade!")
+        }catch(msg){
+            return res.status(400).send(msg);
+        }
+
+        if(salveAge.id){
+            await app.db('tb_control_age')
+                .where({id: salveAge.id})
+                .update(salveAge)
+                .then(()=>res.status(200).send({success: 'Foi alterado com sucesso!'}))
+                .catch(err=>res.status(500).send(err))
+        }else{
+            salveAge.ativo= 1;
+            await app.db('tb_control_age')
+                .insert('tb_control_age')
+                .then(()=>res.status(200).send({success: 'Foi Adicionado com sucesso!'}))
+                .catch(err=>res.status(500).send(err))
+        }
+    }
+    return { save, getAll, getById, remove, salveAgeLimit}
 }

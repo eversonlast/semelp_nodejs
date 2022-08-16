@@ -26,7 +26,8 @@ export default {
 <style>
     .footer{
         grid-area: footer;
-        background-color: #91CFCC;
+        background-color: #526BA8;
+        color: #fff;
 
         -webkit-box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
         -moz-box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
