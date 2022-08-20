@@ -96,7 +96,7 @@ module.exports = app =>{
             .join('modalities as m', 'm.id', 'cl.idModality')
             .join('sportsCenters as spt', 'spt.id', 'cl.idSportCenter')
             .where({idSportCenter: req.params.id})
-            .select('faixaEtaria', 'nomeModalidade', 'nome as centroEsportivo', 'dias', 'horarios', 'cl.id')
+            .select('idadeMinima', 'idadeMaxima', 'nomeModalidade', 'nome as centroEsportivo', 'dias', 'horarios', 'cl.id', 'needAttestationAll', 'needAttestationBetterAge')
             .then(classSport=>res.json({data: classSport}))
     }
 

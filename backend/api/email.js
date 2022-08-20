@@ -1,3 +1,6 @@
+/*******Este é uma módulo para enviar email*********/
+
+
 const nodemailer = require('nodemailer')
 //const { mail } = require('../.env')
 

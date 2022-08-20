@@ -1,9 +1,13 @@
+/**********Módulo para controle de exame médico********/
+
 const knexfile = require('../knexfile');
 
 module.exports = app =>{
 	const {existsOrError} = app.api.validation;
 	const knex = require('knex')(knexfile);
 
+
+	/*******Salva o exame médico de afastamento***********/
 	const save = async(req, res)=>{
 		const examMedicalAfast = {...req.body};
 
@@ -46,6 +50,9 @@ module.exports = app =>{
 		}	
 	}
 
+	/********Pega todos os exames de Afastamento********
+	 * Preciso implementar por centro esportivo
+	*/
 	const limit = 10;
 	const listAllExamAfast = async(req, res) =>{
 		const page = req.query.page || 1;
@@ -60,6 +67,8 @@ module.exports = app =>{
 			.catch(err=>res.status(500).send(err))
 	}
 
+
+	/*******Pega atestado por aluno*********/
 	const getAtestadoByIdUser = async(req, res)=>{
 		const page = req.query.page || 1;
 		const result = await app.db('examMedicalAfast').count('id').where({activeExam: null}).andWhere({idUser: req.params.idUser}).first()
@@ -75,7 +84,7 @@ module.exports = app =>{
 			.catch(err=>res.status(500).send(err))
 	}
 
-
+	/******Pega atestado por data*********/
 	const getAtestadoByDate = async(req, res)=>{
 		const page = req.query.page || 1;
 		const result = await app.db('examMedicalAfast').count('id')

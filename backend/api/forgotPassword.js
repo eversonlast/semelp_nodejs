@@ -1,9 +1,17 @@
+/******Módulo para quem esqueceu a senha 
+ * Precisa melhorar para pegar o token da url
+ */
+
+
 const crypto = require('crypto')
 const bcrypt = require('bcrypt-nodejs')
 
 module.exports = app =>{
     const { existsOrError, notExistsOrErro, equalsOrError } = app.api.validation
     const{ sendEmail } = app.api.email
+
+
+    /******Senha esquicida encrypta a senha para salvar novamente********/
     const passwordForgotten = async(req, res)=>{
     const usuario = {...req.body}
     try{
@@ -35,11 +43,14 @@ module.exports = app =>{
         }
     }
 
+    /*******Encrypta a senha*********/
     const encrypPassword =  password =>{
         const salt = bcrypt.genSaltSync(10)
         return bcrypt.hashSync(password, salt)
     }
 
+
+    /******Redifinada o token********/
     const resetPasswordToken =  async(req, res)=>{
         const usuario = { ...req.body }
         try{
@@ -77,6 +88,9 @@ module.exports = app =>{
             return res.status(500).send(msg)
         }
     }
+
+
+    /*******Redefina o senha de autenticação*******/
     const resetPasswordAuth = async(req, res)=>{
         const usuario = {...req.body}
         if(req.params.id){
@@ -97,6 +111,8 @@ module.exports = app =>{
             .catch(err=>res.status(500).send(err))
     }
 
+    /*******Muda a usuaŕio, não se usar muito porque é CPF, 
+     * é usado se cadastrou errado********/
     const changeUser =  async(req, res)=>{
         const usuario = {...req.body}
         const typeUser = await app.db('users')

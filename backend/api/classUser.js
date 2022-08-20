@@ -1,9 +1,17 @@
+/**********Está módulo para fazer o controle de uma matrícula dentro da turma
+ * é um módulo de extrema importancia, devido é a base para o aluno e para gerencia dentro 
+ * da secretaria...
+ ********/
+
+
 module.exports = app=>{
     const { existsOrError, existsElementOrError } = app.api.validation
     const { removeWaitList, waitingList } = app.api.waitingList
 
     const{ sendEmail } = require('../api/email')
 
+
+    /********Para salvar um aluno dentro de uma turma**********/
     const save = async (req, res)=>{
         const classUser = {... req.body}
         if(req.params.id) classUser.id = req.params.id
@@ -39,6 +47,7 @@ module.exports = app=>{
         }
     }
    
+    /****Para remover um aluno de uma turma*********/
    const remove = async(req, res)=>{
        const classUser = {... req.body}
         try{
@@ -58,7 +67,8 @@ module.exports = app=>{
         }
    } 
 
-   const updateDesactive = async(req, res)=>{
+   /*****Pega aluno transforma em Ativo ********/
+   const updateForActive = async(req, res)=>{
        const classUser = {}
        classUser.activeClass = true
        try{
@@ -86,16 +96,18 @@ module.exports = app=>{
 
    }
 
+   /******Alteraçao para desativado de um aluno**********/
    const updateForDesactive = async(req, res)=>{
-       const classUserActive = {}
-       classUserActive.activeClass = false
+       const classUserDesactive = {}
+       classUserDesactive.activeClass = false
        await app.db('classesUsers')
-            .update(classUserActive)
+            .update(classUserDesactive)
             .where({id: req.params.id})
             .then(_=>res.status(200).send('Usuário desativado com sucesso'))
             .catch(err=>res.status(500).send(err))
    }
 
+   /********Pega todos os alunos de todas as turmas**********/
    const limit = 10
    const getAll = async(req, res)=>{ 
        const page = req.query.page || 1
@@ -109,13 +121,14 @@ module.exports = app=>{
             .join('modalities as m', 'm.id', 'c.idModality')
             .join('sportsCenters as spt', 'spt.id', 'c.idSportCenter')
             .select('clu.id', 'clu.idUser', 'clu.idClass', 'clu.quantidadesDeFalta', 'clu.activeClass',
-            'm.nomeModalidade', 'dias', 'horarios', 'faixaEtaria', 'u.nome as nomeAluno', 'spt.nome as centroEsportivo', 
+            'm.nomeModalidade', 'dias', 'horarios', 'c.idadeMinima', 'c.idadeMaxima', 'needAttestationAll', 'needAttestationBetterAge', 'u.nome as nomeAluno', 'spt.nome as centroEsportivo', 
             'm.departamento', 'maxLackMounth as maximoFaltasMes')
             .limit(limit).offset(page*limit-limit)
             .then(classUser=>res.json({data: classUser, count, limit}))
             .catch(err=>res.status(500).send(err))
    }
 
+   /************Pega aluno por Turma************/
    const getByIDClassActive = async(req, res)=>{
         const page = req.query.page || 1
         const idClass = req.params.id
@@ -132,6 +145,7 @@ module.exports = app=>{
                     .catch(err=>res.status(500).send(err))
    }
    
+   /**********Número de Estudantes por Turma ***************/
    const numberOfStudentsPerClass = async(req, res)=>{
         await app.db('classesUsers as uc')
                 .count('c.id')
@@ -150,6 +164,7 @@ module.exports = app=>{
                 .then(resultCount=> res.json(parseInt(resultCount[0].count)))
    }
 
+   /*******Verifica quantidade de alunos por Turma************/
    const verifyNumberStudents = async(req, res)=>{
        await app.db('classes')
                 .where({id: req.params.idClass})
@@ -157,6 +172,7 @@ module.exports = app=>{
                 .then(resultNumberClass=> res.json(parseInt(resultNumberClass[0].studentsNumber)))
    }
 
+   /****Pega o usuário desativado***** */
    const getByIdClassDesactive = async(req, res)=>{
         const page = req.query.page || 1
         const idClass = req.params.id
@@ -175,6 +191,7 @@ module.exports = app=>{
 
    } 
 
+   /*****Pega todos usuários desativados de uma turma*********/
    const getAllClassDesactive = async(req, res)=>{
     const page = req.query.page || 1
     const result = await app.db('classesUsers').count('id').first()
@@ -193,8 +210,9 @@ module.exports = app=>{
             .then(classUserDesactive=>res.json({data:classUserDesactive, count}))
             .catch(err=>res.status(500).send(err))
 
-} 
+    } 
 
+    /******Pega todos os alunos ativos de uma turma**********/
     const getAllClassActive = async(req, res)=>{
         const page = req.query.page || 1
         const result = await app.db('classesUsers').count('id').first()
@@ -213,6 +231,7 @@ module.exports = app=>{
             .catch(err=>res.status(500).send(err))
     }
 
+    /*********Pega uma aluno específico de uma Turma ***************/
    const getByIdUser = async(req, res)=>{
        const idUser = req.params.id
        const id = parseInt(idUser)
@@ -229,6 +248,7 @@ module.exports = app=>{
                     .catch(err=>res.status(500).send(err))
    }
 
+   /******Modelagem da faltas em Mongo de uma aluno **********/
    const lackByMounth =  app.mongoose.model('lackByMounth',{
        idUserClass: Number,
        ano: Number,
@@ -236,6 +256,7 @@ module.exports = app=>{
        dias: Array
    })
 
+   /******Salvar as faltas de uma turma ************/
    const saveLack = async (req, res)=>{
        var lack = new lackByMounth({... req.body})
        const verifyStudent = await lackByMounth.findOne({$and:[{idUser: req.params.id}, {ano: req.query.ano}, {mes: req.query.mes}]})
@@ -265,12 +286,16 @@ module.exports = app=>{
        }
    }
 
+   /******Pega as faltas de um aluno************/
+
    const getByIdUserLack = async(req, res)=>{
         var idUserClass = req.params.id
         await lackByMounth.find({idUserClass: idUserClass})
             .then(userLacks=>res.json(userLacks))
    }
 
+
+   /********Pega o aluno pelo nome Desativado************/
    const getClassByNameDesactive = async(req, res)=>{
        const nomeAluno = req.query.nome == null ? "".trim() : req.query.nome
        await app.db('classesUsers as turma')
@@ -287,7 +312,9 @@ module.exports = app=>{
                 //.catch(err=>res.status(500).send(err))
    }
 
-   const getClassByNameActive = async (req, res)=>{
+   
+   /*******Pega por nome alunos ativos por nome************/
+    const getClassByNameActive = async (req, res)=>{
     const nomeAluno = req.query.nome == null ? "".trim() : req.query.nome
     await app.db('classesUsers as turma')
             .join('users as u', 'u.id','=', 'turma.idUser')
@@ -304,7 +331,7 @@ module.exports = app=>{
     
 
     return { save, remove, getAll, getByIDClassActive, getByIdUser, saveLack, getByIdUserLack, getByIdClassDesactive, numberOfStudentsPerClass, getAllClassDesactive, 
-        updateDesactive, getAllClassActive, updateForDesactive, countUser, verifyNumberStudents, getClassByNameDesactive, getClassByNameActive}
+        updateForActive, getAllClassActive, updateForDesactive, countUser, verifyNumberStudents, getClassByNameDesactive, getClassByNameActive}
 }
 
 

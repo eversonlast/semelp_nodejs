@@ -1,9 +1,13 @@
+/****Exame para considerar adaptado para modalidade 
+*** */
+
 const knexfile = require('../knexfile')
 
 module.exports = app =>{
     const {existsOrError} = app.api.validation
     const knex = require('knex')(knexfile)
 
+    /***Para Salvar o atestado********/
     const save = async(req, res)=>{
         const medicalExam = {... req.body}
 
@@ -35,7 +39,9 @@ module.exports = app =>{
                     .catch(err=>res.status(500).send(err))
         }
     }
+    
 
+    /*********Pega todos atestados desativados*********/
     const limit = 10
     const getDesactive = async(req, res)=>{
         const page = req.query.page || 1
@@ -57,6 +63,8 @@ module.exports = app =>{
                 //.then(medicalExam=>res.json({data: medicalExam, count, limit}))
                 //.catch(err=>res.status(500).send(err))
     }
+
+    /*******Pega todos exames ativos********/
     const getActive = async(req, res)=>{
         const page = req.query.page || 1
         const result = await app.db('medicalExams').where({activeExam: true}).count('id').first()
@@ -70,6 +78,7 @@ module.exports = app =>{
                         .catch(err=>res.status(500).send(err))
     }
 
+    /******Pega por ID os atestados********/
     const getById = async(req, res)=>{
         await app.db('medicalExams as me')
                 .join('users as u', 'u.id', 'me.idUser')
@@ -79,6 +88,8 @@ module.exports = app =>{
                 .catch(err=>res.status(500).send(err))
     }
 
+
+    /********Apaga os atestados do BD, hard delete******/
     const remove = async(req, res)=>{
         try{
             const rowsDeleted = await app.db('medicalExams')
@@ -95,6 +106,7 @@ module.exports = app =>{
         
     }
 
+    /******Ativa o exame médico******/
     const activeExam = async(req, res)=>{
         await app.db('medicalExams')
                 .update({activeExam: true})

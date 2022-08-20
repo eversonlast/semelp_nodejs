@@ -168,7 +168,7 @@ module.exports = app =>{
 
     app.route('/classUser')
         .all(app.config.passport.authenticate())
-        .post(app.api.classUser.save) 
+        .post(app.api.classUser.save)  
         .get(app.api.classUser.getAll)
     
     app.route('/classUser/:id')
@@ -180,11 +180,11 @@ module.exports = app =>{
     app.route('/classUserDesactive/:id')
         .all(app.config.passport.authenticate())
         .get(app.api.classUser.getByIdClassDesactive)
-        .put(app.api.classUser.updateDesactive)
+        .put(app.api.classUser.updateForDesactive)
  
     app.route('/classUserByActive/:id')
         .all(app.config.passport.authenticate())
-        .put(app.api.classUser.updateForDesactive)
+        .put(app.api.classUser.updateForActive)
 
     app.route('/classUserDesactive')
         .all(app.config.passport.authenticate())

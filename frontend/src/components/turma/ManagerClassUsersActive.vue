@@ -79,12 +79,12 @@ export default {
             const userData = JSON.parse(json)
             await this.$store.commit('setUser', userData)
         },
-        async updateUserActive(userActive){
-            const url = `${baseApiUrl}/classUserByActive/${userActive.id}`
+        async updateUserDesactive(userDesactive){
+            const url = `${baseApiUrl}/classUserDesactive/${userDesactive.id}`
             await axios.put(url)
                     .then(()=>{
                         this.$toasted.success(('O aluno está desativado'))
-                        userActive = {}
+                        userDesactive = {}
                     })
                     .catch(showError)
         this.loadUserAllClassActive()

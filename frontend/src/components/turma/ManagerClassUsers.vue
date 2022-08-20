@@ -78,7 +78,7 @@ export default {
             await this.$store.commit('setUser', userData)
         },
         async activeClassUser(user){
-            const url = `${baseApiUrl}/classUserDesactive/${user.id}`
+            const url = `${baseApiUrl}/classUserByActive/${user.id}`
             await axios.put(url)
                     .then(()=>{
                         this.$toasted.success('O aluno está ativado')    
