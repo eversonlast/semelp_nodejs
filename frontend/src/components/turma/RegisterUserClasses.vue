@@ -104,7 +104,7 @@ export default {
                         return {value: option.id, text: (option.nome).toUpperCase()}
                     })
                 })
-                .catch(showError)
+                .catch(showError) 
         },
         async loadUser(){
             const json = localStorage.getItem(userKey)

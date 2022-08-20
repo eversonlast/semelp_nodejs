@@ -70,6 +70,7 @@ export default {
                         this.$store.commit('setUser', res.data)
                         localStorage.setItem(userKey, JSON.stringify(res.data))
                         localStorage.setItem('tipoUsuario', res.data.tipoUsuario)
+                        localStorage.setItem('idade', res.data.idade)
                         this.$router.push({name: 'home'})
                     })
                     .catch(showError)

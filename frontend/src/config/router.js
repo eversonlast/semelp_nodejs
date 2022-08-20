@@ -33,6 +33,7 @@ import MedicalExamUpdate from '../components/medicalExam/MedicalExamUpdate'
 import UploadPhoto from '../components/users/UploadPhoto'
 import ExamMedicalAfast from '../components/users/MedicalExamAfast'
 import ListaEspera from '../components/waitingLists/ListaEspera'
+import ClassSportUser from '../components/users/ClassSportUser'
 
 import { userKey, baseApiUrl } from './global'
 import axios from 'axios'
@@ -168,6 +169,10 @@ const routes = [{
     name: 'listaEspera',
     path: '/listaEspera',
     component: ListaEspera
+},{
+    name: 'ClassCenterUser',
+    path: '/classCenterUser/:id',
+    component: ClassSportUser
 }]
 
 const router = new VueRouter({

@@ -1,12 +1,12 @@
 <template>
     <div class="container-fluid">
-        <h2>Bem Vindo ao Sistema</h2>
+        <h2>Bem Vindo ao Sistema </h2>
         <div class="container-fluid">
             <div class="row mt-5" >
                 <div v-for="sportCenter in sportCenter" :key="sportCenter.id" class="col-12 col-lg-6 cart mt-4">
-                    <router-link :to="{name:'home'}">
+                    <router-link :to="'/classCenterUser/'+sportCenter.id">
                         <div class="row d-flex justify-content-center">
-                            <span>{{sportCenter.nome}}</span>
+                            <span>{{sportCenter.nome}}</span> 
                         </div> 
                         <div class="row d-flex justify-content-center mt-2">
                             <i class="fa fa-building-o"></i>
@@ -46,6 +46,7 @@ export default {
                     this.count = res.data.count
                     this.limit = res.data.limit
                 })
+                .catch(showError)
         }
     },
     mounted(){
