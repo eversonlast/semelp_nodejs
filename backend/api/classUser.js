@@ -161,6 +161,7 @@ module.exports = app=>{
        await app.db('classesUsers')
                 .count('id')
                 .where({idClass: req.params.idClass})
+                .andWhere({activeClass: true})
                 .then(resultCount=> res.json(parseInt(resultCount[0].count)))
    }
 
