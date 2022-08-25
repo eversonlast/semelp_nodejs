@@ -22,9 +22,13 @@ module.exports = app=>{
         
         const rowsVerifyUser = await waitingList.find({$and:[{idUser:req.params.id}, {idClass: req.query.class}]})
         const rowsVerifyUserClassBody = await waitingList.find({$and:[{idUser: req.body.idUser}, {idClass: req.body.idClass}]})
-        const existsUser = await app.db('users').select('id', 'nome', 'dataNasc').first().where({id: req.body.idUser})
+        const existsUser = await app.db('users').select('id', 'nome', 'dataNasc')
+                                .first()
+                                .where({id: req.body.idUser})
         const existsClass = await app.db('classes as c').join('modalities as m', 'm.id', 'c.idModality')
-                                .select('c.id', 'm.nomeModalidade', 'c.idadeMinima', 'c.idadeMaxima').first().where({'c.id': req.body.idClass})
+                                .select('c.id', 'm.nomeModalidade', 'c.idadeMinima', 'c.idadeMaxima')
+                                .first()
+                                .where({'c.id': req.body.idClass})
         const ano = 1000*60*60*24*365;
         const idade = parseInt((Date.now() - existsUser.dataNasc)/ano)
 
@@ -38,9 +42,10 @@ module.exports = app=>{
         }       
             const idadeMinima = parseInt(existsClass.idadeMinima)
             const idadeMaxima = parseInt(existsClass.idadeMaxima)
+            // console.log(idade <= idadeMaxima);
 
         try{
-            if(!(idade > idadeMinima && idade < idadeMaxima)){
+            if(!(idade >= idadeMinima && idade <= idadeMaxima)){
                 throw 'A idade está fora da faixa etária! Por favor verifique a Modalidade Escolhida'
             }
         }catch(msg){

@@ -271,7 +271,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-body button">                    
+                    <div class="card-body buttonUserById">                    
                         <b-button variant="primary" class="mr-2" @click="checkform" v-b-modal.modal-3>Salvar</b-button>
                         <b-button variant="outline-danger" class="ml-2" @click="reset">Cancelar</b-button>                  
                     </div>
@@ -456,5 +456,8 @@ export default {
 </script>
 
 <style>
-
+    .buttonUserById{
+        display: flex;
+        justify-content: center;
+    }
 </style>

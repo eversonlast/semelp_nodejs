@@ -32,10 +32,11 @@ module.exports = app=>{
             const result = await app.db('classesUsers').count("id")
                         .where({idUser: classUser.idUser})
                         .andWhere({idClass: classUser.idClass})
+                        .andWhere({activeClass: classUser.activeClass})
                         .first()
 
             try {
-                if(result.count != 0) throw "Existe matrícula com este aluno"            
+                if(result.count != 0) throw "Este aluno já está matriculado nesta turma! Por favor, escolhe outra modalidade!"            
             } catch (msg) {
                 return res.status(400).send(msg)
             }

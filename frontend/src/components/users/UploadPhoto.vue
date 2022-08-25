@@ -18,7 +18,7 @@
                     </div>
                     </div>
                 </div>
-                <div class="card-body button">
+                <div class="card-body buttonUpload">
                     <b-button variant="success" class="mr-2" v-b-popover.hover.top="'Clique para enviar a foto'"
                     @click="sendPhoto">Enviar</b-button>
                     <b-button variant="outline-danger" class="mx-2" v-b-popover.hover.top="'Clique para cancelar'">Cancelar</b-button>
@@ -95,5 +95,9 @@ export default {
 </script>
 
 <style>
-
+    .buttonUpload{
+        display: flex;
+        flex: 1;
+        justify-content: center;
+    }
 </style>

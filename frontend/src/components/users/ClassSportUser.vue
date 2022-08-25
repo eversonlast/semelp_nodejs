@@ -17,8 +17,14 @@
         </div>
     </div>
     <div>
-        <b-modal id="modalMatricula" title="Confirmação de Matrícula">
+        <b-modal id="modalMatricula" title="Confirmação de Matrícula" @ok="fazerMatricula" v-if="classModal">
             Modalidade: {{modalidadeChoose}} <br/>
+            Dias: {{dias}} <br />
+            Horarios: {{horarios}}
+        </b-modal>
+        <b-modal id="modalMatricula" title="Lista de Espera" v-if="classWait">
+            A turma está cheia, com isso o seu nome irá para a Lista de Espera <br />
+            Modalidade: {{modalidadeChoose}}<br/>
             Dias: {{dias}} <br />
             Horarios: {{horarios}}
         </b-modal>
@@ -44,7 +50,9 @@ export default {
             countUserClass: 0,
             numberClassUser: 0,
             registerClass: {},
-            idUser: 0
+            idUser: 0,
+            classModal: true,
+            classWait: true
         }
     },
     methods: {
@@ -73,18 +81,13 @@ export default {
                 })
                 .catch(showError)
         },
-        pegarValor(idClass, modalidade, dias, horarios){
+        async pegarValor(idClass, modalidade, dias, horarios){
             this.modalidadeChoose = modalidade
             this.dias = dias;
             this.horarios = horarios;
             this.idClass = idClass
-        },
-        async fazerMatricula(){
-            this.loadUser();
-            const urlSave = `${baseApiUrl}/classUser`
             const urlCountUser = `${baseApiUrl}/countUser/${this.idClass}`;
-            const numberClass = `${baseApiUrl}/numberClass/${this.idClass}`
-
+            const numberClass = `${baseApiUrl}/numberClass/${this.idClass}`;
             await axios.get(urlCountUser)
                 .then(res=>this.countUserClass = res.data)
                 .catch(showError)
@@ -93,11 +96,27 @@ export default {
                 .then(res=>this.numberClassUser = res.data)
                 .catch(showError)
 
+            this.classModal =  this.countUserClass < this.numberClassUser ? true : false;
+            this.classWait =  this.countUserClass >= this.numberClassUser ? true : false;
+        },
+        async fazerMatricula(){
+            this.loadUser();
+            const urlSave = `${baseApiUrl}/classUser`            
+            const urlWaitingList = `${baseApiUrl}/waitingList`            
+            
+            this.registerClass.idClass = this.idClass;
+            this.registerClass.idUser = this.idUser;
+
+            // this.countUserClass >= this.numberClassUser
             if(this.countUserClass >= this.numberClassUser){
-                //lista de espera
+                await axios.post(urlWaitingList, this.registerClass)
+                    .then(()=>{
+                        this.$toasted.success('Não tem vaga nesta turma, o seu nome está na lista de espera!');
+                        this.registerClass = {};
+                    })
+                    .catch(showError)
             }else{
-                this.registerClass.idClass = this.idClass;
-                this.registerClass.idUser = this.idUser;
+                this.registerClass.activeClass = true;
                 await axios.post(urlSave, this.registerClass)
                     .then(()=>{
                         this.$toasted.success('Matrículado com sucesso')

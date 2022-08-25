@@ -211,10 +211,11 @@ export default {
                         this.turmas = res.data.data
                            .filter(option=>{
                                if(this.user.idade >= 60){
-                                    return option.faixaEtaria.toLowerCase() == "acima de 60 anos"
+                                    return option.idadeMinima <= this.user.idade && 
+                                    option.idadeMaxima >= this.user.idade
                                 }else{
-                                    return option.faixaEtaria.substring(0, option.faixaEtaria.toLowerCase().indexOf('à')) <= this.user.idade &&
-                                  option.faixaEtaria.substring(option.faixaEtaria.toLowerCase().indexOf("à")+2, option.faixaEtaria.toLowerCase().indexOf("anos")) >= this.user.idade                                   
+                                    return option.idadeMinima <= this.user.idade &&
+                                  option.idadeMaxima >= this.user.idade                                   
                                 }
 })
                             .map(option=>{

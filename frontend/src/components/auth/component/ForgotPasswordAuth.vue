@@ -32,7 +32,7 @@
                     </div>
                 </div>
             </div> 
-            <div class="card-body button">
+            <div class="card-body buttonForgotUser">
                 <b-button variant="primary" class=mr-2 @click="changePassword" :disabled="disableButton">Alterar Senha</b-button>
                 <b-button variant="outline-danger" class="ml-2" @click="buttonCancel" >Cancel</b-button>
             </div>
@@ -125,5 +125,8 @@ export default {
 </script>
 
 <style>
-
+    .buttonForgotUser{
+        display: flex;
+        justify-content: center;
+    }
 </style>
