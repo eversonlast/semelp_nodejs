@@ -281,6 +281,11 @@ module.exports = app =>{
     app.route('/allModalityBySport')
         .all(app.config.passport.authenticate())
         .get(app.api.modality.getModalityBySportCenter)
+
+    app.route('/controlAge')
+        .all(app.config.passport.authenticate())
+        .get(app.api.controleAge.getControl)
+        .post(app.api.controleAge.save)
 }
 
 
