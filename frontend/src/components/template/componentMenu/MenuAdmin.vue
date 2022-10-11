@@ -42,7 +42,8 @@ export default {
                     {text: 'Cadastrar Exame Médico'},
                     {text: 'Gerenciar Exame Médico Desativados'},
                     {text: 'Gerenciar Exame Médico Ativados'}
-                ]}
+                ]},
+                {text: 'Controle de Idade'}
             ]
         }
     },
